@@ -1,0 +1,561 @@
+"use client";
+
+import { useInfiniteScrollTop } from "6pp";
+import {
+  AttachFile as AttachFileIcon,
+  Send as SendIcon,
+} from "@mui/icons-material";
+import {
+  IconButton,
+  Stack,
+  Typography,
+  Box,
+  Drawer,
+  Grid,
+  Skeleton,
+} from "@mui/material";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useRouter } from "next/navigation";
+import FileMenu from "../../../components/dialog/FileMenu";
+import { TypingLoader } from "../../../components/layout/Loaders";
+import MessageComponent from "../../../components/shared/MessageComponent";
+import { InputBox } from "../../../components/styles/StyledComponents";
+import { grayColor, orange, gradientBg } from "../../../constants/color";
+import {
+  ALERT,
+  CHAT_JOINED,
+  CHAT_LEAVED,
+  NEW_MESSAGE,
+  NEW_MESSAGE_ALERT,
+  NEW_REQUEST,
+  ONLINE_USERS,
+  REFETCH_CHATS,
+  START_TYPING,
+  STOP_TYPING,
+} from "../../../constants/events";
+import { useErrors, useSocketEvents } from "../../../hooks/useHooks";
+import { getOrSaveFromStorage } from "../../../lib/features";
+import {
+  useGetChatDetailsQuery,
+  useGetMessagesQuery,
+  useGetMyChatsQuery,
+} from "../../../redux/api/api";
+import {
+  incrementNotificationCount,
+  removeNewMessagesAlert,
+  setNewMessagesAlert,
+} from "../../../redux/reducers/chat.reducer";
+import {
+  setIsDeleteMenu,
+  setIsFileMenu,
+  setIsMobile,
+  setIsProfile,
+  setSelectedDeleteChat,
+} from "../../../redux/reducers/misc.reducer";
+import { useSocket } from "../../../providers/SocketProvider";
+import Header from "../../../components/layout/Header";
+import ChatList from "../../../components/shared/ChatList";
+import Profile from "../../../components/shared/Profile";
+import DeleteChatMenu from "../../../components/dialog/DeleteChatMenu";
+import ProtectedRoute from "../../../components/auth/ProtectedRoute";
+
+function ChatContent() {
+  const params = useParams();
+  const chatId = params.chatId;
+
+  const { user } = useSelector((state) => state.auth);
+  const { uploadingLoader, newMessagesAlert, isMobile, isProfile } = useSelector((state) => ({
+    ...state.misc,
+    newMessagesAlert: state.chat.newMessagesAlert,
+  }));
+
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+  const [MeTyping, setMeTyping] = useState(false);
+  const [userNameTyping, setUserNameTyping] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  const typingTimeout = useRef(null);
+  const containerRef = useRef(null);
+  const bottomRef = useRef(null);
+  const deleteOptionAnchor = useRef(null);
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const socket = useSocket();
+
+  const handleMobileClose = () => {
+    dispatch(setIsMobile(false));
+  };
+
+  const handleProfileClose = () => {
+    dispatch(setIsProfile(false));
+  };
+
+  const handleDeleteChat = (e, chatId, groupChat) => {
+    e.preventDefault();
+    deleteOptionAnchor.current = e.currentTarget;
+    dispatch(setIsDeleteMenu(true));
+    dispatch(setSelectedDeleteChat({ chatId, groupChat }));
+  };
+
+  const handleFileOpen = (e) => {
+    dispatch(setIsFileMenu(true));
+    setFileMenuAnchor(e.currentTarget);
+  };
+
+  const {
+    data: chatDetails,
+    isLoading: isLoadingChatDetails,
+    isError: isErrorChatDetails,
+    error: errorChatDetails,
+  } = useGetChatDetailsQuery({ chatId, populate: true }, { skip: !chatId });
+
+  const {
+    data: chatsData,
+    isLoading: isLoadingChats,
+    isError: isErrorChats,
+    error: errorChats,
+    refetch: refetchChats,
+  } = useGetMyChatsQuery("");
+
+  const {
+    data: oldMessagesChunks,
+    isLoading: isLoadingMessages,
+    isError: isErrorOldMessages,
+    error: errorOldMessages,
+  } = useGetMessagesQuery({ chatId, page }, { skip: !chatId });
+
+  useErrors([
+    { isError: isErrorChatDetails, error: errorChatDetails },
+    { isError: isErrorOldMessages, error: errorOldMessages },
+    { isError: isErrorChats, error: errorChats },
+  ]);
+
+  const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
+    containerRef,
+    oldMessagesChunks?.totalPages,
+    page,
+    setPage,
+    oldMessagesChunks?.messages
+  );
+
+  const allMessages = [...oldMessages, ...messages];
+
+  const chatMembers = chatDetails?.chat?.members || [];
+  const members = (chatDetails?.chat?.members || []).map((member) => member._id);
+
+  const messageChangeHandler = (e) => {
+    setMessage(e.target.value);
+
+    if (!socket) return;
+
+    if (!MeTyping) {
+      socket.emit(START_TYPING, {
+        members,
+        chatId,
+        senderId: user._id,
+      });
+      setMeTyping(true);
+    }
+
+    if (typingTimeout.current) {
+      clearTimeout(typingTimeout.current);
+    }
+
+    typingTimeout.current = setTimeout(() => {
+      setMeTyping(false);
+      socket.emit(STOP_TYPING, {
+        members,
+        chatId,
+        senderId: user._id,
+      });
+    }, 2000);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (!message.trim() || !socket || !socket.connected) return;
+    if (!members || members.length === 0) return;
+
+    socket.emit(NEW_MESSAGE, {
+      message,
+      chatId,
+      members,
+    });
+    socket.emit(STOP_TYPING, {
+      members,
+      chatId,
+      senderId: user._id,
+    });
+    setMessage("");
+  };
+
+  const alertHandler = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      const messageForAlert = {
+        content: data.message,
+        sender: {
+          _id: Date.now(),
+          name: "System",
+        },
+        chat: chatId,
+        createdAt: new Date().toISOString(),
+      };
+
+      setMessages((prevMessages) => [...prevMessages, messageForAlert]);
+    },
+    [chatId]
+  );
+
+  const newMessagesListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      setMessages((prevMessages) => [...prevMessages, data.message]);
+    },
+    [chatId]
+  );
+
+  const startTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      const { senderId } = data;
+      const member = chatMembers?.find((member) => member._id === senderId);
+      if (member) {
+        setUserNameTyping(member.name);
+      }
+    },
+    [chatId, chatMembers]
+  );
+
+  const stopTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      const { senderId } = data;
+      const member = chatMembers?.find((member) => member._id === senderId);
+      if (member) {
+        setUserNameTyping(null);
+      }
+    },
+    [chatId, chatMembers]
+  );
+
+  const newMessagesAlertListener = useCallback(
+    (data) => {
+      if (data.chatId === chatId) return; // Ignore alerts for the current active chat
+      dispatch(setNewMessagesAlert(data));
+    },
+    [dispatch, chatId]
+  );
+
+  const newRequestListener = useCallback(() => {
+    dispatch(incrementNotificationCount());
+  }, [dispatch]);
+
+  const refetchChatsListener = useCallback(
+    (data) => {
+      if (data) {
+        toast.success(data, {
+          duration: 1000,
+        });
+      }
+      refetchChats();
+    },
+    [refetchChats]
+  );
+
+  const onlineUsersListener = useCallback((data) => {
+    setOnlineUsers(data.onlineUsers);
+  }, []);
+
+  const eventHandler = {
+    [ALERT]: alertHandler,
+    [NEW_MESSAGE]: newMessagesListener,
+    [START_TYPING]: startTypingListener,
+    [STOP_TYPING]: stopTypingListener,
+    [NEW_MESSAGE_ALERT]: newMessagesAlertListener,
+    [NEW_REQUEST]: newRequestListener,
+    [REFETCH_CHATS]: refetchChatsListener,
+    [ONLINE_USERS]: onlineUsersListener,
+  };
+
+  useSocketEvents(socket, eventHandler);
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [allMessages]);
+
+  useEffect(() => {
+    if (!socket || !user) return;
+
+    socket.emit(CHAT_JOINED, {
+      chatId,
+      userId: user._id,
+      members,
+    });
+    dispatch(removeNewMessagesAlert(chatId));
+
+    return () => {
+      setMessages([]);
+      setPage(1);
+      setOldMessages([]);
+      setMessage("");
+      socket.emit(CHAT_LEAVED, {
+        chatId,
+        userId: user._id,
+        members,
+      });
+    };
+  }, [chatId, socket, user]);
+
+  useEffect(() => {
+    if (isErrorOldMessages || isErrorChatDetails) {
+      router.push("/");
+    }
+  }, [isErrorOldMessages, isErrorChatDetails]);
+
+  useEffect(() => {
+    getOrSaveFromStorage({
+      key: NEW_MESSAGE_ALERT,
+      value: newMessagesAlert,
+    });
+  }, [newMessagesAlert]);
+
+  if (isLoadingChatDetails) {
+    return (
+      <>
+        <Header />
+        <Stack
+          sx={{
+            width: "100%",
+            height: "calc(100vh - 4rem)",
+            backgroundColor: grayColor,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography>Loading...</Typography>
+        </Stack>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Header />
+      <DeleteChatMenu deleteOptionAnchor={deleteOptionAnchor} />
+
+      {isLoadingChatDetails ? (
+        <Skeleton />
+      ) : (
+        <Drawer
+          open={isMobile}
+          onClose={handleMobileClose}
+          anchor="right"
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: "80vw",
+              background: gradientBg,
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            },
+          }}
+          onClick={handleMobileClose}
+        >
+          <ChatList
+            w="80vw"
+            chats={chatsData?.chats}
+            chatId={chatId}
+            newMessagesAlert={newMessagesAlert}
+            onlineUsers={onlineUsers}
+            handleDeleteChat={handleDeleteChat}
+          />
+        </Drawer>
+      )}
+
+      {isLoadingChatDetails ? (
+        <Skeleton />
+      ) : (
+        <Drawer
+          open={isProfile}
+          onClose={handleProfileClose}
+          anchor="left"
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: {
+                xs: "85vw",
+                sm: "75vw",
+                md: "42vw",
+              },
+              background: gradientBg,
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            },
+          }}
+        >
+          <Profile />
+        </Drawer>
+      )}
+
+      <Grid container height={"calc(100vh - 4rem)"}>
+        <Grid
+          size={{ sm: 4, md: 5, lg: 3 }}
+          sx={{
+            display: { xs: "none", sm: "block" },
+            background: gradientBg,
+          }}
+          height={"100%"}
+        >
+          {isLoadingChatDetails ? (
+            <Stack spacing={"1rem"}>
+              {Array.from({ length: 8 }, (_, index) => (
+                <Skeleton key={index} variant="rounded" height={95} />
+              ))}
+            </Stack>
+          ) : (
+            <ChatList
+              chats={chatsData?.chats}
+              chatId={chatId}
+              newMessagesAlert={newMessagesAlert}
+              onlineUsers={onlineUsers}
+              handleDeleteChat={handleDeleteChat}
+            />
+          )}
+        </Grid>
+
+        <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height={"100%"}>
+          <Fragment>
+            <Stack
+              ref={containerRef}
+              boxSizing="border-box"
+              padding={"1rem"}
+              spacing={"1rem"}
+              bgcolor={grayColor}
+              height={"90%"}
+              sx={{
+                overflowX: "hidden",
+                overflowY: "auto",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
+              {allMessages.length === 0 ? (
+                <Stack
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  spacing={"1rem"}
+                >
+                  <Typography variant="h3" color="black">
+                    No Messages Yet
+                  </Typography>
+                  <Typography variant="h5" color="black">
+                    Start the conversation
+                  </Typography>
+                </Stack>
+              ) : (
+                <>
+                  {allMessages.map((msg) => (
+                    <MessageComponent message={msg} key={msg._id} />
+                  ))}
+                </>
+              )}
+              {userNameTyping && <TypingLoader username={userNameTyping} />}
+              <div ref={bottomRef} />
+            </Stack>
+            <form
+              style={{
+                height: "10%",
+                background: "#00f2fe",
+              }}
+              onSubmit={submitHandler}
+            >
+              <Stack
+                direction={"row"}
+                height={"100%"}
+                padding={"1rem"}
+                alignItems={"center"}
+              >
+                <IconButton
+                  onClick={handleFileOpen}
+                  disabled={uploadingLoader}
+                  sx={{
+                    rotate: "30deg",
+                    backgroundColor: orange,
+                    marginRight: "1rem",
+                    color: "white",
+                  }}
+                >
+                  <AttachFileIcon />
+                </IconButton>
+
+                <InputBox
+                  placeholder="Type a message..."
+                  value={message}
+                  onChange={messageChangeHandler}
+                  sx={{
+                    padding: "1rem",
+                    borderRadius: "250px",
+                    backgroundColor: "white",
+                    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
+
+                <IconButton
+                  type="submit"
+                  sx={{
+                    rotate: "-30deg",
+                    backgroundColor: orange,
+                    color: "white",
+                    marginLeft: "1rem",
+                    padding: "0.4rem",
+                    "&:hover": {
+                      bgcolor: "error.dark",
+                    },
+                  }}
+                >
+                  <SendIcon />
+                </IconButton>
+              </Stack>
+            </form>
+
+            <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
+          </Fragment>
+        </Grid>
+
+        <Grid
+          size={{ lg: 3 }}
+          sx={{
+            display: { xs: "none", lg: "block" },
+          }}
+          height={"100%"}
+        >
+          <Profile />
+        </Grid>
+      </Grid>
+    </>
+  );
+}
+
+export default function Chat() {
+  return (
+    <ProtectedRoute>
+      <ChatContent />
+    </ProtectedRoute>
+  );
+}
