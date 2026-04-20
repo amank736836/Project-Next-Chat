@@ -1,8 +1,10 @@
 "use client";
 
 import { Stack } from "@mui/material";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import ChatItem from "./ChatItem";
+
+const CHAT_LIST_WINDOW_STEP = 40;
 
 function ChatList({
   w = "100%",
@@ -13,9 +15,32 @@ function ChatList({
   newMessagesAlert = [],
   onSelectChat,
 }) {
+  const [visibleCount, setVisibleCount] = useState(CHAT_LIST_WINDOW_STEP);
+
+  useEffect(() => {
+    setVisibleCount(CHAT_LIST_WINDOW_STEP);
+  }, [chats]);
+
+  const visibleChats = useMemo(
+    () => chats.slice(0, Math.min(visibleCount, chats.length)),
+    [chats, visibleCount]
+  );
+
+  const handleScroll = useCallback(
+    (event) => {
+      const list = event.currentTarget;
+      const nearBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 120;
+
+      if (nearBottom && visibleCount < chats.length) {
+        setVisibleCount((prev) => Math.min(prev + CHAT_LIST_WINDOW_STEP, chats.length));
+      }
+    },
+    [visibleCount, chats.length]
+  );
+
   const chatItems = useMemo(
     () =>
-      chats.map((data, index) => {
+      visibleChats.map((data, index) => {
         const { _id, avatar, name, groupChat, members = [] } = data;
 
         const newMessageCount = newMessagesAlert.find(
@@ -42,7 +67,7 @@ function ChatList({
           />
         );
       }),
-    [chats, newMessagesAlert, onlineUsers, chatId, handleDeleteChat, onSelectChat]
+    [visibleChats, newMessagesAlert, onlineUsers, chatId, handleDeleteChat, onSelectChat]
   );
 
   return (
@@ -61,6 +86,7 @@ function ChatList({
           display: "none",
         },
       }}
+      onScroll={handleScroll}
     >
       {chatItems}
     </Stack>

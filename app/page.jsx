@@ -1,9 +1,10 @@
 "use client";
 
 import { Box, Stack, Typography, Drawer, Grid, Skeleton } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { gradientBg } from "../constants/color";
 import {
   NEW_MESSAGE_ALERT,
@@ -25,29 +26,35 @@ import {
   setSelectedDeleteChat,
 } from "../redux/reducers/misc.reducer";
 import { useSocket } from "../providers/SocketProvider";
-import Header from "../components/layout/Header";
-import ChatList from "../components/shared/ChatList";
-import Profile from "../components/shared/Profile";
 import DeleteChatMenu from "../components/dialog/DeleteChatMenu";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 
+const Header = dynamic(() => import("../components/layout/Header"));
+const ChatList = dynamic(() => import("../components/shared/ChatList"));
+const Profile = dynamic(() => import("../components/shared/Profile"));
+
 function HomeContent() {
   const { newMessagesAlert } = useSelector((state) => state.chat);
-  const { isMobile, isProfile } = useSelector((state) => state.misc);
-  const { user } = useSelector((state) => state.auth);
+  const { isMobile, isProfile } = useSelector(
+    (state) => ({
+      isMobile: state.misc.isMobile,
+      isProfile: state.misc.isProfile,
+    }),
+    shallowEqual
+  );
 
   const [onlineUsers, setOnlineUsers] = useState([]);
   const dispatch = useDispatch();
   const socket = useSocket();
   const deleteOptionAnchor = useRef(null);
 
-  const handleMobileClose = () => {
+  const handleMobileClose = useCallback(() => {
     dispatch(setIsMobile(false));
-  };
+  }, [dispatch]);
 
-  const handleProfileClose = () => {
+  const handleProfileClose = useCallback(() => {
     dispatch(setIsProfile(false));
-  };
+  }, [dispatch]);
 
   const {
     data: chatsData,
@@ -64,12 +71,12 @@ function HomeContent() {
     },
   ]);
 
-  const handleDeleteChat = (e, chatId, groupChat) => {
+  const handleDeleteChat = useCallback((e, chatId, groupChat) => {
     e.preventDefault();
     deleteOptionAnchor.current = e.currentTarget;
     dispatch(setIsDeleteMenu(true));
     dispatch(setSelectedDeleteChat({ chatId, groupChat }));
-  };
+  }, [dispatch]);
 
   const newMessagesAlertListener = useCallback(
     (data) => {
@@ -99,12 +106,33 @@ function HomeContent() {
     setOnlineUsers(data.onlineUsers);
   }, []);
 
-  const eventHandlers = {
-    [NEW_MESSAGE_ALERT]: newMessagesAlertListener,
-    [NEW_REQUEST]: newRequestListener,
-    [REFETCH_CHATS]: refetchChatsListener,
-    [ONLINE_USERS]: onlineUsersListener,
-  };
+  const eventHandlers = useMemo(
+    () => ({
+      [NEW_MESSAGE_ALERT]: newMessagesAlertListener,
+      [NEW_REQUEST]: newRequestListener,
+      [REFETCH_CHATS]: refetchChatsListener,
+      [ONLINE_USERS]: onlineUsersListener,
+    }),
+    [
+      newMessagesAlertListener,
+      newRequestListener,
+      refetchChatsListener,
+      onlineUsersListener,
+    ]
+  );
+
+  const hasChatListData = useMemo(
+    () => (chatsData?.chats?.length || 0) > 0,
+    [chatsData?.chats]
+  );
+  const chatListData = useMemo(() => chatsData?.chats || [], [chatsData?.chats]);
+  const chatListSkeleton = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, index) => (
+        <Skeleton key={index} variant="rounded" height={95} />
+      )),
+    []
+  );
 
   useSocketEvents(socket, eventHandlers);
 
@@ -120,7 +148,7 @@ function HomeContent() {
       <Header />
       <DeleteChatMenu deleteOptionAnchor={deleteOptionAnchor} />
 
-      {isLoadingChats ? (
+      {isLoadingChats && !hasChatListData ? (
         <Skeleton />
       ) : (
         <Drawer
@@ -138,7 +166,7 @@ function HomeContent() {
         >
           <ChatList
             w="80vw"
-            chats={chatsData?.chats}
+            chats={chatListData}
             chatId={null}
             newMessagesAlert={newMessagesAlert}
             onlineUsers={onlineUsers}
@@ -147,7 +175,7 @@ function HomeContent() {
         </Drawer>
       )}
 
-      {isLoadingChats ? (
+      {isLoadingChats && !hasChatListData ? (
         <Skeleton />
       ) : (
         <Drawer
@@ -181,13 +209,11 @@ function HomeContent() {
         >
           {isLoadingChats ? (
             <Stack spacing={"1rem"}>
-              {Array.from({ length: 8 }, (_, index) => (
-                <Skeleton key={index} variant="rounded" height={95} />
-              ))}
+              {chatListSkeleton}
             </Stack>
           ) : (
             <ChatList
-              chats={chatsData?.chats}
+              chats={chatListData}
               chatId={null}
               newMessagesAlert={newMessagesAlert}
               onlineUsers={onlineUsers}

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import {
   ArcElement,
   CategoryScale,
@@ -54,18 +55,21 @@ const LineChartOptions = {
 const labels = getLast7Days();
 
 export function LineChart({ value = [] }) {
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        data: value,
-        label: "Messages",
-        fill: true,
-        backgroundColor: lightPurple,
-        borderColor: purple,
-      },
-    ],
-  };
+  const data = useMemo(
+    () => ({
+      labels,
+      datasets: [
+        {
+          data: value,
+          label: "Messages",
+          fill: true,
+          backgroundColor: lightPurple,
+          borderColor: purple,
+        },
+      ],
+    }),
+    [value]
+  );
 
   return <Line data={data} options={LineChartOptions} />;
 }
@@ -84,19 +88,22 @@ const DoughnutChartOptions = {
 };
 
 export function DoughnutChart({ value = [], labels = [] }) {
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        data: value,
-        fill: true,
-        borderColor: [purple, orange],
-        hoverBackgroundColor: [purple, orange],
-        backgroundColor: [lightPurple, lightOrange],
-        offset: 40,
-      },
-    ],
-  };
+  const data = useMemo(
+    () => ({
+      labels,
+      datasets: [
+        {
+          data: value,
+          fill: true,
+          borderColor: [purple, orange],
+          hoverBackgroundColor: [purple, orange],
+          backgroundColor: [lightPurple, lightOrange],
+          offset: 40,
+        },
+      ],
+    }),
+    [labels, value]
+  );
 
   return (
     <Doughnut
@@ -106,3 +113,6 @@ export function DoughnutChart({ value = [], labels = [] }) {
     />
   );
 }
+
+export const MemoizedLineChart = memo(LineChart);
+export const MemoizedDoughnutChart = memo(DoughnutChart);

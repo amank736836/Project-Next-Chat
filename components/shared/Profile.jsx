@@ -10,7 +10,7 @@ import {
 import { Avatar, Box, Stack, Switch, Typography } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { gradientBg } from "../../constants/color";
@@ -22,27 +22,29 @@ export default function Profile() {
   const { user } = useSelector((state) => state.auth);
 
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const profileUrl = `${baseUrl}/u/${user?.username}`;
+  const profileUrl = useMemo(() => `${baseUrl}/u/${user?.username || ""}`, [baseUrl, user?.username]);
 
-  const copyToClipboard = () => {
+  const copyToClipboard = useCallback(() => {
+    if (!profileUrl) return;
     navigator.clipboard.writeText(profileUrl);
     toast.success("Profile URL copied to clipboard!", {
       duration: 2000,
     });
-  };
+  }, [profileUrl]);
 
   const [isAcceptingMessage, setIsAcceptingMessage] = useState(
     user?.isAcceptingMessage || false
   );
 
-  const handleAcceptMessages = async () => {
-    setIsAcceptingMessage((prev) => !prev);
+  const handleAcceptMessages = useCallback(async () => {
+    const nextState = !isAcceptingMessage;
+    setIsAcceptingMessage(nextState);
     const toastId = toast.loading("Updating Accepting Messages...");
     try {
       const response = await axios.post(
         `${AUTH_API_BASE}/acceptMessages`,
         {
-          isAcceptingMessage: !isAcceptingMessage,
+          isAcceptingMessage: nextState,
         },
         {
           withCredentials: true,
@@ -52,28 +54,29 @@ export default function Profile() {
       if (response.data.success) {
         toast.success(
           `You are now ${
-            !isAcceptingMessage ? "accepting" : "not accepting"
+            nextState ? "accepting" : "not accepting"
           } messages!`,
           {
             duration: 1000,
             id: toastId,
           }
         );
-        setIsAcceptingMessage(!isAcceptingMessage);
       } else {
+        setIsAcceptingMessage(!nextState);
         toast.error("Failed to update accepting messages", {
           duration: 1000,
           id: toastId,
         });
       }
     } catch (error) {
+      setIsAcceptingMessage(!nextState);
       console.error(error);
       toast.error("Failed to update accepting messages", {
         duration: 1000,
         id: toastId,
       });
     }
-  };
+  }, [isAcceptingMessage]);
 
   if (!user) return null;
 
@@ -160,7 +163,7 @@ export default function Profile() {
   );
 }
 
-const ProfileCard = ({ text, Icon, heading, handler = () => {} }) => (
+const ProfileCard = memo(({ text, Icon, heading, handler = () => {} }) => (
   <Stack
     spacing={1}
     direction="row"
@@ -187,4 +190,4 @@ const ProfileCard = ({ text, Icon, heading, handler = () => {} }) => (
       </Typography>
     </Stack>
   </Stack>
-);
+));

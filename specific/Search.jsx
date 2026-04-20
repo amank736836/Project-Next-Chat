@@ -43,7 +43,7 @@ export default function Search() {
       isError: isErrorSearchUser,
       error: errorSearchUser,
     },
-  ] = useLazySearchUserQuery(search.value);
+  ] = useLazySearchUserQuery();
 
   const [
     sendFriendRequest,
@@ -77,10 +77,6 @@ export default function Search() {
     if (!isSearch) return;
 
     const query = search.value.trim();
-    if (!query) {
-      setUsers([]);
-      return;
-    }
 
     const timeOutId = setTimeout(() => {
       const runSearch = async () => {

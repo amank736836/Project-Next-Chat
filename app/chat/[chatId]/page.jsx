@@ -70,6 +70,7 @@ import ProtectedRoute from "../../../components/auth/ProtectedRoute";
 const Header = dynamic(() => import("../../../components/layout/Header"));
 const ChatList = dynamic(() => import("../../../components/shared/ChatList"));
 const Profile = dynamic(() => import("../../../components/shared/Profile"));
+const MESSAGE_WINDOW_STEP = 120;
 
 function ChatContent() {
   const params = useParams();
@@ -102,6 +103,7 @@ function ChatContent() {
 
   const [replyingTo, setReplyingTo] = useState(null);
   const [selectedChatId, setSelectedChatId] = useState(chatId);
+  const [visibleMessageCount, setVisibleMessageCount] = useState(MESSAGE_WINDOW_STEP);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -192,16 +194,17 @@ function ChatContent() {
       )),
     []
   );
-  const renderedMessages = useMemo(
+
+  const displayedMessages = useMemo(
     () =>
-      allMessages.map((msg) => (
-        <MessageComponent
-          message={msg}
-          key={msg._id}
-          onReply={handleReplyToMessage}
-        />
-      )),
-    [allMessages, handleReplyToMessage]
+      allMessages.length <= visibleMessageCount
+        ? allMessages
+        : allMessages.slice(-visibleMessageCount),
+    [allMessages, visibleMessageCount]
+  );
+  const hiddenMessagesCount = useMemo(
+    () => Math.max(allMessages.length - displayedMessages.length, 0),
+    [allMessages.length, displayedMessages.length]
   );
 
   const messageChangeHandler = useCallback((e) => {
@@ -265,6 +268,32 @@ function ChatContent() {
     setReplyingTo(null);
     setMessage("");
   }, []);
+
+  const renderedMessages = useMemo(
+    () =>
+      displayedMessages.map((msg) => (
+        <MessageComponent
+          message={msg}
+          key={msg._id}
+          onReply={handleReplyToMessage}
+        />
+      )),
+    [displayedMessages, handleReplyToMessage]
+  );
+
+  const handleMessageListScroll = useCallback(
+    (event) => {
+      const scroller = event.currentTarget;
+      const nearTop = scroller.scrollTop <= 120;
+
+      if (nearTop && displayedMessages.length < allMessages.length) {
+        setVisibleMessageCount((prev) =>
+          Math.min(prev + MESSAGE_WINDOW_STEP, allMessages.length)
+        );
+      }
+    },
+    [displayedMessages.length, allMessages.length]
+  );
 
   const alertHandler = useCallback(
     (data) => {
@@ -415,6 +444,10 @@ function ChatContent() {
     setSelectedChatId((prev) => (prev === chatId ? prev : chatId));
   }, [chatId]);
 
+  useEffect(() => {
+    setVisibleMessageCount(MESSAGE_WINDOW_STEP);
+  }, [chatId]);
+
   return (
     <>
       <Header />
@@ -510,6 +543,7 @@ function ChatContent() {
                   display: "none",
                 },
               }}
+              onScroll={handleMessageListScroll}
             >
               {isChatWindowLoading ? (
                 <Stack
@@ -541,6 +575,19 @@ function ChatContent() {
                 </Stack>
               ) : (
                 <>
+                  {hiddenMessagesCount > 0 && (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        display: "block",
+                        textAlign: "center",
+                        color: "#555",
+                        mb: "0.25rem",
+                      }}
+                    >
+                      Showing latest {displayedMessages.length} messages. Scroll up to load older loaded messages.
+                    </Typography>
+                  )}
                   {renderedMessages}
                 </>
               )}
