@@ -170,7 +170,13 @@ export default function Username() {
   }, [username, user, fetchSuggestedMessages]);
 
   const handleMessageClick = (msg) => {
+    if (isOwner) return;
     setContent(msg);
+  };
+
+  const handleSuggestionTemplateClick = (msg) => {
+    if (!isOwner) return;
+    setNewQuestion(msg);
   };
 
   return (
@@ -266,7 +272,32 @@ export default function Username() {
           <Typography variant="h6" gutterBottom>
             {isOwner ? "Unanswered Suggestions (for visitors)" : "Suggested Messages"}
           </Typography>
-          {messageArray.length > 0 ? (
+          {isOwner ? (
+            messageArray.length > 0 ? (
+              <>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  Click a suggestion to use it as a custom question.
+                </Typography>
+                <Stack spacing={1}>
+                  {messageArray.slice(0, 4).map((msg, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => handleSuggestionTemplateClick(msg)}
+                      variant={newQuestion === msg ? "contained" : "outlined"}
+                      fullWidth
+                      sx={{ justifyContent: "flex-start" }}
+                    >
+                      {msg}
+                    </Button>
+                  ))}
+                </Stack>
+              </>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No suggestions available right now.
+              </Typography>
+            )
+          ) : messageArray.length > 0 ? (
             <Stack spacing={1}>
               {messageArray.slice(0, 4).map((msg, i) => (
                 <Button
