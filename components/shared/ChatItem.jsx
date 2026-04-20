@@ -15,6 +15,7 @@ export default function ChatItem({
   newMessageCount = 0,
   index = 0,
   handleDeleteChat,
+  onSelectChat,
 }) {
   return (
     <Link
@@ -30,6 +31,10 @@ export default function ChatItem({
       onContextMenu={(e) => {
         e.preventDefault();
         handleDeleteChat(e, _id, groupChat);
+      }}
+      onClick={() => {
+        if (sameSender) return;
+        onSelectChat?.(_id);
       }}
     >
       <motion.div

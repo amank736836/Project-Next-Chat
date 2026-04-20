@@ -20,6 +20,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import axios from "axios";
 import { useState, lazy, Suspense } from "react";
 import toast from "react-hot-toast";
@@ -104,19 +105,35 @@ export default function Header() {
         }}
       >
         <Toolbar>
-          <Typography
-            variant="h6"
-            sx={{
-              display: { xs: "none", sm: "block" },
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "color 0.3s",
-              "&:hover": { color: "#FFDA79" },
-            }}
+          <Box
             onClick={() => router.push("/")}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              cursor: "pointer",
+              transition: "opacity 0.3s",
+              "&:hover": { opacity: 0.9 },
+            }}
           >
-            Chat App
-          </Typography>
+            <Image
+              src="/logo.svg"
+              alt="Chat Next logo"
+              width={32}
+              height={32}
+              priority
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                display: { xs: "none", sm: "block" },
+                fontWeight: 700,
+                letterSpacing: "0.3px",
+              }}
+            >
+              Chat Next
+            </Typography>
+          </Box>
 
           <Box sx={{ display: { xs: "block", sm: "none" } }}>
             <IconButton color="inherit" onClick={openMobile}>

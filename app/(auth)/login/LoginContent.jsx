@@ -20,6 +20,11 @@ import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
 const AUTH_API_BASE = "/api/v1/user";
+const hydrationSafeInputSlotProps = {
+  htmlInput: {
+    suppressHydrationWarning: true,
+  },
+};
 
 export default function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
@@ -203,6 +208,7 @@ export default function LoginContent() {
               autoFocus
               value={username.value}
               onChange={username.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <TextField
@@ -215,6 +221,7 @@ export default function LoginContent() {
               autoComplete="current-password"
               value={password.value}
               onChange={password.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <Button
@@ -301,6 +308,7 @@ export default function LoginContent() {
               type="text"
               value={name.value}
               onChange={name.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <TextField
@@ -312,6 +320,7 @@ export default function LoginContent() {
               type="text"
               value={username.value}
               onChange={username.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <TextField
@@ -323,6 +332,7 @@ export default function LoginContent() {
               type="email"
               value={email.value}
               onChange={email.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <TextField
@@ -334,6 +344,7 @@ export default function LoginContent() {
               type="password"
               value={password.value}
               onChange={password.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <TextField
@@ -345,6 +356,7 @@ export default function LoginContent() {
               type="password"
               value={confirmPassword.value}
               onChange={confirmPassword.changeHandler}
+              slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
             <Button

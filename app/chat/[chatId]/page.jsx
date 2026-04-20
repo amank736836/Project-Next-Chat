@@ -93,6 +93,7 @@ function ChatContent() {
   const deleteOptionAnchor = useRef(null);
 
   const [replyingTo, setReplyingTo] = useState(null);
+  const [selectedChatId, setSelectedChatId] = useState(chatId);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -116,6 +117,11 @@ function ChatContent() {
   const handleFileOpen = (e) => {
     dispatch(setIsFileMenu(true));
     setFileMenuAnchor(e.currentTarget);
+  };
+
+  const handleSelectChat = (nextChatId) => {
+    if (nextChatId === selectedChatId) return;
+    setSelectedChatId(nextChatId);
   };
 
   const {
@@ -155,6 +161,7 @@ function ChatContent() {
   );
 
   const allMessages = [...oldMessages, ...messages];
+  const isChatWindowLoading = isLoadingChatDetails || (isLoadingMessages && allMessages.length === 0);
 
   const chatMembers = chatDetails?.chat?.members || [];
   const members = (chatDetails?.chat?.members || []).map((member) => member._id);
@@ -349,79 +356,57 @@ function ChatContent() {
     });
   }, [newMessagesAlert]);
 
-  if (isLoadingChatDetails) {
-    return (
-      <>
-        <Header />
-        <Stack
-          sx={{
-            width: "100%",
-            height: "calc(100vh - 4rem)",
-            backgroundColor: grayColor,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <FullPageLoader minHeight="calc(100vh - 4rem)" />
-        </Stack>
-      </>
-    );
-  }
+  useEffect(() => {
+    setSelectedChatId(chatId);
+  }, [chatId]);
 
   return (
     <>
       <Header />
       <DeleteChatMenu deleteOptionAnchor={deleteOptionAnchor} />
 
-      {isLoadingChatDetails ? (
-        <Skeleton />
-      ) : (
-        <Drawer
-          open={isMobile}
-          onClose={handleMobileClose}
-          anchor="right"
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: "80vw",
-              background: gradientBg,
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            },
-          }}
-          onClick={handleMobileClose}
-        >
-          <ChatList
-            w="80vw"
-            chats={chatsData?.chats}
-            chatId={chatId}
-            newMessagesAlert={newMessagesAlert}
-            onlineUsers={onlineUsers}
-            handleDeleteChat={handleDeleteChat}
-          />
-        </Drawer>
-      )}
+      <Drawer
+        open={isMobile}
+        onClose={handleMobileClose}
+        anchor="right"
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: "80vw",
+            background: gradientBg,
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          },
+        }}
+        onClick={handleMobileClose}
+      >
+        <ChatList
+          w="80vw"
+          chats={chatsData?.chats}
+          chatId={selectedChatId}
+          newMessagesAlert={newMessagesAlert}
+          onlineUsers={onlineUsers}
+          handleDeleteChat={handleDeleteChat}
+          onSelectChat={handleSelectChat}
+        />
+      </Drawer>
 
-      {isLoadingChatDetails ? (
-        <Skeleton />
-      ) : (
-        <Drawer
-          open={isProfile}
-          onClose={handleProfileClose}
-          anchor="left"
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: {
-                xs: "85vw",
-                sm: "75vw",
-                md: "42vw",
-              },
-              background: gradientBg,
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+      <Drawer
+        open={isProfile}
+        onClose={handleProfileClose}
+        anchor="left"
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: {
+              xs: "85vw",
+              sm: "75vw",
+              md: "42vw",
             },
-          }}
-        >
-          <Profile />
-        </Drawer>
-      )}
+            background: gradientBg,
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          },
+        }}
+      >
+        <Profile />
+      </Drawer>
 
       <Grid container height={"calc(100vh - 4rem)"}>
         <Grid
@@ -432,7 +417,7 @@ function ChatContent() {
           }}
           height={"100%"}
         >
-          {isLoadingChatDetails ? (
+          {isLoadingChats ? (
             <Stack spacing={"1rem"}>
               {Array.from({ length: 8 }, (_, index) => (
                 <Skeleton key={index} variant="rounded" height={95} />
@@ -441,10 +426,11 @@ function ChatContent() {
           ) : (
             <ChatList
               chats={chatsData?.chats}
-              chatId={chatId}
+              chatId={selectedChatId}
               newMessagesAlert={newMessagesAlert}
               onlineUsers={onlineUsers}
               handleDeleteChat={handleDeleteChat}
+              onSelectChat={handleSelectChat}
             />
           )}
         </Grid>
@@ -466,7 +452,18 @@ function ChatContent() {
                 },
               }}
             >
-              {allMessages.length === 0 ? (
+              {isChatWindowLoading ? (
+                <Stack
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <FullPageLoader minHeight="100%" />
+                </Stack>
+              ) : allMessages.length === 0 ? (
                 <Stack
                   sx={{
                     width: "100%",

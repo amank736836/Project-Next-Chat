@@ -10,6 +10,7 @@ export default function ChatList({
   onlineUsers = [],
   handleDeleteChat,
   newMessagesAlert = [],
+  onSelectChat,
 }) {
   return (
     <Stack
@@ -51,6 +52,7 @@ export default function ChatList({
             groupChat={groupChat}
             sameSender={_id === chatId}
             handleDeleteChat={handleDeleteChat}
+            onSelectChat={onSelectChat}
           />
         );
       })}
