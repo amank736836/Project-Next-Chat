@@ -52,13 +52,13 @@ export default function Username() {
   const [newQuestion, setNewQuestion] = useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
 
-  const fetchSuggestedMessages = useCallback(async ({ refresh = false } = {}) => {
+  const fetchSuggestedMessages = useCallback(async ({ refresh = false, exclude = "" } = {}) => {
     setIsCompletionLoading(true);
     try {
       const response = await axios.get(NEXT_QUESTIONS_API_BASE, {
         params: {
           username,
-          exclude: messageString,
+          exclude,
           refresh,
         },
       });
@@ -80,7 +80,7 @@ export default function Username() {
     } finally {
       setIsCompletionLoading(false);
     }
-  }, [messageString, username]);
+  }, [username]);
 
   const saveQuestion = async ({ questionId = null, question }) => {
     setSavingQuestionId(questionId || "new");
@@ -94,7 +94,7 @@ export default function Username() {
       if (response.data.success) {
         toast.success("Question saved successfully");
         setNewQuestion("");
-        fetchSuggestedMessages();
+        fetchSuggestedMessages({ exclude: messageString });
       }
     } catch (error) {
       toast.error("Failed to save question");
@@ -150,7 +150,7 @@ export default function Username() {
       toast.success(response.data.message || "Message sent");
       if (response.data.success) {
         setContent("");
-        await fetchSuggestedMessages({ refresh: true });
+        await fetchSuggestedMessages({ refresh: true, exclude: messageString });
       }
     } catch (error) {
       console.error(error);
@@ -166,7 +166,7 @@ export default function Username() {
 
   useEffect(() => {
     if (!username) return;
-    fetchSuggestedMessages({ refresh: false });
+    fetchSuggestedMessages({ refresh: false, exclude: "" });
   }, [username, user, fetchSuggestedMessages]);
 
   const handleMessageClick = (msg) => {
@@ -256,7 +256,7 @@ export default function Username() {
         <Button
           fullWidth
           variant="outlined"
-          onClick={() => fetchSuggestedMessages({ refresh: true })}
+          onClick={() => fetchSuggestedMessages({ refresh: true, exclude: messageString })}
           disabled={isCompletionLoading}
         >
           {isCompletionLoading ? <CircularProgress size={20} /> : "Suggest Messages"}
