@@ -46,6 +46,34 @@ const randomPick = (items, count = SUGGESTION_LIMIT) => {
   return cloned.slice(0, count);
 };
 
+const mixSuggestionsWithUserRatio = ({ personal, global, limit, shuffle = false }) => {
+  const personalPool = shuffle ? randomPick(personal, personal.length) : [...personal];
+  const globalPool = shuffle ? randomPick(global, global.length) : [...global];
+
+  const mixed = [];
+
+  while (mixed.length < limit && (personalPool.length > 0 || globalPool.length > 0)) {
+    const slot = mixed.length;
+    const needsPersonalSlot = slot % 3 === 0;
+
+    if (needsPersonalSlot && personalPool.length > 0) {
+      mixed.push(personalPool.shift());
+      continue;
+    }
+
+    if (globalPool.length > 0) {
+      mixed.push(globalPool.shift());
+      continue;
+    }
+
+    if (personalPool.length > 0) {
+      mixed.push(personalPool.shift());
+    }
+  }
+
+  return mixed;
+};
+
 const ensureGlobalSeeds = async () => {
   const operations = GLOBAL_SEED_QUESTIONS.map((question) => {
     const normalized = normalizeQuestion(question);
@@ -124,14 +152,24 @@ export async function GET(request) {
         answer: item.answer,
       }));
 
-    const availableSuggestions = unanswered
+    const filteredUnanswered = unanswered
       .filter((item) => !excludedSet.has(item.normalizedQuestion))
-      .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question))
+      .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
+
+    const personalSuggestions = filteredUnanswered
+      .filter((item) => item.targetUsername === username)
       .map((item) => item.question);
 
-    const suggestions = shouldRefresh
-      ? randomPick(availableSuggestions, SUGGESTION_LIMIT)
-      : availableSuggestions.slice(0, SUGGESTION_LIMIT);
+    const globalSuggestions = filteredUnanswered
+      .filter((item) => item.targetUsername !== username)
+      .map((item) => item.question);
+
+    const suggestions = mixSuggestionsWithUserRatio({
+      personal: personalSuggestions,
+      global: globalSuggestions,
+      limit: SUGGESTION_LIMIT,
+      shuffle: shouldRefresh,
+    });
 
     return NextResponse.json(
       {

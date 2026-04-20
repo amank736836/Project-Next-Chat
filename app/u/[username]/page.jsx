@@ -37,10 +37,16 @@ export default function Username() {
   const username = params.username;
 
   const { user } = useSelector((state) => state.auth);
+  const [viewerUsername, setViewerUsername] = useState("");
 
   const normalizedUsername = (username || "").toLowerCase();
   const normalizedUserUsername = (user?.username || "").toLowerCase();
-  const isOwner = Boolean(user && normalizedUserUsername === normalizedUsername);
+  const normalizedViewerUsername = (viewerUsername || "").toLowerCase();
+  const isOwner = Boolean(
+    normalizedUsername &&
+      (normalizedUserUsername === normalizedUsername ||
+        normalizedViewerUsername === normalizedUsername)
+  );
 
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +57,32 @@ export default function Username() {
   const [answeredShowcase, setAnsweredShowcase] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchViewer = async () => {
+      try {
+        const { data } = await axios.get(`${nextBackend}/user/me`, {
+          withCredentials: true,
+        });
+
+        if (isMounted) {
+          setViewerUsername(data?.user?.username || "");
+        }
+      } catch {
+        if (isMounted) {
+          setViewerUsername("");
+        }
+      }
+    };
+
+    fetchViewer();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const fetchSuggestedMessages = useCallback(async ({ refresh = false, exclude = "" } = {}) => {
     setIsCompletionLoading(true);
@@ -167,7 +199,7 @@ export default function Username() {
   useEffect(() => {
     if (!username) return;
     fetchSuggestedMessages({ refresh: false, exclude: "" });
-  }, [username, user, fetchSuggestedMessages]);
+  }, [username, fetchSuggestedMessages]);
 
   const handleMessageClick = (msg) => {
     if (isOwner) return;
