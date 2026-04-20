@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import UserItem from "../components/shared/UserItem";
@@ -60,12 +60,12 @@ export default function NewGroupDialog() {
     },
   ]);
 
-  const closeGroupHandler = () => {
+  const closeGroupHandler = useCallback(() => {
     setSelectedMembers([]);
     dispatch(setIsNewGroup(false));
-  };
+  }, [dispatch]);
 
-  const submitHandler = () => {
+  const submitHandler = useCallback(() => {
     if (!groupName.value) return toast.error("Group name is required");
     if (selectedMembers.length < 1) {
       return toast.error("Select at least one member");
@@ -77,9 +77,9 @@ export default function NewGroupDialog() {
     });
 
     closeGroupHandler();
-  };
+  }, [groupName.value, selectedMembers, newGroup, closeGroupHandler]);
 
-  const selectMemberHandler = (userId) => {
+  const selectMemberHandler = useCallback((userId) => {
     if (!userId) return;
     setSelectedMembers((prev) =>
       prev.includes(userId)
@@ -91,7 +91,7 @@ export default function NewGroupDialog() {
         user._id === userId ? { ...user, isAdded: !user.isAdded } : user
       )
     );
-  };
+  }, []);
 
   useEffect(() => {
     if (availableFriends?.friends?.length > 0) {
@@ -101,10 +101,18 @@ export default function NewGroupDialog() {
     }
   }, [availableFriends]);
 
-  useEffect(() => {
-    setMembers((prev) => prev.map((user) => ({ ...user, isAdded: false })));
-    setSelectedMembers([]);
-  }, []);
+  const renderedMembers = useMemo(
+    () =>
+      members.map((user) => (
+        <UserItem
+          user={user}
+          key={user._id}
+          handler={selectMemberHandler}
+          isAdded={Boolean(user.isAdded)}
+        />
+      )),
+    [members, selectMemberHandler]
+  );
 
   return (
     <Dialog open={isNewGroup} onClose={closeGroupHandler}>
@@ -166,14 +174,7 @@ export default function NewGroupDialog() {
               No available friends to add.
             </Typography>
           ) : (
-            members.map((user) => (
-              <UserItem
-                user={user}
-                key={user._id}
-                handler={selectMemberHandler}
-                isAdded={Boolean(user.isAdded)}
-              />
-            ))
+            renderedMembers
           )}
         </Stack>
 

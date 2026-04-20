@@ -3,6 +3,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import moment from "moment";
+import { memo, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { lightBlue } from "../../constants/color";
 import { fileFormat } from "../../lib/features";
@@ -10,13 +11,13 @@ import RenderAttachment from "./RenderAttachment";
 import { useSendFriendRequestMutation } from "../../redux/api/api";
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 
-export default function MessageComponent({ message, onReply }) {
+function MessageComponent({ message, onReply }) {
   const { user } = useSelector((state) => state.auth);
   const { sender, content, attachments = [], createdAt } = message;
 
-  const isSender = sender._id === user._id;
+  const isSender = useMemo(() => sender._id === user._id, [sender._id, user._id]);
 
-  const timeAgo = moment(createdAt).fromNow();
+  const timeAgo = useMemo(() => moment(createdAt).fromNow(), [createdAt]);
 
   const [
     sendFriendRequest,
@@ -34,12 +35,12 @@ export default function MessageComponent({ message, onReply }) {
     },
   ]);
 
-  const sendFriendRequestHandler = async (userId) => {
+  const sendFriendRequestHandler = useCallback(async (userId) => {
     if (!userId) return;
     await sendFriendRequest("Sending friend request...", userId);
-  };
+  }, [sendFriendRequest]);
 
-  const handleReplyClick = () => {
+  const handleReplyClick = useCallback(() => {
     if (!onReply) return;
 
     onReply({
@@ -47,7 +48,7 @@ export default function MessageComponent({ message, onReply }) {
       senderName: sender?.name || "Anonymous",
       content: content || "",
     });
-  };
+  }, [onReply, message._id, sender?.name, content]);
 
   return (
     <motion.div
@@ -136,3 +137,5 @@ export default function MessageComponent({ message, onReply }) {
     </motion.div>
   );
 }
+
+export default memo(MessageComponent);

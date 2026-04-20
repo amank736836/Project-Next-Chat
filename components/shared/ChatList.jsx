@@ -1,9 +1,10 @@
 "use client";
 
 import { Stack } from "@mui/material";
+import { memo, useMemo } from "react";
 import ChatItem from "./ChatItem";
 
-export default function ChatList({
+function ChatList({
   w = "100%",
   chats = [],
   chatId,
@@ -12,24 +13,9 @@ export default function ChatList({
   newMessagesAlert = [],
   onSelectChat,
 }) {
-  return (
-    <Stack
-      height={"100%"}
-      width={w}
-      direction={"column"}
-      spacing={2}
-      sx={{
-        p: {
-          xs: "0.5rem",
-          sm: "1rem",
-        },
-        overflow: "auto",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-      }}
-    >
-      {chats.map((data, index) => {
+  const chatItems = useMemo(
+    () =>
+      chats.map((data, index) => {
         const { _id, avatar, name, groupChat, members = [] } = data;
 
         const newMessageCount = newMessagesAlert.find(
@@ -55,7 +41,30 @@ export default function ChatList({
             onSelectChat={onSelectChat}
           />
         );
-      })}
+      }),
+    [chats, newMessagesAlert, onlineUsers, chatId, handleDeleteChat, onSelectChat]
+  );
+
+  return (
+    <Stack
+      height={"100%"}
+      width={w}
+      direction={"column"}
+      spacing={2}
+      sx={{
+        p: {
+          xs: "0.5rem",
+          sm: "1rem",
+        },
+        overflow: "auto",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+      }}
+    >
+      {chatItems}
     </Stack>
   );
 }
+
+export default memo(ChatList);

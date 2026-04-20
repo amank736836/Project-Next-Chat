@@ -3,9 +3,10 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { memo } from "react";
 import AvatarCard from "./AvatarCard";
 
-export default function ChatItem({
+function ChatItem({
   avatar = [],
   name = "Unknown",
   _id = "",
@@ -32,8 +33,11 @@ export default function ChatItem({
         e.preventDefault();
         handleDeleteChat(e, _id, groupChat);
       }}
-      onClick={() => {
-        if (sameSender) return;
+      onClick={(e) => {
+        if (sameSender) {
+          e.preventDefault();
+          return;
+        }
         onSelectChat?.(_id);
       }}
     >
@@ -78,3 +82,5 @@ export default function ChatItem({
     </Link>
   );
 }
+
+export default memo(ChatItem);

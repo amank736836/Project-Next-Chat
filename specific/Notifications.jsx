@@ -12,7 +12,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useState, memo } from "react";
+import { useCallback, useEffect, useMemo, useState, memo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { dialogBg } from "../constants/color";
@@ -27,7 +27,7 @@ import { setIsNotification } from "../redux/reducers/misc.reducer";
 export default function Notifications() {
   const { isNotification } = useSelector((state) => state.misc);
 
-  const [notification, setNotification] = useState([]);
+  const [notificationList, setNotificationList] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -59,26 +59,27 @@ export default function Notifications() {
     },
   ]);
 
-  const closeNotification = () => {
+  const closeNotification = useCallback(() => {
     dispatch(setIsNotification(false));
-  };
+  }, [dispatch]);
 
-  const friendRequestHandler = async ({ _id, accept }) => {
+  const friendRequestHandler = useCallback(async ({ _id, accept }) => {
     await acceptFriendRequest("Accepting Friend Request...", {
       requestId: _id,
       accept,
     });
-  };
+  }, [acceptFriendRequest]);
 
   useEffect(() => {
     if (acceptFriendRequestData?.success) {
       toast.success(acceptFriendRequestData.message, {
         duration: 1000,
       });
-      setNotification((prev) =>
+      setNotificationList((prev) =>
         prev.filter(
           (notification) =>
-            notification.sender.id !== acceptFriendRequestData.senderId
+            (notification.sender?._id || notification.sender?.id) !==
+            acceptFriendRequestData.senderId
         )
       );
     }
@@ -86,9 +87,22 @@ export default function Notifications() {
 
   useEffect(() => {
     if (notificationsData) {
-      setNotification(notificationsData.allRequests);
+      setNotificationList(notificationsData.allRequests || []);
     }
   }, [notificationsData]);
+
+  const renderedNotifications = useMemo(
+    () =>
+      notificationList.map((notification) => (
+        <NotificationItem
+          sender={notification.sender}
+          _id={notification._id}
+          handler={friendRequestHandler}
+          key={notification._id}
+        />
+      )),
+    [notificationList, friendRequestHandler]
+  );
 
   return (
     <Dialog open={isNotification} onClose={closeNotification}>
@@ -144,18 +158,11 @@ export default function Notifications() {
                 animation: "loading 1.5s infinite",
               }}
             />
-          ) : notification.length > 0 ? (
-            notificationsData.allRequests.map((notification) => (
-              <NotificationItem
-                sender={notification.sender}
-                _id={notification._id}
-                handler={friendRequestHandler}
-                key={notification._id}
-              />
-            ))
+          ) : notificationList.length > 0 ? (
+            renderedNotifications
           ) : (
             <Typography textAlign="center" color="gray">
-              {notification.length === 0
+              {notificationList.length === 0
                 ? "No Notifications yet"
                 : "Error fetching notifications"}
             </Typography>

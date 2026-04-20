@@ -21,7 +21,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { memo, useEffect, useState, lazy, Suspense } from "react";
+import { memo, useEffect, useState, lazy, Suspense, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -107,13 +107,13 @@ function GroupsContent() {
     { isError: isErrorRemoveMember, error: errorRemoveMember },
   ]);
 
-  const navigateBack = () => router.push("/");
-  const handleMobileOpen = () => dispatch(setIsMobile(true));
-  const handleMobileClose = () => dispatch(setIsMobile(false));
-  const openAddMemberHandler = () => dispatch(setIsAddMember(true));
-  const openConfirmDeleteHandler = () => dispatch(setIsDeleteMenu(true));
+  const navigateBack = useCallback(() => router.push("/"), [router]);
+  const handleMobileOpen = useCallback(() => dispatch(setIsMobile(true)), [dispatch]);
+  const handleMobileClose = useCallback(() => dispatch(setIsMobile(false)), [dispatch]);
+  const openAddMemberHandler = useCallback(() => dispatch(setIsAddMember(true)), [dispatch]);
+  const openConfirmDeleteHandler = useCallback(() => dispatch(setIsDeleteMenu(true)), [dispatch]);
 
-  const updateGroupName = () => {
+  const updateGroupName = useCallback(() => {
     setIsEdit(false);
     if (groupName === groupNameUpdatedValue) return;
     setGroupName(groupNameUpdatedValue);
@@ -121,15 +121,15 @@ function GroupsContent() {
       chatId,
       name: groupNameUpdatedValue,
     });
-  };
+  }, [chatId, groupName, groupNameUpdatedValue, updateGroupNameMutation]);
 
-  const removeMemberHandler = async (memberId) => {
+  const removeMemberHandler = useCallback(async (memberId) => {
     if (memberId === groupDetails.chat.creator) return;
     removeMemberMutation("Removing member...", {
       chatId,
       memberId,
     });
-  };
+  }, [chatId, groupDetails?.chat?.creator, removeMemberMutation]);
 
   useEffect(() => {
     if (groupDetails) {
@@ -146,7 +146,7 @@ function GroupsContent() {
     if (isErrorGroupDetails) {
       router.push("/groups");
     }
-  }, [groupDetails]);
+  }, [groupDetails, isErrorGroupDetails, router]);
 
   useEffect(() => {
     return () => {
@@ -156,6 +156,8 @@ function GroupsContent() {
       setIsEdit(false);
     };
   }, [chatId]);
+
+  const groupsList = useMemo(() => myGroups?.groups || [], [myGroups?.groups]);
 
   const IconButtons = (
     <>
@@ -292,7 +294,7 @@ function GroupsContent() {
         position={"relative"}
         overflow={"auto"}
       >
-        <GroupsList myGroups={myGroups?.groups} chatId={chatId} />
+        <GroupsList myGroups={groupsList} chatId={chatId} />
       </Grid>
 
       <Grid
@@ -435,31 +437,42 @@ function GroupsContent() {
           },
         }}
       >
-        <GroupsList w={"70vw"} myGroups={myGroups?.groups} chatId={chatId} />
+        <GroupsList w={"70vw"} myGroups={groupsList} chatId={chatId} />
       </Drawer>
     </Grid>
   );
 }
 
-const GroupsList = ({ w = "100%", myGroups = [], chatId }) => (
-  <Stack sx={{ padding: "0.25rem" }} width={w} height={"100%"}>
-    {myGroups.length > 0 ? (
+const GroupsList = memo(({ w = "100%", myGroups = [], chatId }) => {
+  const renderedGroups = useMemo(
+    () =>
       myGroups.map((group) => (
         <GroupListItem group={group} key={group._id} chatId={chatId} />
-      ))
-    ) : (
-      <Typography textAlign="center" padding="1rem" color="white">
-        No Groups Found
-      </Typography>
-    )}
-  </Stack>
-);
+      )),
+    [myGroups, chatId]
+  );
+
+  return (
+    <Stack sx={{ padding: "0.25rem" }} width={w} height={"100%"}>
+      {myGroups.length > 0 ? (
+        renderedGroups
+      ) : (
+        <Typography textAlign="center" padding="1rem" color="white">
+          No Groups Found
+        </Typography>
+      )}
+    </Stack>
+  );
+});
 
 const GroupListItem = memo(({ group, chatId }) => {
   const { name, avatar, _id } = group;
 
   const dispatch = useDispatch();
-  const handleMobileClose = () => dispatch(setIsMobile(false));
+  const handleMobileClose = useCallback(
+    () => dispatch(setIsMobile(false)),
+    [dispatch]
+  );
 
   return (
     <Link

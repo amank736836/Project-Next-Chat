@@ -11,7 +11,7 @@ import {
   Skeleton,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import UserItem from "../components/shared/UserItem";
@@ -28,9 +28,9 @@ export default function Search() {
 
   const dispatch = useDispatch();
 
-  const closeSearch = () => {
+  const closeSearch = useCallback(() => {
     dispatch(setIsSearch(false));
-  };
+  }, [dispatch]);
 
   const [users, setUsers] = useState([]);
 
@@ -65,30 +65,54 @@ export default function Search() {
     },
   ]);
 
-  const sendFriendRequestHandler = async (userId) => {
+  const sendFriendRequestHandler = useCallback(async (userId) => {
     if (!userId) return;
     await sendFriendRequest("Sending friend request...", userId);
     setUsers((prev) =>
       prev.filter((user) => (user.id || user._id) !== userId)
     );
-  };
+  }, [sendFriendRequest]);
 
   useEffect(() => {
+    if (!isSearch) return;
+
+    const query = search.value.trim();
+    if (!query) {
+      setUsers([]);
+      return;
+    }
+
     const timeOutId = setTimeout(() => {
-      try {
-        searchUser(search.value).then((res) => {
+      const runSearch = async () => {
+        try {
+          const res = await searchUser(query);
           setUsers(res?.data?.users || []);
-        });
-      } catch (error) {
-        console.error(error);
-        toast.error("Error fetching users");
-      }
+        } catch (error) {
+          console.error(error);
+          toast.error("Error fetching users");
+        }
+      };
+
+      runSearch();
     }, 300);
 
     return () => {
       clearTimeout(timeOutId);
     };
-  }, [search.value, searchUser]);
+  }, [isSearch, search.value, searchUser]);
+
+  const renderedUsers = useMemo(
+    () =>
+      users.map((user) => (
+        <UserItem
+          user={user}
+          key={user.id || user._id}
+          handler={sendFriendRequestHandler}
+          handlerIsLoading={isLoadingSendFriendRequest}
+        />
+      )),
+    [users, sendFriendRequestHandler, isLoadingSendFriendRequest]
+  );
 
   return (
     <Dialog open={isSearch} onClose={closeSearch}>
@@ -192,14 +216,7 @@ export default function Search() {
               <p style={{ color: "#555" }}>No users found</p>
             </Box>
           ) : (
-            users.map((user) => (
-              <UserItem
-                user={user}
-                key={user.id || user._id}
-                handler={sendFriendRequestHandler}
-                handlerIsLoading={isLoadingSendFriendRequest}
-              />
-            ))
+            renderedUsers
           )}
         </List>
       </Box>

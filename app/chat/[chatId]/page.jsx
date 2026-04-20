@@ -19,11 +19,13 @@ import {
   Fragment,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import FileMenu from "../../../components/dialog/FileMenu";
 import { FullPageLoader, TypingLoader } from "../../../components/layout/Loaders";
@@ -62,21 +64,27 @@ import {
   setSelectedDeleteChat,
 } from "../../../redux/reducers/misc.reducer";
 import { useSocket } from "../../../providers/SocketProvider";
-import Header from "../../../components/layout/Header";
-import ChatList from "../../../components/shared/ChatList";
-import Profile from "../../../components/shared/Profile";
 import DeleteChatMenu from "../../../components/dialog/DeleteChatMenu";
 import ProtectedRoute from "../../../components/auth/ProtectedRoute";
 
+const Header = dynamic(() => import("../../../components/layout/Header"));
+const ChatList = dynamic(() => import("../../../components/shared/ChatList"));
+const Profile = dynamic(() => import("../../../components/shared/Profile"));
+
 function ChatContent() {
   const params = useParams();
-  const chatId = params.chatId;
+  const chatId = params?.chatId;
 
   const { user } = useSelector((state) => state.auth);
-  const { uploadingLoader, newMessagesAlert, isMobile, isProfile } = useSelector((state) => ({
-    ...state.misc,
-    newMessagesAlert: state.chat.newMessagesAlert,
-  }));
+  const { uploadingLoader, isMobile, isProfile } = useSelector(
+    (state) => ({
+      uploadingLoader: state.misc.uploadingLoader,
+      isMobile: state.misc.isMobile,
+      isProfile: state.misc.isProfile,
+    }),
+    shallowEqual
+  );
+  const newMessagesAlert = useSelector((state) => state.chat.newMessagesAlert);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -99,30 +107,30 @@ function ChatContent() {
   const dispatch = useDispatch();
   const socket = useSocket();
 
-  const handleMobileClose = () => {
+  const handleMobileClose = useCallback(() => {
     dispatch(setIsMobile(false));
-  };
+  }, [dispatch]);
 
-  const handleProfileClose = () => {
+  const handleProfileClose = useCallback(() => {
     dispatch(setIsProfile(false));
-  };
+  }, [dispatch]);
 
-  const handleDeleteChat = (e, chatId, groupChat) => {
+  const handleDeleteChat = useCallback((e, chatId, groupChat) => {
     e.preventDefault();
     deleteOptionAnchor.current = e.currentTarget;
     dispatch(setIsDeleteMenu(true));
     dispatch(setSelectedDeleteChat({ chatId, groupChat }));
-  };
+  }, [dispatch]);
 
-  const handleFileOpen = (e) => {
+  const handleFileOpen = useCallback((e) => {
     dispatch(setIsFileMenu(true));
     setFileMenuAnchor(e.currentTarget);
-  };
+  }, [dispatch]);
 
-  const handleSelectChat = (nextChatId) => {
+  const handleSelectChat = useCallback((nextChatId) => {
     if (nextChatId === selectedChatId) return;
     setSelectedChatId(nextChatId);
-  };
+  }, [selectedChatId]);
 
   const {
     data: chatDetails,
@@ -160,13 +168,43 @@ function ChatContent() {
     oldMessagesChunks?.messages
   );
 
-  const allMessages = [...oldMessages, ...messages];
-  const isChatWindowLoading = isLoadingChatDetails || (isLoadingMessages && allMessages.length === 0);
+  const allMessages = useMemo(() => [...oldMessages, ...messages], [oldMessages, messages]);
+  const isChatWindowLoading = useMemo(
+    () => isLoadingChatDetails || (isLoadingMessages && allMessages.length === 0),
+    [isLoadingChatDetails, isLoadingMessages, allMessages.length]
+  );
 
-  const chatMembers = chatDetails?.chat?.members || [];
-  const members = (chatDetails?.chat?.members || []).map((member) => member._id);
+  const chatMembers = useMemo(() => chatDetails?.chat?.members || [], [chatDetails?.chat?.members]);
+  const members = useMemo(
+    () => chatMembers.map((member) => member._id),
+    [chatMembers]
+  );
 
-  const messageChangeHandler = (e) => {
+  const hasChatListData = useMemo(
+    () => (chatsData?.chats?.length || 0) > 0,
+    [chatsData?.chats]
+  );
+  const chatListData = useMemo(() => chatsData?.chats || [], [chatsData?.chats]);
+  const chatListSkeleton = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, index) => (
+        <Skeleton key={index} variant="rounded" height={95} />
+      )),
+    []
+  );
+  const renderedMessages = useMemo(
+    () =>
+      allMessages.map((msg) => (
+        <MessageComponent
+          message={msg}
+          key={msg._id}
+          onReply={handleReplyToMessage}
+        />
+      )),
+    [allMessages, handleReplyToMessage]
+  );
+
+  const messageChangeHandler = useCallback((e) => {
     setMessage(e.target.value);
 
     if (!socket) return;
@@ -192,9 +230,9 @@ function ChatContent() {
         senderId: user._id,
       });
     }, 2000);
-  };
+  }, [socket, MeTyping, members, chatId, user?._id]);
 
-  const submitHandler = (e) => {
+  const submitHandler = useCallback((e) => {
     e.preventDefault();
     if (!message.trim() || !socket || !socket.connected) return;
     if (!members || members.length === 0) return;
@@ -215,13 +253,18 @@ function ChatContent() {
     });
     setMessage("");
     setReplyingTo(null);
-  };
+  }, [message, socket, members, replyingTo, chatId, user?._id]);
 
-  const handleReplyToMessage = (selectedMessage) => {
+  const handleReplyToMessage = useCallback((selectedMessage) => {
     setReplyingTo(selectedMessage);
     setMessage((prevMessage) => prevMessage || `@${selectedMessage.senderName} `);
     inputRef.current?.focus();
-  };
+  }, []);
+
+  const handleCancelReply = useCallback(() => {
+    setReplyingTo(null);
+    setMessage("");
+  }, []);
 
   const alertHandler = useCallback(
     (data) => {
@@ -301,16 +344,28 @@ function ChatContent() {
     setOnlineUsers(data.onlineUsers);
   }, []);
 
-  const eventHandler = {
-    [ALERT]: alertHandler,
-    [NEW_MESSAGE]: newMessagesListener,
-    [START_TYPING]: startTypingListener,
-    [STOP_TYPING]: stopTypingListener,
-    [NEW_MESSAGE_ALERT]: newMessagesAlertListener,
-    [NEW_REQUEST]: newRequestListener,
-    [REFETCH_CHATS]: refetchChatsListener,
-    [ONLINE_USERS]: onlineUsersListener,
-  };
+  const eventHandler = useMemo(
+    () => ({
+      [ALERT]: alertHandler,
+      [NEW_MESSAGE]: newMessagesListener,
+      [START_TYPING]: startTypingListener,
+      [STOP_TYPING]: stopTypingListener,
+      [NEW_MESSAGE_ALERT]: newMessagesAlertListener,
+      [NEW_REQUEST]: newRequestListener,
+      [REFETCH_CHATS]: refetchChatsListener,
+      [ONLINE_USERS]: onlineUsersListener,
+    }),
+    [
+      alertHandler,
+      newMessagesListener,
+      startTypingListener,
+      stopTypingListener,
+      newMessagesAlertListener,
+      newRequestListener,
+      refetchChatsListener,
+      onlineUsersListener,
+    ]
+  );
 
   useSocketEvents(socket, eventHandler);
 
@@ -341,13 +396,13 @@ function ChatContent() {
         members,
       });
     };
-  }, [chatId, socket, user]);
+  }, [chatId, socket, user, members, dispatch, setOldMessages]);
 
   useEffect(() => {
     if (isErrorOldMessages || isErrorChatDetails) {
       router.push("/");
     }
-  }, [isErrorOldMessages, isErrorChatDetails]);
+  }, [isErrorOldMessages, isErrorChatDetails, router]);
 
   useEffect(() => {
     getOrSaveFromStorage({
@@ -357,7 +412,7 @@ function ChatContent() {
   }, [newMessagesAlert]);
 
   useEffect(() => {
-    setSelectedChatId(chatId);
+    setSelectedChatId((prev) => (prev === chatId ? prev : chatId));
   }, [chatId]);
 
   return (
@@ -378,18 +433,24 @@ function ChatContent() {
         }}
         onClick={handleMobileClose}
       >
-        <ChatList
-          w="80vw"
-          chats={chatsData?.chats}
-          chatId={selectedChatId}
-          newMessagesAlert={newMessagesAlert}
-          onlineUsers={onlineUsers}
-          handleDeleteChat={handleDeleteChat}
-          onSelectChat={handleSelectChat}
-        />
+        {isLoadingChats && !hasChatListData ? (
+          <Stack spacing={"1rem"} sx={{ p: "1rem" }}>
+            {chatListSkeleton}
+          </Stack>
+        ) : (
+          <ChatList
+            w="80vw"
+            chats={chatListData}
+            chatId={selectedChatId}
+            newMessagesAlert={newMessagesAlert}
+            onlineUsers={onlineUsers}
+            handleDeleteChat={handleDeleteChat}
+            onSelectChat={handleSelectChat}
+          />
+        )}
       </Drawer>
 
-      <Drawer
+        <Drawer
         open={isProfile}
         onClose={handleProfileClose}
         anchor="left"
@@ -417,15 +478,13 @@ function ChatContent() {
           }}
           height={"100%"}
         >
-          {isLoadingChats ? (
+          {isLoadingChats && !hasChatListData ? (
             <Stack spacing={"1rem"}>
-              {Array.from({ length: 8 }, (_, index) => (
-                <Skeleton key={index} variant="rounded" height={95} />
-              ))}
+              {chatListSkeleton}
             </Stack>
           ) : (
             <ChatList
-              chats={chatsData?.chats}
+              chats={chatListData}
               chatId={selectedChatId}
               newMessagesAlert={newMessagesAlert}
               onlineUsers={onlineUsers}
@@ -482,13 +541,7 @@ function ChatContent() {
                 </Stack>
               ) : (
                 <>
-                  {allMessages.map((msg) => (
-                    <MessageComponent
-                      message={msg}
-                      key={msg._id}
-                      onReply={handleReplyToMessage}
-                    />
-                  ))}
+                  {renderedMessages}
                 </>
               )}
               {userNameTyping && <TypingLoader username={userNameTyping} />}
@@ -528,10 +581,7 @@ function ChatContent() {
                 <Button
                   size="small"
                   variant="text"
-                  onClick={() => {
-                    setReplyingTo(null);
-                    setMessage("");
-                  }}
+                  onClick={handleCancelReply}
                   sx={{ textTransform: "none" }}
                 >
                   Cancel
