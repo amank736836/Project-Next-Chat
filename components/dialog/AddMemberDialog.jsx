@@ -130,7 +130,7 @@ export default function AddMemberDialog({ chatId }) {
                 />
               ))
             ) : (
-              <Typography textAlign={"center"}>No Known Found</Typography>
+              <Typography textAlign={"center"}>No Friends Found</Typography>
             )}
           </List>
         </Stack>
