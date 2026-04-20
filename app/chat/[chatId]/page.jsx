@@ -172,8 +172,8 @@ function ChatContent() {
 
   const allMessages = useMemo(() => [...oldMessages, ...messages], [oldMessages, messages]);
   const isChatWindowLoading = useMemo(
-    () => isLoadingChatDetails || (isLoadingMessages && allMessages.length === 0),
-    [isLoadingChatDetails, isLoadingMessages, allMessages.length]
+    () => isLoadingMessages && allMessages.length === 0,
+    [isLoadingMessages, allMessages.length]
   );
 
   const chatMembers = useMemo(() => chatDetails?.chat?.members || [], [chatDetails?.chat?.members]);

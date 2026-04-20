@@ -19,7 +19,7 @@ function ChatList({
 
   useEffect(() => {
     setVisibleCount(CHAT_LIST_WINDOW_STEP);
-  }, [chats]);
+  }, [chats.length]);
 
   const visibleChats = useMemo(
     () => chats.slice(0, Math.min(visibleCount, chats.length)),
