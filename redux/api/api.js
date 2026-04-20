@@ -1,12 +1,21 @@
 "use client";
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { server } from "../../constants/config";
+
+const backendBaseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+
+const getSocketBackedUrl = (path) => {
+  if (!backendBaseUrl) {
+    throw new Error("NEXT_PUBLIC_SERVER_URL is required for socket-backed API calls");
+  }
+
+  return `${backendBaseUrl}${path}`;
+};
 
 const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${server}`,
+    baseUrl: "/api/v1",
   }),
   tagTypes: ["Chat", "User", "Request"],
   refetchOnFocus: true,
@@ -74,7 +83,7 @@ const api = createApi({
     }),
     sendFriendRequest: builder.mutation({
       query: (userId) => ({
-        url: `/user/sendRequest`,
+        url: getSocketBackedUrl("/user/sendRequest"),
         body: { userId },
         method: "PUT",
         credentials: "include",
@@ -83,7 +92,7 @@ const api = createApi({
     }),
     acceptFriendRequest: builder.mutation({
       query: (data) => ({
-        url: `/user/acceptRequest`,
+        url: getSocketBackedUrl("/user/acceptRequest"),
         body: data,
         method: "PUT",
         credentials: "include",
@@ -92,15 +101,23 @@ const api = createApi({
     }),
     sendAttachments: builder.mutation({
       query: (data) => ({
-        url: "/chat/message",
+        url: getSocketBackedUrl("/chat/message"),
         method: "POST",
         body: data,
         credentials: "include",
       }),
     }),
+    sendChatMessage: builder.mutation({
+      query: ({ chatId, content }) => ({
+        url: getSocketBackedUrl("/chat/message/text"),
+        method: "POST",
+        body: { chatId, content },
+        credentials: "include",
+      }),
+    }),
     newGroup: builder.mutation({
       query: (data) => ({
-        url: "/chat/group",
+        url: getSocketBackedUrl("/chat/group"),
         method: "POST",
         body: data,
         credentials: "include",
@@ -109,7 +126,7 @@ const api = createApi({
     }),
     renameGroup: builder.mutation({
       query: ({ chatId, name }) => ({
-        url: `/chat/${chatId}`,
+        url: getSocketBackedUrl(`/chat/${chatId}`),
         method: "PUT",
         body: { name },
         credentials: "include",
@@ -118,7 +135,7 @@ const api = createApi({
     }),
     removeMember: builder.mutation({
       query: ({ chatId, memberId }) => ({
-        url: `/chat/removeMember`,
+        url: getSocketBackedUrl("/chat/removeMember"),
         method: "PUT",
         body: { chatId, memberId },
         credentials: "include",
@@ -127,7 +144,7 @@ const api = createApi({
     }),
     addMembers: builder.mutation({
       query: ({ members, chatId }) => ({
-        url: `/chat/group`,
+        url: getSocketBackedUrl("/chat/group"),
         method: "PUT",
         body: { members, chatId },
         credentials: "include",
@@ -136,7 +153,7 @@ const api = createApi({
     }),
     deleteChat: builder.mutation({
       query: (chatId) => ({
-        url: `/chat/${chatId}`,
+        url: getSocketBackedUrl(`/chat/${chatId}`),
         method: "DELETE",
         credentials: "include",
       }),
@@ -144,7 +161,7 @@ const api = createApi({
     }),
     leaveGroup: builder.mutation({
       query: (chatId) => ({
-        url: `/chat/group`,
+        url: getSocketBackedUrl("/chat/group"),
         method: "DELETE",
         body: { chatId },
         credentials: "include",
@@ -204,6 +221,7 @@ export const {
   useGetChatsDashboardStatsQuery,
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
+  useSendChatMessageMutation,
   useSendAttachmentsMutation,
   useNewGroupMutation,
   useRenameGroupMutation,

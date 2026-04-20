@@ -13,14 +13,20 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { gradientBg } from "../../../constants/color";
-import { server } from "../../../constants/config";
+
+const CHAT_API_BASE = "/api/v1/chat";
+const QUESTIONS_API_BASE = "/api/v1/chat/questions";
+const BACKEND_API_BASE = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const specialChar = "||";
 
 const parseStringMessages = (messageString) => {
-  return messageString.split(specialChar).map((msg) => msg.trim());
+  return messageString
+    .split(specialChar)
+    .map((msg) => msg.trim())
+    .filter(Boolean);
 };
 
 const initialMessageString =
@@ -32,7 +38,9 @@ export default function Username() {
 
   const { user } = useSelector((state) => state.auth);
 
-  const router = useRouter();
+  const normalizedUsername = (username || "").toLowerCase();
+  const normalizedUserUsername = (user?.username || "").toLowerCase();
+  const isOwner = Boolean(user && normalizedUserUsername === normalizedUsername);
 
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,39 +48,26 @@ export default function Username() {
   const [messageArray, setMessageArray] = useState([]);
   const [isCompletionLoading, setIsCompletionLoading] = useState(false);
   const [completionError, setCompletionError] = useState(null);
+  const [answeredShowcase, setAnsweredShowcase] = useState([]);
+  const [newQuestion, setNewQuestion] = useState("");
+  const [savingQuestionId, setSavingQuestionId] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!content) return;
-
-    setIsLoading(true);
-    try {
-      const response = await axios.post(`${server}/chat/sendMessage`, {
-        content,
-        username,
-        sender: user,
-      });
-
-      toast.success(response.data.message || "Message sent");
-      if (response.data.success) setContent("");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to send message. Please try again.");
-    } finally {
-      setIsLoading(false);
-      fetchSuggestedMessages();
-    }
-  };
-
-  const fetchSuggestedMessages = useCallback(async () => {
+  const fetchSuggestedMessages = useCallback(async ({ refresh = false } = {}) => {
     setIsCompletionLoading(true);
     try {
-      const response = await axios.post(`${server}/chat/suggestMessages`, {
-        exclude: messageString,
+      const response = await axios.get(QUESTIONS_API_BASE, {
+        params: {
+          username,
+          exclude: messageString,
+          refresh,
+        },
       });
 
       if (response.data.success) {
-        setMessageString(response.data.message);
+        const nextSuggestions = (response.data.suggestions || []).join(specialChar);
+        setMessageString(nextSuggestions || initialMessageString);
+        setAnsweredShowcase(response.data.answered || []);
+
         setCompletionError(null);
       } else {
         setMessageString(initialMessageString);
@@ -85,7 +80,91 @@ export default function Username() {
     } finally {
       setIsCompletionLoading(false);
     }
-  }, [messageString]);
+  }, [messageString, username]);
+
+  const saveQuestion = async ({ questionId = null, question }) => {
+    setSavingQuestionId(questionId || "new");
+    try {
+      const response = await axios.put(QUESTIONS_API_BASE, {
+        username,
+        questionId,
+        question,
+      });
+
+      if (response.data.success) {
+        toast.success("Question saved successfully");
+        setNewQuestion("");
+        fetchSuggestedMessages();
+      }
+    } catch (error) {
+      toast.error("Failed to save question");
+    } finally {
+      setSavingQuestionId(null);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!content) return;
+
+    if (isOwner) {
+      toast.error("Owner cannot ask questions on own board.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      if (!BACKEND_API_BASE) {
+        toast.error("NEXT_PUBLIC_SERVER_URL is required to send messages.");
+        setIsLoading(false);
+        return;
+      }
+
+      const askedQuestion = content.trim();
+
+      const questionStatus = await axios.post(QUESTIONS_API_BASE, {
+        username,
+        question: askedQuestion,
+      });
+
+      if (questionStatus.data.success && questionStatus.data.alreadyAnswered) {
+        toast.success("This question is already answered. Showing existing answer.");
+        setAnsweredShowcase((prev) => {
+          const exists = prev.some(
+            (item) => item.question.toLowerCase() === questionStatus.data.question.toLowerCase()
+          );
+          if (exists) return prev;
+          return [
+            {
+              id: `local-${Date.now()}`,
+              question: questionStatus.data.question,
+              answer: questionStatus.data.answer,
+            },
+            ...prev,
+          ];
+        });
+        setContent("");
+        return;
+      }
+
+      const response = await axios.post(`${BACKEND_API_BASE}/chat/sendMessage`, {
+        content,
+        username,
+        sender: user,
+      });
+
+      toast.success(response.data.message || "Message sent");
+      if (response.data.success) {
+        setContent("");
+        await fetchSuggestedMessages({ refresh: true });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     setMessageArray(parseStringMessages(messageString));
@@ -93,13 +172,8 @@ export default function Username() {
 
   useEffect(() => {
     if (!username) return;
-    if (user && user.username === username) {
-      toast.error("You are not authorized to view this page.");
-      router.push("/");
-      return;
-    }
-    fetchSuggestedMessages();
-  }, [username, user]);
+    fetchSuggestedMessages({ refresh: false });
+  }, [username, user, fetchSuggestedMessages]);
 
   const handleMessageClick = (msg) => {
     setContent(msg);
@@ -112,53 +186,80 @@ export default function Username() {
         background: gradientBg,
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-start",
         padding: "2rem",
       }}
     >
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 1150,
+          display: "grid",
+          gap: 3,
+          gridTemplateColumns: { xs: "1fr", md: "minmax(0, 2fr) minmax(280px, 1fr)" },
+        }}
+      >
       <Stack
         spacing={3}
         component={Paper}
         elevation={4}
         sx={{
-          maxWidth: 600,
           width: "100%",
           padding: "2rem",
           borderRadius: "16px",
         }}
       >
         <Typography variant="h5" align="center" fontWeight={600}>
-          Send Anonymous Message to @{username}
+          {isOwner ? `Manage Your Message Board (@${username})` : `Send Anonymous Message to @${username}`}
         </Typography>
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            placeholder="Write your anonymous message here"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            variant="outlined"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isLoading || !content}
-            sx={{ mt: 2 }}
-          >
-            {isLoading ? <CircularProgress size={24} /> : "Send Message"}
-          </Button>
-        </form>
+        {!isOwner ? (
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              placeholder="Write your anonymous message here"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              variant="outlined"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={isLoading || !content}
+              sx={{ mt: 2 }}
+            >
+              {isLoading ? <CircularProgress size={24} /> : "Send Message"}
+            </Button>
+          </form>
+        ) : (
+          <Stack spacing={1.5}>
+            <Typography variant="h6">Create Custom Question</Typography>
+            <TextField
+              fullWidth
+              label="Question"
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              disabled={!newQuestion.trim() || savingQuestionId === "new"}
+              onClick={() => saveQuestion({ question: newQuestion })}
+            >
+              {savingQuestionId === "new" ? <CircularProgress size={20} /> : "Save Custom Question"}
+            </Button>
+          </Stack>
+        )}
 
         <Button
           fullWidth
           variant="outlined"
-          onClick={fetchSuggestedMessages}
+          onClick={() => fetchSuggestedMessages({ refresh: true })}
           disabled={isCompletionLoading}
         >
-          {isCompletionLoading ? "Loading..." : "Suggest Messages"}
+          {isCompletionLoading ? <CircularProgress size={20} /> : "Suggest Messages"}
         </Button>
 
         {completionError && (
@@ -169,11 +270,11 @@ export default function Username() {
 
         <Box>
           <Typography variant="h6" gutterBottom>
-            Suggested Messages
+            {isOwner ? "Unanswered Suggestions (for visitors)" : "Suggested Messages"}
           </Typography>
           {messageArray.length > 0 ? (
             <Stack spacing={1}>
-              {messageArray.map((msg, i) => (
+              {messageArray.slice(0, 4).map((msg, i) => (
                 <Button
                   key={i}
                   onClick={() => handleMessageClick(msg)}
@@ -203,6 +304,43 @@ export default function Username() {
           </Button>
         </Box>
       </Stack>
+
+      <Paper
+        elevation={3}
+        sx={{
+          p: 2,
+          borderRadius: "16px",
+          position: { md: "sticky" },
+          top: { md: 24 },
+          maxHeight: { md: "calc(100vh - 48px)" },
+          overflowY: { md: "auto" },
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Answer Showcase
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          Previously answered questions for @{username}
+        </Typography>
+
+        {answeredShowcase.length > 0 ? (
+          <Stack spacing={1.5}>
+            {answeredShowcase.map((item) => (
+              <Paper key={item.id} variant="outlined" sx={{ p: 1.5 }}>
+                <Typography fontWeight={600}>{item.question}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  {item.answer}
+                </Typography>
+              </Paper>
+            ))}
+          </Stack>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No answered questions yet
+          </Typography>
+        )}
+      </Paper>
+      </Box>
     </Box>
   );
 }

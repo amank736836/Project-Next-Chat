@@ -7,9 +7,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
-import { server } from "../../../constants/config";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
+
+const AUTH_API_BASE = "/api/v1/user";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
@@ -37,7 +38,7 @@ export default function VerifyContent() {
       };
 
       const { data } = await axios.post(
-        `${server}/user/verify`,
+        `${AUTH_API_BASE}/verify`,
         {
           identifier: identifier.value,
           verifyCode: verifyCode,

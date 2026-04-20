@@ -10,7 +10,7 @@ import RenderAttachment from "./RenderAttachment";
 import { useSendFriendRequestMutation } from "../../redux/api/api";
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 
-export default function MessageComponent({ message }) {
+export default function MessageComponent({ message, onReply }) {
   const { user } = useSelector((state) => state.auth);
   const { sender, content, attachments = [], createdAt } = message;
 
@@ -37,6 +37,16 @@ export default function MessageComponent({ message }) {
   const sendFriendRequestHandler = async (userId) => {
     if (!userId) return;
     await sendFriendRequest("Sending friend request...", userId);
+  };
+
+  const handleReplyClick = () => {
+    if (!onReply) return;
+
+    onReply({
+      id: message._id,
+      senderName: sender?.name || "Anonymous",
+      content: content || "",
+    });
   };
 
   return (
@@ -97,9 +107,32 @@ export default function MessageComponent({ message }) {
 
       {content && <Typography>{content}</Typography>}
 
-      <Typography variant="caption" color={isSender ? "white" : "black"}>
-        {timeAgo}
-      </Typography>
+      <Box
+        sx={{
+          mt: 0.4,
+          display: "flex",
+          alignItems: "center",
+          gap: 0.8,
+        }}
+      >
+        <Typography variant="caption" color={isSender ? "white" : "black"}>
+          {timeAgo}
+        </Typography>
+        <Button
+          size="small"
+          variant="text"
+          onClick={handleReplyClick}
+          sx={{
+            minWidth: "auto",
+            p: 0,
+            lineHeight: 1,
+            textTransform: "none",
+            color: isSender ? "white" : "#1976d2",
+          }}
+        >
+          Reply
+        </Button>
+      </Box>
     </motion.div>
   );
 }

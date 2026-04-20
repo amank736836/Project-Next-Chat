@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Container, Paper, Typography } from "@mui/material";
+import { CircularProgress, Container, Paper } from "@mui/material";
 import { authBg } from "../../../constants/color";
 import VerifyContent from "./VerifyContent";
 
@@ -40,9 +40,7 @@ export default function Verify() {
         >
           <Suspense
             fallback={
-              <Typography variant="h5" fontWeight={600} color="primary">
-                Loading...
-              </Typography>
+              <CircularProgress color="primary" />
             }
           >
             <VerifyContent />

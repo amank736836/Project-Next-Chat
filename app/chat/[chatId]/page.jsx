@@ -6,6 +6,7 @@ import {
   Send as SendIcon,
 } from "@mui/icons-material";
 import {
+  Button,
   IconButton,
   Stack,
   Typography,
@@ -25,8 +26,8 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import FileMenu from "../../../components/dialog/FileMenu";
-import { TypingLoader } from "../../../components/layout/Loaders";
-import MessageComponent from "../../../components/shared/MessageComponent";
+import { FullPageLoader, TypingLoader } from "../../../components/layout/Loaders";
+import MessageComponent from "../../../components/shared/MessageComponent";    
 import { InputBox } from "../../../components/styles/StyledComponents";
 import { grayColor, orange, gradientBg } from "../../../constants/color";
 import {
@@ -88,7 +89,10 @@ function ChatContent() {
   const typingTimeout = useRef(null);
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
+  const inputRef = useRef(null);
   const deleteOptionAnchor = useRef(null);
+
+  const [replyingTo, setReplyingTo] = useState(null);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -188,8 +192,12 @@ function ChatContent() {
     if (!message.trim() || !socket || !socket.connected) return;
     if (!members || members.length === 0) return;
 
+    const formattedMessage = replyingTo
+      ? `Reply to ${replyingTo.senderName}: ${message.trim()}`
+      : message;
+
     socket.emit(NEW_MESSAGE, {
-      message,
+      message: formattedMessage,
       chatId,
       members,
     });
@@ -199,6 +207,13 @@ function ChatContent() {
       senderId: user._id,
     });
     setMessage("");
+    setReplyingTo(null);
+  };
+
+  const handleReplyToMessage = (selectedMessage) => {
+    setReplyingTo(selectedMessage);
+    setMessage((prevMessage) => prevMessage || `@${selectedMessage.senderName} `);
+    inputRef.current?.focus();
   };
 
   const alertHandler = useCallback(
@@ -347,7 +362,7 @@ function ChatContent() {
             alignItems: "center",
           }}
         >
-          <Typography>Loading...</Typography>
+          <FullPageLoader minHeight="calc(100vh - 4rem)" />
         </Stack>
       </>
     );
@@ -471,13 +486,62 @@ function ChatContent() {
               ) : (
                 <>
                   {allMessages.map((msg) => (
-                    <MessageComponent message={msg} key={msg._id} />
+                    <MessageComponent
+                      message={msg}
+                      key={msg._id}
+                      onReply={handleReplyToMessage}
+                    />
                   ))}
                 </>
               )}
               {userNameTyping && <TypingLoader username={userNameTyping} />}
               <div ref={bottomRef} />
             </Stack>
+
+            {replyingTo && (
+              <Box
+                sx={{
+                  px: "1rem",
+                  py: "0.4rem",
+                  bgcolor: "#e3f2fd",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "1rem",
+                }}
+              >
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography variant="body2" sx={{ color: "#0d47a1", fontWeight: 600 }}>
+                    Replying to {replyingTo.senderName}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "#0d47a1",
+                      display: "block",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: { xs: "180px", sm: "360px", md: "520px" },
+                    }}
+                  >
+                    {replyingTo.content || "(no text message)"}
+                  </Typography>
+                </Box>
+                <Button
+                  size="small"
+                  variant="text"
+                  onClick={() => {
+                    setReplyingTo(null);
+                    setMessage("");
+                  }}
+                  sx={{ textTransform: "none" }}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            )}
+
             <form
               style={{
                 height: "10%",
@@ -508,6 +572,7 @@ function ChatContent() {
                   placeholder="Type a message..."
                   value={message}
                   onChange={messageChangeHandler}
+                  ref={inputRef}
                   sx={{
                     padding: "1rem",
                     borderRadius: "250px",

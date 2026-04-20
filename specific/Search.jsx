@@ -68,14 +68,16 @@ export default function Search() {
   const sendFriendRequestHandler = async (userId) => {
     if (!userId) return;
     await sendFriendRequest("Sending friend request...", userId);
-    setUsers((prev) => prev.filter((user) => user.id !== userId));
+    setUsers((prev) =>
+      prev.filter((user) => (user.id || user._id) !== userId)
+    );
   };
 
   useEffect(() => {
     const timeOutId = setTimeout(() => {
       try {
         searchUser(search.value).then((res) => {
-          setUsers(res.data.users);
+          setUsers(res?.data?.users || []);
         });
       } catch (error) {
         console.error(error);
@@ -193,7 +195,7 @@ export default function Search() {
             users.map((user) => (
               <UserItem
                 user={user}
-                key={user.id}
+                key={user.id || user._id}
                 handler={sendFriendRequestHandler}
                 handlerIsLoading={isLoadingSendFriendRequest}
               />

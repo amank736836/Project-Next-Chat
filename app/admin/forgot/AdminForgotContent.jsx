@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
-import { server } from "../../../constants/config";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
+
+const AUTH_API_BASE = "/api/v1/user";
 
 export default function AdminForgotContent() {
   const [isForgotPassword, setIsForgotPassword] = useState(true);
@@ -50,7 +51,7 @@ export default function AdminForgotContent() {
 
     try {
       const res = await axios.post(
-        `${server}/user/forgotPassword`,
+        `${AUTH_API_BASE}/forgotPassword`,
         {
           identifier: identifier.value,
         },
@@ -90,7 +91,7 @@ export default function AdminForgotContent() {
       };
 
       const { data } = await axios.post(
-        `${server}/user/updatePassword`,
+        `${AUTH_API_BASE}/updatePassword`,
         {
           identifier: identifier.value,
           password: password.value,

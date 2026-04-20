@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid, Skeleton, Stack, Typography } from "@mui/material";
+import { CircularProgress, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import { BouncingSkeleton } from "../styles/StyledComponents";
 
 export function LayoutLoader() {
@@ -108,6 +108,22 @@ export function TypingLoader({ username }) {
           background: "linear-gradient(45deg, #f3ec78, #af4261)",
         }}
       />
+    </Stack>
+  );
+}
+
+export function FullPageLoader({ message = "Loading...", minHeight = "100vh" }) {
+  return (
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      spacing={1.5}
+      sx={{ minHeight, width: "100%" }}
+    >
+      <CircularProgress color="inherit" />
+      <Typography variant="body2" color="inherit">
+        {message}
+      </Typography>
     </Stack>
   );
 }

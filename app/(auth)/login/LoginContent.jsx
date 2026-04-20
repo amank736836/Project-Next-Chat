@@ -16,9 +16,10 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import { VisuallyHiddenInput } from "../../../components/styles/StyledComponents";
-import { server } from "../../../constants/config";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
+
+const AUTH_API_BASE = "/api/v1/user";
 
 export default function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
@@ -66,7 +67,7 @@ export default function LoginContent() {
 
     try {
       const res = await axios.post(
-        `${server}/user/login`,
+        `${AUTH_API_BASE}/login`,
         {
           identifier: username.value,
           password: password.value,
@@ -150,7 +151,7 @@ export default function LoginContent() {
         withCredentials: true,
       };
 
-      const { data } = await axios.post(`${server}/user/new`, formDate, config);
+      const { data } = await axios.post(`${AUTH_API_BASE}/new`, formDate, config);
 
       dispatch(userExists(data.user));
 

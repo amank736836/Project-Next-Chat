@@ -27,6 +27,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AvatarCard from "../../components/shared/AvatarCard";
 import UserItem from "../../components/shared/UserItem";
+import { FullPageLoader } from "../../components/layout/Loaders";
 import { gradientBg } from "../../constants/color";
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 import {
@@ -270,7 +271,7 @@ function GroupsContent() {
   return isLoadingMyGroups ? (
     <Grid container height="100vh">
       <Grid size={12}>
-        <Typography textAlign="center" sx={{ mt: 4 }}>Loading...</Typography>
+        <FullPageLoader minHeight="100vh" />
       </Grid>
     </Grid>
   ) : (
@@ -508,7 +509,7 @@ const GroupListItem = memo(({ group, chatId }) => {
 export default function Groups() {
   return (
     <ProtectedRoute>
-      <Suspense fallback={<Typography>Loading...</Typography>}>
+      <Suspense fallback={<FullPageLoader minHeight="100vh" />}>
         <GroupsContent />
       </Suspense>
     </ProtectedRoute>

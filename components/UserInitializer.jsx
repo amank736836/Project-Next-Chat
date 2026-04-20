@@ -3,8 +3,9 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { server } from "../constants/config";
 import { userExists, userNotExists } from "../redux/reducers/auth.reducer";
+
+const AUTH_API_BASE = "/api/v1/user";
 
 export default function UserInitializer() {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ export default function UserInitializer() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`${server}/user/me`, {
+        const { data } = await axios.get(`${AUTH_API_BASE}/me`, {
           withCredentials: true,
         });
         dispatch(userExists(data.user));

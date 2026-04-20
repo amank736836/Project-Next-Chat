@@ -14,8 +14,9 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { gradientBg } from "../../constants/color";
-import { server } from "../../constants/config";
 import { transformImageUrl } from "../../lib/features";
+
+const AUTH_API_BASE = "/api/v1/user";
 
 export default function Profile() {
   const { user } = useSelector((state) => state.auth);
@@ -39,7 +40,7 @@ export default function Profile() {
     const toastId = toast.loading("Updating Accepting Messages...");
     try {
       const response = await axios.post(
-        `${server}/user/acceptMessages`,
+        `${AUTH_API_BASE}/acceptMessages`,
         {
           isAcceptingMessage: !isAcceptingMessage,
         },

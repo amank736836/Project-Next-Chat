@@ -11,7 +11,8 @@ export default function UserItem({
   isAdded = false,
   styling = {},
 }) {
-  const { _id, name, avatar } = user;
+  const userId = user?._id || user?.id;
+  const { name, avatar } = user;
 
   return (
     <ListItem>
@@ -38,7 +39,7 @@ export default function UserItem({
         </Typography>
 
         <IconButton
-          onClick={() => handler(_id)}
+          onClick={() => handler(userId)}
           disabled={handlerIsLoading}
           size="small"
           sx={{

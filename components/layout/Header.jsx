@@ -24,7 +24,6 @@ import axios from "axios";
 import { useState, lazy, Suspense } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { server } from "../../constants/config";
 import { userNotExists } from "../../redux/reducers/auth.reducer";
 import { resetNotificationCount } from "../../redux/reducers/chat.reducer";
 import {
@@ -39,6 +38,8 @@ import { useRouter } from "next/navigation";
 const SearchDialog = lazy(() => import("../../specific/Search"));
 const NotificationsDialog = lazy(() => import("../../specific/Notifications"));
 const NewGroupDialog = lazy(() => import("../../specific/NewGroup"));
+
+const AUTH_API_BASE = "/api/v1/user";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ export default function Header() {
     let toastId = toast.loading("Logging out...");
 
     try {
-      const { data } = await axios.get(`${server}/user/logout`, {
+      const { data } = await axios.get(`${AUTH_API_BASE}/logout`, {
         withCredentials: true,
       });
 
