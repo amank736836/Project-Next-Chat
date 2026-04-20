@@ -14,11 +14,11 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
+import { nextBackend, socketBackend } from "../../../constants/config";
 import { gradientBg } from "../../../constants/color";
 
-const CHAT_API_BASE = "/api/v1/chat";
-const QUESTIONS_API_BASE = "/api/v1/chat/questions";
-const BACKEND_API_BASE = process.env.NEXT_PUBLIC_SERVER_URL;
+const NEXT_QUESTIONS_API_BASE = `${nextBackend}/chat/questions`;
+const SOCKET_CHAT_API_BASE = `${socketBackend}/chat`;
 
 const specialChar = "||";
 
@@ -55,7 +55,7 @@ export default function Username() {
   const fetchSuggestedMessages = useCallback(async ({ refresh = false } = {}) => {
     setIsCompletionLoading(true);
     try {
-      const response = await axios.get(QUESTIONS_API_BASE, {
+      const response = await axios.get(NEXT_QUESTIONS_API_BASE, {
         params: {
           username,
           exclude: messageString,
@@ -85,7 +85,7 @@ export default function Username() {
   const saveQuestion = async ({ questionId = null, question }) => {
     setSavingQuestionId(questionId || "new");
     try {
-      const response = await axios.put(QUESTIONS_API_BASE, {
+      const response = await axios.put(NEXT_QUESTIONS_API_BASE, {
         username,
         questionId,
         question,
@@ -114,15 +114,9 @@ export default function Username() {
 
     setIsLoading(true);
     try {
-      if (!BACKEND_API_BASE) {
-        toast.error("NEXT_PUBLIC_SERVER_URL is required to send messages.");
-        setIsLoading(false);
-        return;
-      }
-
       const askedQuestion = content.trim();
 
-      const questionStatus = await axios.post(QUESTIONS_API_BASE, {
+      const questionStatus = await axios.post(NEXT_QUESTIONS_API_BASE, {
         username,
         question: askedQuestion,
       });
@@ -147,7 +141,7 @@ export default function Username() {
         return;
       }
 
-      const response = await axios.post(`${BACKEND_API_BASE}/chat/sendMessage`, {
+      const response = await axios.post(`${SOCKET_CHAT_API_BASE}/sendMessage`, {
         content,
         username,
         sender: user,

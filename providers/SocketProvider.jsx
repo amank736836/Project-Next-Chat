@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
+import { socketServer } from "../constants/config";
 
 const SocketContext = createContext();
 
@@ -11,7 +12,12 @@ export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
+    if (!socketServer) {
+      console.warn("Socket server URL is not configured.");
+      return;
+    }
+
+    const socketInstance = io(socketServer, {
       withCredentials: true,
     });
 

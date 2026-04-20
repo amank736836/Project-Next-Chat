@@ -1,21 +1,16 @@
 "use client";
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-const backendBaseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+import { nextBackend, socketBackend } from "../../constants/config";
 
 const getSocketBackedUrl = (path) => {
-  if (!backendBaseUrl) {
-    throw new Error("NEXT_PUBLIC_SERVER_URL is required for socket-backed API calls");
-  }
-
-  return `${backendBaseUrl}${path}`;
+  return `${socketBackend}${path}`;
 };
 
 const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api/v1",
+    baseUrl: nextBackend,
   }),
   tagTypes: ["Chat", "User", "Request"],
   refetchOnFocus: true,
