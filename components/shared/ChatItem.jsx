@@ -42,9 +42,9 @@ function ChatItem({
       }}
     >
       <motion.div
-        initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.001 * index, duration: 0.1, ease: "easeInOut" }}
+        initial={false}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.08, ease: "easeInOut" }}
         style={{
           display: "flex",
           alignItems: "center",

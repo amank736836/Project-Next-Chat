@@ -104,6 +104,7 @@ function ChatContent() {
   const [replyingTo, setReplyingTo] = useState(null);
   const [selectedChatId, setSelectedChatId] = useState(chatId);
   const [visibleMessageCount, setVisibleMessageCount] = useState(MESSAGE_WINDOW_STEP);
+  const [stableChats, setStableChats] = useState([]);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -147,7 +148,11 @@ function ChatContent() {
     isError: isErrorChats,
     error: errorChats,
     refetch: refetchChats,
-  } = useGetMyChatsQuery("");
+  } = useGetMyChatsQuery("", {
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+  });
 
   const {
     data: oldMessagesChunks,
@@ -182,11 +187,12 @@ function ChatContent() {
     [chatMembers]
   );
 
+  const hasResolvedChats = useMemo(() => Array.isArray(chatsData?.chats), [chatsData?.chats]);
   const hasChatListData = useMemo(
-    () => (chatsData?.chats?.length || 0) > 0,
-    [chatsData?.chats]
+    () => stableChats.length > 0,
+    [stableChats.length]
   );
-  const chatListData = useMemo(() => chatsData?.chats || [], [chatsData?.chats]);
+  const chatListData = useMemo(() => stableChats, [stableChats]);
   const chatListSkeleton = useMemo(
     () =>
       Array.from({ length: 8 }, (_, index) => (
@@ -445,6 +451,12 @@ function ChatContent() {
   }, [chatId]);
 
   useEffect(() => {
+    if (Array.isArray(chatsData?.chats)) {
+      setStableChats(chatsData.chats);
+    }
+  }, [chatsData?.chats]);
+
+  useEffect(() => {
     setVisibleMessageCount(MESSAGE_WINDOW_STEP);
   }, [chatId]);
 
@@ -466,7 +478,7 @@ function ChatContent() {
         }}
         onClick={handleMobileClose}
       >
-        {isLoadingChats && !hasChatListData ? (
+        {isLoadingChats && !hasResolvedChats && !hasChatListData ? (
           <Stack spacing={"1rem"} sx={{ p: "1rem" }}>
             {chatListSkeleton}
           </Stack>
@@ -511,7 +523,7 @@ function ChatContent() {
           }}
           height={"100%"}
         >
-          {isLoadingChats && !hasChatListData ? (
+          {isLoadingChats && !hasResolvedChats && !hasChatListData ? (
             <Stack spacing={"1rem"}>
               {chatListSkeleton}
             </Stack>
