@@ -62,6 +62,7 @@ export default function Username() {
   const [answeredShowcase, setAnsweredShowcase] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
+  const [hidingShowcaseId, setHidingShowcaseId] = useState(null);
   const [mobileTab, setMobileTab] = useState("board");
   const [answerShowcasePage, setAnswerShowcasePage] = useState(1);
   const hasAnsweredShowcase = answeredShowcase.length > 0;
@@ -254,6 +255,31 @@ export default function Username() {
     setNewQuestion(msg);
   };
 
+  const hideShowcaseItem = async (item) => {
+    if (!isOwner || !item?.id || !item?.itemType) return;
+
+    setHidingShowcaseId(item.id);
+    try {
+      const response = await axios.patch(NEXT_QUESTIONS_API_BASE, {
+        username,
+        itemId: item.id,
+        itemType: item.itemType,
+      });
+
+      if (response.data.success) {
+        setAnsweredShowcase((prev) => prev.filter((entry) => entry.id !== item.id));
+        toast.success("Showcase item hidden");
+      } else {
+        toast.error("Failed to hide showcase item");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to hide showcase item");
+    } finally {
+      setHidingShowcaseId(null);
+    }
+  };
+
   const boardPanel = (
     <Stack
       spacing={3}
@@ -410,6 +436,18 @@ export default function Username() {
         <Stack spacing={1.5}>
           {pagedAnsweredShowcase.map((item) => (
             <Paper key={item.id} variant="outlined" sx={{ p: 1.5 }}>
+              {isOwner && item.itemType && (
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => hideShowcaseItem(item)}
+                    disabled={hidingShowcaseId === item.id}
+                  >
+                    {hidingShowcaseId === item.id ? "Hiding..." : "Hide"}
+                  </Button>
+                </Box>
+              )}
               <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>
                 Question
               </Typography>

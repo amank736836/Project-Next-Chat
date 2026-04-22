@@ -40,6 +40,19 @@ const parseExclude = (exclude = '') => {
   );
 };
 
+const normalizeShowcaseAnswer = (answer = '') => {
+  const trimmed = (answer || '').trim();
+  const replyPrefixMatch = trimmed.match(/^Reply to\s+.+?:\s*(.*)$/i);
+
+  if (!replyPrefixMatch) return trimmed;
+
+  const replyBody = (replyPrefixMatch[1] || '').trim();
+  const replyBodyWithoutMention = replyBody.replace(/^@\S+\s+/, '').trim();
+  const finalBody = replyBodyWithoutMention || replyBody;
+
+  return finalBody ? `Reply to Anonymous: ${finalBody}` : 'Reply to Anonymous';
+};
+
 const randomPick = (items, count = SUGGESTION_LIMIT) => {
   const cloned = [...items];
   for (let i = cloned.length - 1; i > 0; i -= 1) {
@@ -134,6 +147,7 @@ const getBoardReplyShowcaseForUsername = async (username) => {
     chat: boardChat._id,
     replyTo: { $exists: true },
     'replyTo.content': { $nin: ['', null] },
+    hiddenFromShowcase: { $ne: true },
   })
     .populate('sender', 'name username')
     .sort({ createdAt: -1 })
@@ -142,8 +156,9 @@ const getBoardReplyShowcaseForUsername = async (username) => {
 
   return replyMessages.map((message) => ({
     id: `reply-${message._id}`,
+    itemType: 'reply',
     question: message.replyTo?.content || 'Replied question',
-    answer: message.content || '',
+    answer: normalizeShowcaseAnswer(message.content || ''),
     createdAt: message.createdAt,
   }));
 };
@@ -173,13 +188,14 @@ export async function GET(request) {
 
     const unanswered = pool.filter((item) => !item.answer?.trim());
     const answered = pool
-      .filter((item) => item.answer?.trim())
+      .filter((item) => item.answer?.trim() && !item.hiddenFromShowcase)
       .sort((a, b) => new Date(b.answeredAt || b.updatedAt) - new Date(a.answeredAt || a.updatedAt))
       .slice(0, 20)
       .map((item) => ({
         id: item._id,
+        itemType: 'question',
         question: item.question,
-        answer: item.answer,
+        answer: normalizeShowcaseAnswer(item.answer),
         createdAt: item.answeredAt || item.updatedAt,
       }));
 
@@ -417,6 +433,119 @@ export async function PUT(request) {
   } catch {
     return NextResponse.json(
       { success: false, message: 'Failed to save question' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request) {
+  try {
+    await connectDB();
+    const authUser = await getAuthenticatedUser();
+
+    if (!authUser) {
+      return NextResponse.json(
+        { success: false, message: 'Please login to continue' },
+        { status: 401 }
+      );
+    }
+
+    const { username, itemId, itemType } = await request.json();
+    const normalizedUsername = (username || '').trim().toLowerCase();
+
+    if (!normalizedUsername || normalizedUsername !== authUser.username.toLowerCase()) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized hide attempt' },
+        { status: 403 }
+      );
+    }
+
+    if (!itemId || !itemType) {
+      return NextResponse.json(
+        { success: false, message: 'itemId and itemType are required' },
+        { status: 400 }
+      );
+    }
+
+    if (itemType === 'question') {
+      const updated = await SuggestedQuestion.findOneAndUpdate(
+        {
+          _id: itemId,
+          targetUsername: normalizedUsername,
+        },
+        {
+          $set: {
+            hiddenFromShowcase: true,
+          },
+        },
+        { new: true }
+      );
+
+      if (!updated) {
+        return NextResponse.json(
+          { success: false, message: 'Showcase item not found' },
+          { status: 404 }
+        );
+      }
+    } else if (itemType === 'reply') {
+      const owner = await User.findOne({ username: normalizedUsername }).select('_id').lean();
+
+      if (!owner?._id) {
+        return NextResponse.json(
+          { success: false, message: 'User not found' },
+          { status: 404 }
+        );
+      }
+
+      const boardChat = await Chat.findById(owner._id).select('_id').lean();
+
+      if (!boardChat?._id) {
+        return NextResponse.json(
+          { success: false, message: 'Board chat not found' },
+          { status: 404 }
+        );
+      }
+
+      const replyId = String(itemId).startsWith('reply-')
+        ? String(itemId).slice('reply-'.length)
+        : itemId;
+
+      const updated = await Message.findOneAndUpdate(
+        {
+          _id: replyId,
+          chat: boardChat._id,
+        },
+        {
+          $set: {
+            hiddenFromShowcase: true,
+          },
+        },
+        { new: true }
+      );
+
+      if (!updated) {
+        return NextResponse.json(
+          { success: false, message: 'Reply showcase item not found' },
+          { status: 404 }
+        );
+      }
+    } else {
+      return NextResponse.json(
+        { success: false, message: 'Invalid itemType' },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Showcase item hidden successfully',
+      },
+      { status: 200 }
+    );
+  } catch {
+    return NextResponse.json(
+      { success: false, message: 'Failed to hide showcase item' },
       { status: 500 }
     );
   }

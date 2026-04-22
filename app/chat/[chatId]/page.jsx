@@ -246,8 +246,17 @@ function ChatContent() {
     if (!message.trim() || !socket || !socket.connected) return;
     if (!members || members.length === 0) return;
 
+    const isSenderNameSameAsChatId = Boolean(
+      replyingTo?.senderName &&
+      chatId &&
+      String(replyingTo.senderName).toLowerCase() === String(chatId).toLowerCase()
+    );
+    const replyTargetName = isSenderNameSameAsChatId
+      ? "Anonymous"
+      : (replyingTo?.senderName || "Anonymous");
+
     const formattedMessage = replyingTo
-      ? `Reply to ${replyingTo.senderName}: ${message.trim()}`
+      ? `Reply to ${replyTargetName}: ${message.trim()}`
       : message;
 
     socket.emit(NEW_MESSAGE, {
