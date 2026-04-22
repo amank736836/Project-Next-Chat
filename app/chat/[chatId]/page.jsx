@@ -254,6 +254,12 @@ function ChatContent() {
       message: formattedMessage,
       chatId,
       members,
+      replyTo: replyingTo
+        ? {
+            senderName: replyingTo.senderName,
+            content: replyingTo.content,
+          }
+        : undefined,
     });
     socket.emit(STOP_TYPING, {
       members,

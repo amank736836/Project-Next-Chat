@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import connectDB from '../../../../../lib/server/db.js';
+import Chat from '../../../../../lib/server/models/chat.model.js';
+import Message from '../../../../../lib/server/models/message.model.js';
 import SuggestedQuestion from '../../../../../lib/server/models/suggestedQuestion.model.js';
+import User from '../../../../../lib/server/models/user.model.js';
 import { getAuthenticatedUser } from '../../../../../lib/server/auth.js';
 
 const SUGGESTION_LIMIT = 8;
@@ -118,6 +121,33 @@ const getPoolForUsername = async (username) => {
   return [...personalQuestions, ...globalQuestions];
 };
 
+const getBoardReplyShowcaseForUsername = async (username) => {
+  const owner = await User.findOne({ username }).select('_id username').lean();
+
+  if (!owner?._id) return [];
+
+  const boardChat = await Chat.findById(owner._id).select('_id').lean();
+
+  if (!boardChat?._id) return [];
+
+  const replyMessages = await Message.find({
+    chat: boardChat._id,
+    replyTo: { $exists: true },
+    'replyTo.content': { $nin: ['', null] },
+  })
+    .populate('sender', 'name username')
+    .sort({ createdAt: -1 })
+    .limit(20)
+    .lean();
+
+  return replyMessages.map((message) => ({
+    id: `reply-${message._id}`,
+    question: message.replyTo?.content || 'Replied question',
+    answer: message.content || '',
+    createdAt: message.createdAt,
+  }));
+};
+
 export async function GET(request) {
   try {
     await connectDB();
@@ -150,7 +180,26 @@ export async function GET(request) {
         id: item._id,
         question: item.question,
         answer: item.answer,
+        createdAt: item.answeredAt || item.updatedAt,
       }));
+
+    const boardReplyAnswered = await getBoardReplyShowcaseForUsername(username);
+
+    const answeredKeys = new Set(
+      answered.map((item) => `${normalizeQuestion(item.question)}::${normalizeQuestion(item.answer)}`)
+    );
+
+    const mergedAnswered = [...answered];
+
+    for (const item of boardReplyAnswered) {
+      const key = `${normalizeQuestion(item.question)}::${normalizeQuestion(item.answer)}`;
+      if (answeredKeys.has(key)) continue;
+      mergedAnswered.push(item);
+    }
+
+    mergedAnswered.sort(
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+    );
 
     const filteredUnanswered = unanswered
       .filter((item) => !excludedSet.has(item.normalizedQuestion))
@@ -175,7 +224,7 @@ export async function GET(request) {
       {
         success: true,
         suggestions,
-        answered,
+        answered: mergedAnswered.slice(0, 20),
       },
       { status: 200 }
     );
@@ -236,6 +285,23 @@ export async function POST(request) {
           $inc: { askedCount: 1 },
         },
         { new: true }
+      );
+    }
+
+    if (!existing) {
+      existing = await SuggestedQuestion.findOne({
+        targetUsername: normalizedUsername,
+        normalizedQuestion,
+      });
+    }
+
+    if (!existing) {
+      return NextResponse.json(
+        {
+          success: true,
+          alreadyAnswered: false,
+        },
+        { status: 200 }
       );
     }
 
