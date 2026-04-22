@@ -118,7 +118,7 @@ export default function Header() {
           >
             <Image
               src="/logo.svg"
-              alt="Chat Next logo"
+              alt="Chat Champ logo"
               width={32}
               height={32}
               priority
@@ -131,7 +131,7 @@ export default function Header() {
                 letterSpacing: "0.3px",
               }}
             >
-              Chat Next
+              Chat Champ
             </Typography>
           </Box>
 

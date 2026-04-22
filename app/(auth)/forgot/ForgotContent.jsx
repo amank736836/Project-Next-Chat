@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
+import PasswordStrengthBar from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
@@ -244,6 +245,7 @@ export default function ForgotContent() {
               value={password.value}
               onChange={password.changeHandler}
             />
+            <PasswordStrengthBar password={password.value} />
             <TextField
               required
               fullWidth

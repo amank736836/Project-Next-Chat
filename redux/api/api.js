@@ -70,7 +70,7 @@ const api = createApi({
     getAvailableFriends: builder.query({
       query: (chatId) => ({
         url: `/user/friends`,
-        params: { chatId },
+        params: chatId ? { chatId } : {},
         method: "GET",
         credentials: "include",
       }),

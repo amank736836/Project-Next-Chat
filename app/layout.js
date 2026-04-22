@@ -7,7 +7,7 @@ import UserInitializer from "../components/UserInitializer";
 import "./globals.css";
 
 export const metadata = {
-  title: "Chat Next",
+  title: "Chat Champ",
   description: "A modern chat application",
 };
 

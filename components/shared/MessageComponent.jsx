@@ -16,6 +16,11 @@ function MessageComponent({ message, onReply }) {
   const { sender, content, attachments = [], createdAt } = message;
 
   const isSender = useMemo(() => sender._id === user._id, [sender._id, user._id]);
+  const isReplyMessage = useMemo(
+    () => typeof content === "string" && /^Reply to\s+.+?:/i.test(content.trim()),
+    [content]
+  );
+  const isRightAligned = isReplyMessage;
 
   const timeAgo = useMemo(() => moment(createdAt).fromNow(), [createdAt]);
 
@@ -52,19 +57,19 @@ function MessageComponent({ message, onReply }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: isSender ? 100 : -100 }}
+      initial={{ opacity: 0, x: isRightAligned ? 100 : -100 }}
       whileInView={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
       style={{
-        alignSelf: isSender ? "flex-end" : "flex-start",
-        color: isSender ? "white" : "black",
-        backgroundColor: isSender ? "blue" : "lightgray",
+        alignSelf: isRightAligned ? "flex-end" : "flex-start",
+        color: isRightAligned ? "white" : "black",
+        backgroundColor: isRightAligned ? "blue" : "lightgray",
         borderRadius: "5px",
         padding: "0.5rem",
         width: "fit-content",
       }}
     >
-      {!isSender && (
+      {!isRightAligned && (
         <Typography color={lightBlue} fontWeight={600} variant="caption">
           {sender.name ? sender.name : "Anonymous"}
         </Typography>
@@ -97,7 +102,7 @@ function MessageComponent({ message, onReply }) {
                 target="_blank"
                 download
                 style={{
-                  color: isSender ? "white" : "black",
+                  color: isRightAligned ? "white" : "black",
                 }}
               >
                 {RenderAttachment(fileType, url)}
@@ -116,7 +121,7 @@ function MessageComponent({ message, onReply }) {
           gap: 0.8,
         }}
       >
-        <Typography variant="caption" color={isSender ? "white" : "black"}>
+        <Typography variant="caption" color={isRightAligned ? "white" : "black"}>
           {timeAgo}
         </Typography>
         <Button
@@ -128,7 +133,7 @@ function MessageComponent({ message, onReply }) {
             p: 0,
             lineHeight: 1,
             textTransform: "none",
-            color: isSender ? "white" : "#1976d2",
+            color: isRightAligned ? "white" : "#1976d2",
           }}
         >
           Reply

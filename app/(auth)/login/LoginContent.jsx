@@ -6,6 +6,7 @@ import {
   Avatar,
   Button,
   IconButton,
+  Link as MuiLink,
   Stack,
   TextField,
   Typography,
@@ -14,8 +15,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { VisuallyHiddenInput } from "../../../components/styles/StyledComponents";
+import PasswordStrengthBar from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
@@ -347,6 +350,7 @@ export default function LoginContent() {
               slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
+            <PasswordStrengthBar password={password.value} />
             <TextField
               required
               fullWidth
@@ -388,8 +392,15 @@ export default function LoginContent() {
             Login
           </Button>
           <Typography textAlign={"center"} m={"0.5rem"}>
-            By signing up, you agree to our Terms of Service and Privacy
-            Policy.
+            By signing up, you agree to our{" "}
+            <MuiLink component={Link} href="/terms" underline="hover">
+              Terms of Service
+            </MuiLink>{" "}
+            and{" "}
+            <MuiLink component={Link} href="/privacy" underline="hover">
+              Privacy Policy
+            </MuiLink>
+            .
           </Typography>
         </>
       )}
