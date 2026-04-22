@@ -1,7 +1,8 @@
 "use client";
 
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
-import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import { CameraAlt as CameraAltIcon, Cancel as CancelIcon, CheckCircle as CheckCircleIcon } from "@mui/icons-material";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   Avatar,
   Button,
@@ -12,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
@@ -31,9 +32,16 @@ const hydrationSafeInputSlotProps = {
 
 export default function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
+  const [usernameAvailable, setUsernameAvailable] = useState(null);
+  const [emailAvailable, setEmailAvailable] = useState(null);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const identifierParam = searchParams.get("identifier");
+
+  const timerRef = useRef(null);
+  const emailTimerRef = useRef(null);
 
   let usernameParam;
   let emailParam;
@@ -52,11 +60,77 @@ export default function LoginContent() {
 
   const name = useInputValidation("");
   const email = useInputValidation(emailParam || "");
-  const username = useInputValidation(usernameParam || "", usernameValidator);
+  const username = useInputValidation("", usernameValidator);
   const password = useStrongPassword("");
   const confirmPassword = useStrongPassword("");
   const avatar = useFileHandler("single", 2);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    if (!username.value || username.value.length < 3) {
+      setUsernameAvailable(null);
+      return;
+    }
+
+    setCheckingUsername(true);
+    timerRef.current = setTimeout(() => {
+      const checkUsername = async () => {
+        try {
+          const response = await axios.get(
+            `${AUTH_API_BASE}/check-username?username=${username.value}`
+          );
+          setUsernameAvailable(response.data.available);
+        } catch (error) {
+          console.error("Failed to check username:", error);
+          setUsernameAvailable(null);
+        } finally {
+          setCheckingUsername(false);
+        }
+      };
+      checkUsername();
+    }, 500);
+
+    return () => {
+      clearTimeout(timerRef.current);
+    };
+  }, [username.value]);
+
+  useEffect(() => {
+    if (emailTimerRef.current) {
+      clearTimeout(emailTimerRef.current);
+    }
+
+    if (!email.value || !email.value.includes("@")) {
+      setEmailAvailable(null);
+      return;
+    }
+
+    setCheckingEmail(true);
+    emailTimerRef.current = setTimeout(() => {
+      const checkEmail = async () => {
+        try {
+          const response = await axios.get(
+            `${AUTH_API_BASE}/check-email?email=${email.value}`
+          );
+          setEmailAvailable(response.data.available);
+        } catch (error) {
+          console.error("Failed to check email:", error);
+          setEmailAvailable(null);
+        } finally {
+          setCheckingEmail(false);
+        }
+      };
+      checkEmail();
+    }, 500);
+
+    return () => {
+      clearTimeout(emailTimerRef.current);
+    };
+  }, [email.value]);
 
   const dispatch = useDispatch();
 
@@ -143,6 +217,34 @@ export default function LoginContent() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    
+    // Check email availability
+    if (!emailAvailable) {
+      toast.error("Email already exists. Please use a different email.", {
+        duration: 2000,
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Check password match
+    if (password.value !== confirmPassword.value) {
+      toast.error("Passwords do not match", {
+        duration: 2000,
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Check username availability
+    if (!usernameAvailable) {
+      toast.error("Username already exists. Please use a different username.", {
+        duration: 2000,
+      });
+      setIsLoading(false);
+      return;
+    }
+
     const formDate = new FormData();
     formDate.append("avatar", avatar.file);
     formDate.append("name", name.value);
@@ -179,10 +281,20 @@ export default function LoginContent() {
         });
     } catch (error) {
       console.error(error);
-      toast.error(error?.response?.data?.message || "Sign up failed", {
-        duration: 1000,
-        id: toastId,
-      });
+      const errorMsg = error?.response?.data?.message || "Sign up failed";
+      
+      // Handle email already exists error
+      if (errorMsg.toLowerCase().includes("email")) {
+        toast.error("Email already exists. Please use a different email.", {
+          duration: 2000,
+          id: toastId,
+        });
+      } else {
+        toast.error(errorMsg, {
+          duration: 2000,
+          id: toastId,
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -325,6 +437,27 @@ export default function LoginContent() {
               onChange={username.changeHandler}
               slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor:
+                      username.value && username.value.length >= 3
+                        ? (usernameAvailable === null ? 'inherit' : (usernameAvailable ? 'green' : 'red'))
+                        : 'inherit',
+                  },
+                },
+              }}
+              InputProps={{
+                endAdornment: checkingUsername ? (
+                  <CircularProgress size={20} />
+                ) : usernameAvailable !== null && username.value.length >= 3 ? (
+                  usernameAvailable ? (
+                    <CheckCircleIcon color="success" />
+                  ) : (
+                    <CancelIcon color="error" />
+                  )
+                ) : null,
+              }}
             />
             <TextField
               required
@@ -337,6 +470,32 @@ export default function LoginContent() {
               onChange={email.changeHandler}
               slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor:
+                      email.value && email.value.includes("@")
+                        ? (emailAvailable === null ? 'inherit' : (emailAvailable ? 'green' : 'red'))
+                        : 'inherit',
+                  },
+                },
+              }}
+              InputProps={{
+                endAdornment: checkingEmail ? (
+                  <CircularProgress size={20} />
+                ) : emailAvailable !== null && email.value.includes("@") ? (
+                  emailAvailable ? (
+                    <CheckCircleIcon color="success" />
+                  ) : (
+                    <CancelIcon color="error" />
+                  )
+                ) : null,
+              }}
+              helperText={
+                email.value && !emailAvailable && email.value.includes("@")
+                  ? "Email already exists"
+                  : ""
+              }
             />
             <TextField
               required
@@ -362,6 +521,22 @@ export default function LoginContent() {
               onChange={confirmPassword.changeHandler}
               slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: confirmPassword.value && password.value ?
+                      (password.value === confirmPassword.value ? 'green' : 'red') : 'inherit',
+                  },
+                },
+              }}
+              error={confirmPassword.value && password.value !== confirmPassword.value}
+              helperText={
+                confirmPassword.value && password.value !== confirmPassword.value
+                  ? "Passwords do not match"
+                  : confirmPassword.value && password.value === confirmPassword.value
+                  ? "Passwords match ✓"
+                  : ""
+              }
             />
             <Button
               fullWidth
@@ -370,7 +545,10 @@ export default function LoginContent() {
               type="submit"
               sx={{ mt: 2 }}
               disabled={
-                password.value !== confirmPassword.value || isLoading
+                password.value !== confirmPassword.value || 
+                isLoading || 
+                !usernameAvailable || 
+                !emailAvailable
               }
               suppressHydrationWarning
             >
