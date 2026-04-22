@@ -17,6 +17,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { nextBackend, socketBackend } from "../../../constants/config";
 import { gradientBg } from "../../../constants/color";
 
@@ -40,6 +42,8 @@ const ANSWER_SHOWCASE_PAGE_SIZE = 4;
 export default function Username() {
   const params = useParams();
   const username = params.username;
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { user } = useSelector((state) => state.auth);
   const [viewerUsername, setViewerUsername] = useState("");
@@ -255,6 +259,8 @@ export default function Username() {
     setNewQuestion(msg);
   };
 
+  const suggestionVisibleCount = isMobileView ? 3 : 4;
+
   const hideShowcaseItem = async (item) => {
     if (!isOwner || !item?.id || !item?.itemType) return;
 
@@ -287,11 +293,16 @@ export default function Username() {
       elevation={4}
       sx={{
         width: "100%",
-        padding: "2rem",
+        padding: { xs: "1.25rem", sm: "2rem" },
         borderRadius: "16px",
       }}
     >
-      <Typography variant="h5" align="center" fontWeight={600}>
+      <Typography
+        variant={isMobileView ? "h6" : "h5"}
+        align="center"
+        fontWeight={600}
+        sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
+      >
         {isOwner ? `Manage Your Message Board (@${username})` : `Send Anonymous Message to @${username}`}
       </Typography>
 
@@ -318,7 +329,9 @@ export default function Username() {
         </form>
       ) : (
         <Stack spacing={1.5}>
-          <Typography variant="h6">Create Custom Question</Typography>
+          <Typography variant={isMobileView ? "subtitle1" : "h6"} sx={{ fontSize: { xs: "0.95rem", sm: "1.25rem" } }}>
+            Create Custom Question
+          </Typography>
           <TextField
             fullWidth
             label="Question"
@@ -340,6 +353,7 @@ export default function Username() {
         variant="outlined"
         onClick={() => fetchSuggestedMessages({ refresh: true, exclude: messageString })}
         disabled={isCompletionLoading}
+        sx={{ py: { xs: 0.75, sm: 1 } }}
       >
         {isCompletionLoading ? <CircularProgress size={20} /> : "Suggest Messages"}
       </Button>
@@ -351,23 +365,28 @@ export default function Username() {
       )}
 
       <Box>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant={isMobileView ? "subtitle1" : "h6"} gutterBottom sx={{ fontSize: { xs: "0.95rem", sm: "1.25rem" } }}>
           {isOwner ? "Unanswered Suggestions (for visitors)" : "Suggested Messages"}
         </Typography>
         {isOwner ? (
           messageArray.length > 0 ? (
             <>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
                 Click a suggestion to use it as a custom question.
               </Typography>
               <Stack spacing={1}>
-                {messageArray.slice(0, 4).map((msg, i) => (
+                {messageArray.slice(0, suggestionVisibleCount).map((msg, i) => (
                   <Button
                     key={i}
                     onClick={() => handleSuggestionTemplateClick(msg)}
                     variant={newQuestion === msg ? "contained" : "outlined"}
                     fullWidth
-                    sx={{ justifyContent: "flex-start" }}
+                    sx={{
+                      justifyContent: "flex-start",
+                      fontSize: { xs: "0.72rem", sm: "0.875rem" },
+                      py: { xs: 0.7, sm: 1 },
+                      px: { xs: 1, sm: 1.5 },
+                    }}
                   >
                     {msg}
                   </Button>
@@ -375,37 +394,42 @@ export default function Username() {
               </Stack>
             </>
           ) : (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
               No suggestions available right now.
             </Typography>
           )
         ) : messageArray.length > 0 ? (
           <Stack spacing={1}>
-            {messageArray.slice(0, 4).map((msg, i) => (
+            {messageArray.slice(0, suggestionVisibleCount).map((msg, i) => (
               <Button
                 key={i}
                 onClick={() => handleMessageClick(msg)}
                 variant="outlined"
                 fullWidth
-                sx={{ justifyContent: "flex-start" }}
+                sx={{
+                  justifyContent: "flex-start",
+                  fontSize: { xs: "0.72rem", sm: "0.875rem" },
+                  py: { xs: 0.7, sm: 1 },
+                  px: { xs: 1, sm: 1.5 },
+                }}
               >
                 {msg}
               </Button>
             ))}
           </Stack>
         ) : (
-          <Typography>No messages to suggest</Typography>
+          <Typography sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>No messages to suggest</Typography>
         )}
       </Box>
 
       <Box textAlign="center" mt={2}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
           Get Your Own Message Board
         </Typography>
         <Button
           href="/login"
           variant="contained"
-          sx={{ mt: 1, px: 3, borderRadius: "999px" }}
+          sx={{ mt: 1, px: 3, borderRadius: "999px", fontSize: { xs: "0.72rem", sm: "0.875rem" }, py: { xs: 0.75, sm: 1 } }}
         >
           Create Your Account
         </Button>
@@ -489,7 +513,7 @@ export default function Username() {
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
-        padding: "2rem",
+        padding: { xs: "0.75rem", sm: "2rem" },
       }}
     >
       <Box
@@ -497,7 +521,7 @@ export default function Username() {
           width: "100%",
           maxWidth: 1150,
           display: "grid",
-          gap: 3,
+          gap: { xs: 1.5, sm: 3 },
           gridTemplateColumns: {
             xs: "1fr",
             md: hasAnsweredShowcase ? "minmax(0, 2fr) minmax(280px, 1fr)" : "1fr",
