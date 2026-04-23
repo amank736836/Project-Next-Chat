@@ -221,9 +221,18 @@ export async function GET(request) {
       .filter((item) => !excludedSet.has(item.normalizedQuestion))
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
 
-    const personalSuggestions = filteredUnanswered
-      .filter((item) => item.targetUsername === username)
+    const personalUnanswered = filteredUnanswered
+      .filter((item) => item.targetUsername === username);
+
+    const personalSuggestions = personalUnanswered
       .map((item) => item.question);
+
+    const customQuestions = personalUnanswered.map((item) => ({
+      id: item._id,
+      question: item.question,
+      askedCount: item.askedCount || 0,
+      createdAt: item.createdAt,
+    }));
 
     const globalSuggestions = filteredUnanswered
       .filter((item) => item.targetUsername !== username)
@@ -241,6 +250,7 @@ export async function GET(request) {
         success: true,
         suggestions,
         answered: mergedAnswered.slice(0, 20),
+        customQuestions,
       },
       { status: 200 }
     );
@@ -546,6 +556,62 @@ export async function PATCH(request) {
   } catch {
     return NextResponse.json(
       { success: false, message: 'Failed to hide showcase item' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    await connectDB();
+    const authUser = await getAuthenticatedUser();
+
+    if (!authUser) {
+      return NextResponse.json(
+        { success: false, message: 'Please login to continue' },
+        { status: 401 }
+      );
+    }
+
+    const { username, questionId } = await request.json();
+    const normalizedUsername = (username || '').trim().toLowerCase();
+
+    if (!normalizedUsername || normalizedUsername !== authUser.username.toLowerCase()) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized delete attempt' },
+        { status: 403 }
+      );
+    }
+
+    if (!questionId) {
+      return NextResponse.json(
+        { success: false, message: 'questionId is required' },
+        { status: 400 }
+      );
+    }
+
+    const deleted = await SuggestedQuestion.findOneAndDelete({
+      _id: questionId,
+      targetUsername: normalizedUsername,
+    });
+
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, message: 'Question not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Custom question deleted successfully',
+      },
+      { status: 200 }
+    );
+  } catch {
+    return NextResponse.json(
+      { success: false, message: 'Failed to delete custom question' },
       { status: 500 }
     );
   }

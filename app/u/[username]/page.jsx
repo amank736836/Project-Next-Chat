@@ -63,8 +63,10 @@ export default function Username() {
   const [isCompletionLoading, setIsCompletionLoading] = useState(false);
   const [completionError, setCompletionError] = useState(null);
   const [answeredShowcase, setAnsweredShowcase] = useState([]);
+  const [customQuestions, setCustomQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
+  const [deletingQuestionId, setDeletingQuestionId] = useState(null);
   const [hidingShowcaseId, setHidingShowcaseId] = useState(null);
   const [mobileTab, setMobileTab] = useState("board");
   const [answerShowcasePage, setAnswerShowcasePage] = useState(1);
@@ -119,6 +121,7 @@ export default function Username() {
         const nextSuggestions = (response.data.suggestions || []).join(specialChar);
         setMessageString(nextSuggestions || initialMessageString);
         setAnsweredShowcase(response.data.answered || []);
+        setCustomQuestions(response.data.customQuestions || []);
 
         setCompletionError(null);
       } else {
@@ -170,6 +173,32 @@ export default function Username() {
       toast.error("Failed to save question");
     } finally {
       setSavingQuestionId(null);
+    }
+  };
+
+  const deleteCustomQuestion = async (questionId) => {
+    if (!questionId || !isOwner) return;
+
+    setDeletingQuestionId(questionId);
+    try {
+      const response = await axios.delete(NEXT_QUESTIONS_API_BASE, {
+        data: {
+          username,
+          questionId,
+        },
+      });
+
+      if (response.data.success) {
+        toast.success("Question deleted successfully");
+        setCustomQuestions((prev) => prev.filter((item) => item.id !== questionId));
+        await fetchSuggestedMessages({ refresh: false, exclude: messageString });
+      } else {
+        toast.error("Failed to delete question");
+      }
+    } catch (error) {
+      toast.error("Failed to delete question");
+    } finally {
+      setDeletingQuestionId(null);
     }
   };
 
@@ -353,6 +382,42 @@ export default function Username() {
           >
             {savingQuestionId === "new" ? <CircularProgress size={20} /> : "Save Custom Question"}
           </Button>
+
+          <Box>
+            <Typography
+              variant={isMobileView ? "subtitle2" : "subtitle1"}
+              sx={{ mb: 1, fontSize: { xs: "0.8rem", sm: "1rem" } }}
+            >
+              Your Custom Questions
+            </Typography>
+
+            {customQuestions.length > 0 ? (
+              <Stack spacing={1}>
+                {customQuestions.map((item) => (
+                  <Paper key={item.id} variant="outlined" sx={{ p: 1 }}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+                      <Typography variant="body2" sx={{ flex: 1 }}>
+                        {item.question}
+                      </Typography>
+                      <Button
+                        size="small"
+                        color="error"
+                        variant="outlined"
+                        onClick={() => deleteCustomQuestion(item.id)}
+                        disabled={deletingQuestionId === item.id}
+                      >
+                        {deletingQuestionId === item.id ? "Deleting..." : "Delete"}
+                      </Button>
+                    </Stack>
+                  </Paper>
+                ))}
+              </Stack>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No custom questions yet.
+              </Typography>
+            )}
+          </Box>
         </Stack>
       )}
 
