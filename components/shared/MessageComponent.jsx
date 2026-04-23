@@ -82,7 +82,7 @@ function MessageComponent({ message, onReply }) {
         </Typography>
       )}
 
-      {!isSender && message.chat === user._id && (
+      {!isSender && !isAnonymousMessage && sender?._id && message.chat === user._id && (
         <Button
           onClick={() => sendFriendRequestHandler(sender._id)}
           disabled={isLoadingSendFriendRequest}
