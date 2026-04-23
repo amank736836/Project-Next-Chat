@@ -216,9 +216,9 @@ function ChatContent() {
   const messageChangeHandler = useCallback((e) => {
     setMessage(e.target.value);
 
-    if (!socket) return;
+    if (!socket || !socket.connected) return;
 
-    if (!MeTyping) {
+    if (!MeTyping && socket && socket.connected) {
       socket.emit(START_TYPING, {
         members,
         chatId,
@@ -233,11 +233,13 @@ function ChatContent() {
 
     typingTimeout.current = setTimeout(() => {
       setMeTyping(false);
-      socket.emit(STOP_TYPING, {
-        members,
-        chatId,
-        senderId: user._id,
-      });
+      if (socket && socket.connected) {
+        socket.emit(STOP_TYPING, {
+          members,
+          chatId,
+          senderId: user._id,
+        });
+      }
     }, 2000);
   }, [socket, MeTyping, members, chatId, user?._id]);
 
@@ -259,22 +261,26 @@ function ChatContent() {
       ? `Reply to ${replyTargetName}: ${message.trim()}`
       : message;
 
-    socket.emit(NEW_MESSAGE, {
-      message: formattedMessage,
-      chatId,
-      members,
-      replyTo: replyingTo
-        ? {
-            senderName: replyingTo.senderName,
-            content: replyingTo.content,
-          }
-        : undefined,
-    });
-    socket.emit(STOP_TYPING, {
-      members,
-      chatId,
-      senderId: user._id,
-    });
+    if (socket && socket.connected) {
+      socket.emit(NEW_MESSAGE, {
+        message: formattedMessage,
+        chatId,
+        members,
+        replyTo: replyingTo
+          ? {
+              senderName: replyingTo.senderName,
+              content: replyingTo.content,
+            }
+          : undefined,
+      });
+    }
+    if (socket && socket.connected) {
+      socket.emit(STOP_TYPING, {
+        members,
+        chatId,
+        senderId: user._id,
+      });
+    }
     setMessage("");
     setReplyingTo(null);
   }, [message, socket, members, replyingTo, chatId, user?._id]);
@@ -426,7 +432,7 @@ function ChatContent() {
   }, [allMessages]);
 
   useEffect(() => {
-    if (!socket || !user) return;
+    if (!socket || !socket.connected || !user) return;
 
     socket.emit(CHAT_JOINED, {
       chatId,
@@ -440,11 +446,13 @@ function ChatContent() {
       setPage(1);
       setOldMessages([]);
       setMessage("");
-      socket.emit(CHAT_LEAVED, {
-        chatId,
-        userId: user._id,
-        members,
-      });
+      if (socket && socket.connected) {
+        socket.emit(CHAT_LEAVED, {
+          chatId,
+          userId: user._id,
+          members,
+        });
+      }
     };
   }, [chatId, socket, user, members, dispatch, setOldMessages]);
 

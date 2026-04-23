@@ -71,8 +71,14 @@ export function SocketProvider({ children }) {
     sharedSocketUserId = user._id;
     setSocket(socketInstance);
 
-    return () => {};
-  }, [user?._id]);
+    return () => {
+      if (sharedSocket && sharedSocketUserId === user._id) {
+        sharedSocket.disconnect();
+        sharedSocket = null;
+        sharedSocketUserId = null;
+      }
+    };
+  }, [user?._id, socketServer]);
 
   return (
     <SocketContext.Provider value={socket}>
