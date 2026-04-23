@@ -23,8 +23,7 @@ import { nextBackend, socketBackend } from "../../../constants/config";
 import { gradientBg } from "../../../constants/color";
 
 const NEXT_QUESTIONS_API_BASE = `${nextBackend}/chat/questions`;
-const ASK_AND_RECORD_API_BASE = `${nextBackend}/chat/ask-and-record`;
-const SOCKET_CHAT_API_BASE = `${socketBackend}/chat`;
+const ASK_AND_RECORD_API_BASE = `${socketBackend}/chat/ask-and-record`;
 
 const specialChar = "||";
 
@@ -215,7 +214,16 @@ export default function Username() {
       }
 
       if (response.data.success && response.data.messageSent) {
-        toast.success("Message sent");
+        if (response.data.realtimeDelivered) {
+          toast.success("Message delivered in real-time! 🎉");
+        } else {
+          toast.success("Message saved. They'll see it when they come online.");
+        }
+        setContent("");
+        await fetchSuggestedMessages({ refresh: true, exclude: messageString });
+      } else if (response.data.success && !response.data.alreadyAnswered) {
+        // Message was saved to DB even if socket delivery had issues
+        toast.success("Message saved successfully.");
         setContent("");
         await fetchSuggestedMessages({ refresh: true, exclude: messageString });
       } else {
