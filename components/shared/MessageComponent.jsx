@@ -14,10 +14,18 @@ import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 function MessageComponent({ message, onReply }) {
   const { user } = useSelector((state) => state.auth);
   const { sender, content, attachments = [], createdAt } = message;
+  const isAnonymousMessage = useMemo(
+    () =>
+      Boolean(message?.isAnonymous) ||
+      String(sender?.name || "").trim().toLowerCase() === "anonymous",
+    [message?.isAnonymous, sender?.name]
+  );
 
   const isSender = useMemo(
-    () => String(sender?._id || "") === String(user?._id || ""),
-    [sender?._id, user?._id]
+    () =>
+      !isAnonymousMessage &&
+      String(sender?._id || "") === String(user?._id || ""),
+    [isAnonymousMessage, sender?._id, user?._id]
   );
   const isRightAligned = isSender;
 
@@ -70,7 +78,7 @@ function MessageComponent({ message, onReply }) {
     >
       {!isRightAligned && (
         <Typography color={lightBlue} fontWeight={600} variant="caption">
-          {sender.name ? sender.name : "Anonymous"}
+          {isAnonymousMessage ? "Anonymous" : sender?.name || "Anonymous"}
         </Typography>
       )}
 
