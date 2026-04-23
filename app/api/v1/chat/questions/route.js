@@ -217,15 +217,9 @@ export async function GET(request) {
       (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
     );
 
-    const filteredUnanswered = unanswered
-      .filter((item) => !excludedSet.has(item.normalizedQuestion))
+    const personalUnanswered = unanswered
+      .filter((item) => item.targetUsername === username)
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
-
-    const personalUnanswered = filteredUnanswered
-      .filter((item) => item.targetUsername === username);
-
-    const personalSuggestions = personalUnanswered
-      .map((item) => item.question);
 
     const customQuestions = personalUnanswered.map((item) => ({
       id: item._id,
@@ -233,6 +227,13 @@ export async function GET(request) {
       askedCount: item.askedCount || 0,
       createdAt: item.createdAt,
     }));
+
+    const filteredUnanswered = unanswered
+      .filter((item) => !excludedSet.has(item.normalizedQuestion))
+      .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
+
+    const personalSuggestions = personalUnanswered
+      .map((item) => item.question);
 
     const globalSuggestions = filteredUnanswered
       .filter((item) => item.targetUsername !== username)

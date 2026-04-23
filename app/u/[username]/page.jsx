@@ -191,7 +191,7 @@ export default function Username() {
       if (response.data.success) {
         toast.success("Question deleted successfully");
         setCustomQuestions((prev) => prev.filter((item) => item.id !== questionId));
-        await fetchSuggestedMessages({ refresh: false, exclude: messageString });
+        await fetchSuggestedMessages({ refresh: false, exclude: "" });
       } else {
         toast.error("Failed to delete question");
       }
