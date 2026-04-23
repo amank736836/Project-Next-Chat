@@ -15,12 +15,11 @@ function MessageComponent({ message, onReply }) {
   const { user } = useSelector((state) => state.auth);
   const { sender, content, attachments = [], createdAt } = message;
 
-  const isSender = useMemo(() => sender._id === user._id, [sender._id, user._id]);
-  const isReplyMessage = useMemo(
-    () => typeof content === "string" && /^Reply to\s+.+?:/i.test(content.trim()),
-    [content]
+  const isSender = useMemo(
+    () => String(sender?._id || "") === String(user?._id || ""),
+    [sender?._id, user?._id]
   );
-  const isRightAligned = isReplyMessage;
+  const isRightAligned = isSender;
 
   const timeAgo = useMemo(() => moment(createdAt).fromNow(), [createdAt]);
 
