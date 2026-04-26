@@ -525,18 +525,20 @@ export default function Username() {
         )}
       </Box>
 
-      <Box textAlign="center" mt={2}>
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
-          Get Your Own Message Board
-        </Typography>
-        <Button
-          href="/login"
-          variant="contained"
-          sx={{ mt: 1, px: 3, borderRadius: "999px", fontSize: { xs: "0.72rem", sm: "0.875rem" }, py: { xs: 0.75, sm: 1 } }}
-        >
-          Create Your Account
-        </Button>
-      </Box>
+      {!isOwner && (
+        <Box textAlign="center" mt={2}>
+          <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
+            Get Your Own Message Board
+          </Typography>
+          <Button
+            href="/login"
+            variant="contained"
+            sx={{ mt: 1, px: 3, borderRadius: "999px", fontSize: { xs: "0.72rem", sm: "0.875rem" }, py: { xs: 0.75, sm: 1 } }}
+          >
+            Create Your Account
+          </Button>
+        </Box>
+      )}
     </Stack>
   );
 
