@@ -8,6 +8,8 @@ const initialState = {
   user: null,
   isAdmin: false,
   loader: true,
+  loading: false,
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -21,6 +23,18 @@ const authSlice = createSlice({
     userNotExists: (state) => {
       state.user = null;
       state.loader = false;
+    },
+    loginStarted: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    loginSuccess: (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+    },
+    loginFailed: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -68,4 +82,4 @@ const authSlice = createSlice({
 
 export default authSlice;
 
-export const { userExists, userNotExists } = authSlice.actions;
+export const { userExists, userNotExists, loginStarted, loginSuccess, loginFailed } = authSlice.actions;

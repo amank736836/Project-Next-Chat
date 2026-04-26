@@ -12,7 +12,7 @@ export default function AdminProtectedRoute({ children }) {
     if (!loader && !isAdmin) {
       router.push("/admin/login");
     }
-  }, [isAdmin, loader]);
+  }, [isAdmin, loader, router]);
 
   if (loader || !isAdmin) {
     return null;

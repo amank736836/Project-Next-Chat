@@ -140,3 +140,6 @@ dist
 
 # Testing
 tests/
+playwright-report/
+test-results/
+blob-report/

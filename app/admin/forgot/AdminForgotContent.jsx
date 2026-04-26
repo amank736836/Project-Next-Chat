@@ -25,7 +25,7 @@ export default function AdminForgotContent() {
     if (usernameParam || verifyCodeParam) {
       setIsForgotPassword(false);
     }
-  }, [usernameParam]);
+  }, [usernameParam, verifyCodeParam]);
 
   const identifier = useInputValidation(usernameParam || "", usernameValidator);
   const password = useStrongPassword("");

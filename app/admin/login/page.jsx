@@ -25,7 +25,7 @@ export default function AdminLogin() {
     if (isAdmin) {
       router.push("/admin/dashboard");
     }
-  }, [isAdmin]);
+  }, [isAdmin, router]);
 
   useEffect(() => {
     dispatch(getAdmin());

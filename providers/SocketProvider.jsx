@@ -78,7 +78,7 @@ export function SocketProvider({ children }) {
         sharedSocketUserId = null;
       }
     };
-  }, [user?._id, socketServer]);
+  }, [user?._id]);
 
   return (
     <SocketContext.Provider value={socket}>

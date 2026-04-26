@@ -42,16 +42,15 @@ export default function LoginContent() {
 
   const timerRef = useRef(null);
   const emailTimerRef = useRef(null);
-
-  let usernameParam;
-  let emailParam;
+  const usernameParam = useRef('');
+  const emailParam = useRef('');
 
   useEffect(() => {
     if (identifierParam) {
       if (identifierParam.includes("@")) {
-        emailParam = identifierParam;
+        emailParam.current = identifierParam;
       } else {
-        usernameParam = identifierParam;
+        usernameParam.current = identifierParam;
       }
     }
   }, [identifierParam]);
@@ -59,8 +58,8 @@ export default function LoginContent() {
   const toggleLogin = () => setIsLogin((prev) => !prev);
 
   const name = useInputValidation("");
-  const email = useInputValidation(emailParam || "");
-  const username = useInputValidation("", usernameValidator);
+  const email = useInputValidation(emailParam.current || "");
+  const username = useInputValidation(usernameParam.current || "", usernameValidator);
   const password = useStrongPassword("");
   const confirmPassword = useStrongPassword("");
   const avatar = useFileHandler("single", 2);
@@ -151,7 +150,7 @@ export default function LoginContent() {
       const res = await axios.post(
         `${AUTH_API_BASE}/login`,
         {
-          identifier: username.value,
+          identifier: usernameParam.current || username.value,
           password: password.value,
         },
         config
@@ -190,7 +189,7 @@ export default function LoginContent() {
           duration: 1000,
           id: toastId,
         });
-        router.push(`/forgot?identifier=${username.value}`);
+        router.push(`/forgot?identifier=${usernameParam.current || username.value}`);
         return;
       }
 
@@ -207,7 +206,7 @@ export default function LoginContent() {
           duration: 1000,
         })
         .then(() => {
-          router.push(`/verify?identifier=${username.value}`);
+          router.push(`/verify?identifier=${usernameParam.current || username.value}`);
         });
     } finally {
       setIsLoading(false);
@@ -371,7 +370,7 @@ export default function LoginContent() {
               variant="text"
               color="primary"
               onClick={() =>
-                router.push(`/forgot?identifier=${username.value}`)
+                router.push(`/forgot?identifier=${usernameParam.current || username.value}`)
               }
               sx={{ textTransform: "none" }}
               suppressHydrationWarning
