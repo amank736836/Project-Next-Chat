@@ -20,7 +20,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { adminTabs } from "../../constants/adminTabs";
 import { grayColor, matBlack } from "../../constants/color";
-import { adminLogout } from "../../redux/thunks/admin.thunk";
+import { adminLogout } from "../../redux/thunks/admin.thunk.js";
 
 const LinkComponent = styled(Link)`
   text-decoration: none;

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { authBg } from "../../../constants/color";
-import { adminLogin, getAdmin } from "../../../redux/thunks/admin.thunk";
+import { adminLogin, getAdmin } from "../../../redux/thunks/admin.thunk.js";
 
 export default function AdminLogin() {
   const { isAdmin } = useSelector((state) => state.auth);
