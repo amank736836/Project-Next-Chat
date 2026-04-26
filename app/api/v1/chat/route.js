@@ -1,45 +1,58 @@
 import { NextResponse } from 'next/server';
-const BACKEND_URL = process.env.BACKEND_SERVER_URL || 'http://localhost:4000/api/v1';
-
-const buildProxyResponse = async (response) => {
-  let data;
-
-  try {
-    data = await response.json();
-  } catch {
-    data = {
-      success: response.ok,
-      message: response.ok ? 'Request completed' : 'Backend request failed',
-    };
-  }
-
-  const nextResponse = NextResponse.json(data, {
-    status: response.status,
-  });
-
-  const setCookie = response.headers.get('set-cookie');
-  if (setCookie) {
-    nextResponse.headers.set('set-cookie', setCookie);
-  }
-
-  return nextResponse;
-};
-
-const proxyToBackend = async (request, method, path) => {
-  const requestHeaders = {
-    Cookie: request.headers.get('cookie') || '',
-  };
-
-  const requestInit = {
-    method,
-    headers: requestHeaders,
-  };
-
-  const url = new URL(request.url);
-  const response = await fetch(`${BACKEND_URL}${path}${url.search}`, requestInit);
-  return buildProxyResponse(response);
-};
+import connectDB from '../../../../lib/server/db.js';
+import Chat from '../../../../lib/server/models/chat.model.js';
+import { getAuthenticatedUser } from '../../../../lib/server/auth.js';
 
 export async function GET(request) {
-  return proxyToBackend(request, 'GET', '/chat');
+  try {
+    await connectDB();
+
+    const user = await getAuthenticatedUser(request);
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: 'Please login to access this resource' },
+        { status: 401 }
+      );
+    }
+
+    const chats = await Chat.find({ members: user._id })
+      .populate('members', 'name avatar')
+      .sort({ updatedAt: -1 });
+
+    const transformedChats = chats.map(({ _id, name, members, groupChat }) => {
+      const otherMember = members.find(
+        (member) => member._id.toString() !== user._id.toString()
+      );
+
+      return {
+        _id,
+        name: groupChat ? name : otherMember?.name || 'Anonymous Inbox',
+        groupChat,
+        avatar: groupChat
+          ? members.slice(0, 3).map(({ avatar }) => avatar?.url || '')
+          : [otherMember?.avatar?.url || ''],
+        members: members.reduce((acc, member) => {
+          if (member._id.toString() !== user._id.toString()) {
+            acc.push(member._id.toString());
+          }
+          return acc;
+        }, []),
+      };
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Chats fetched successfully',
+        chats: transformedChats,
+      },
+      { status: 200 }
+    );
+  } catch {
+    return NextResponse.json(
+      { success: false, message: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }
