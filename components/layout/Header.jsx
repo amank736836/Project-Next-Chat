@@ -4,6 +4,7 @@ import {
   AccountCircle as AccountCircleIcon,
   Add as AddIcon,
   Close as CloseIcon,
+  Forum as ForumIcon,
   Group as GroupIcon,
   Logout as LogoutIcon,
   Menu as MenuIcon,
@@ -48,6 +49,7 @@ export default function Header() {
 
   const { isMobile, isSearch, isNotification, isNewGroup, isProfile } =
     useSelector((state) => state.misc);
+  const { user } = useSelector((state) => state.auth);
 
   const { notificationCount } = useSelector((state) => state.chat);
 
@@ -98,8 +100,10 @@ export default function Header() {
   return (
     <>
       <AppBar
-        position="static"
+        position="sticky"
         sx={{
+          top: 0,
+          zIndex: (theme) => theme.zIndex.appBar,
           bgcolor: "#4facfe",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
         }}
@@ -164,6 +168,11 @@ export default function Header() {
               title="Manage Groups"
               onClick={() => router.push("/groups")}
               icon={<GroupIcon />}
+            />
+            <IconBtn
+              title="My Board"
+              onClick={() => router.push("/board")}
+              icon={<ForumIcon />}
             />
             <IconBtn
               title="Logout"

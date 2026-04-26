@@ -51,6 +51,7 @@ const AddMemberDialog = lazy(() =>
 );
 
 import ProtectedRoute from "../../components/auth/ProtectedRoute";
+import Header from "../../components/layout/Header";
 
 function GroupsContent() {
   const { isMobile, isDeleteMenu, isAddMember } = useSelector(
@@ -158,6 +159,7 @@ function GroupsContent() {
   }, [chatId]);
 
   const groupsList = useMemo(() => myGroups?.groups || [], [myGroups?.groups]);
+  const shouldShowIntro = !chatId || !groupDetails?.chat;
 
   const IconButtons = (
     <>
@@ -271,13 +273,19 @@ function GroupsContent() {
   );
 
   return isLoadingMyGroups ? (
-    <Grid container height="100vh">
+    <Grid
+      container
+      height={{ xs: "calc(100vh - 56px)", sm: "calc(100vh - 64px)" }}
+    >
       <Grid size={12}>
-        <FullPageLoader minHeight="100vh" />
+        <FullPageLoader minHeight="100%" />
       </Grid>
     </Grid>
   ) : (
-    <Grid container height="100vh">
+    <Grid
+      container
+      height={{ xs: "calc(100vh - 56px)", sm: "calc(100vh - 64px)" }}
+    >
       <Grid
         size={{ sm: 4 }}
         sx={{
@@ -341,7 +349,7 @@ function GroupsContent() {
                 },
               }}
             >
-              {!chatId && (
+              {shouldShowIntro && (
                 <Typography
                   variant="body2"
                   color="white"
@@ -522,9 +530,12 @@ const GroupListItem = memo(({ group, chatId }) => {
 export default function Groups() {
   return (
     <ProtectedRoute>
-      <Suspense fallback={<FullPageLoader minHeight="100vh" />}>
-        <GroupsContent />
-      </Suspense>
+      <>
+        <Header />
+        <Suspense fallback={<FullPageLoader minHeight="90vh" />}>
+          <GroupsContent />
+        </Suspense>
+      </>
     </ProtectedRoute>
   );
 }

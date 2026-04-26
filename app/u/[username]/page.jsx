@@ -21,6 +21,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { nextBackend, socketBackend } from "../../../constants/config";
 import { gradientBg } from "../../../constants/color";
+import Header from "../../../components/layout/Header";
 
 const NEXT_QUESTIONS_API_BASE = `${nextBackend}/chat/questions`;
 const ASK_AND_RECORD_API_BASE = `${socketBackend}/chat/ask-and-record`;
@@ -622,29 +623,31 @@ export default function Username() {
   );
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: gradientBg,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        padding: { xs: "0.75rem", sm: "2rem" },
-      }}
-    >
+    <>
+      {isOwner && <Header />}
       <Box
         sx={{
-          width: "100%",
-          maxWidth: 1150,
-          display: "grid",
-          gap: { xs: 1.5, sm: 3 },
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: hasAnsweredShowcase ? "minmax(0, 2fr) minmax(280px, 1fr)" : "1fr",
-          },
-          justifyItems: { md: hasAnsweredShowcase ? "stretch" : "center" },
+          minHeight: "100vh",
+          background: gradientBg,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          padding: { xs: "0.75rem", sm: "2rem" },
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 1150,
+            display: "grid",
+            gap: { xs: 1.5, sm: 3 },
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: hasAnsweredShowcase ? "minmax(0, 2fr) minmax(280px, 1fr)" : "1fr",
+            },
+            justifyItems: { md: hasAnsweredShowcase ? "stretch" : "center" },
+          }}
+        >
         {hasAnsweredShowcase && (
           <Box sx={{ display: { xs: "block", md: "none" }, gridColumn: "1 / -1" }}>
             <Paper elevation={2} sx={{ mb: 1, borderRadius: "14px" }}>
@@ -676,7 +679,8 @@ export default function Username() {
             {answerShowcasePanel}
           </Box>
         )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
