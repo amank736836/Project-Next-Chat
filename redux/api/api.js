@@ -103,10 +103,10 @@ const api = createApi({
       }),
     }),
     sendChatMessage: builder.mutation({
-      query: ({ chatId, content }) => ({
-        url: getSocketBackedUrl("/chat/message/text"),
+      query: ({ username, content, sender, replyTo }) => ({
+        url: getSocketBackedUrl("/chat/sendMessage"),
         method: "POST",
-        body: { chatId, content },
+        body: { username, content, sender, replyTo },
         credentials: "include",
       }),
     }),
