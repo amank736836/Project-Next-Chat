@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
-import connectDB from '../../../../../lib/server/db.js';
 import User from '../../../../../lib/server/models/user.model.js';
 import { getAuthenticatedUser } from '../../../../../lib/server/auth.js';
 
 export async function POST(request) {
   try {
-    await connectDB();
     const user = await getAuthenticatedUser(request);
     if (!user) {
       return NextResponse.json(
