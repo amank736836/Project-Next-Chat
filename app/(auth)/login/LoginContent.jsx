@@ -66,6 +66,12 @@ export default function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (isLogin) {
+      setUsernameAvailable(null);
+      setCheckingUsername(false);
+      return;
+    }
+
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -96,9 +102,15 @@ export default function LoginContent() {
     return () => {
       clearTimeout(timerRef.current);
     };
-  }, [username.value]);
+  }, [isLogin, username.value]);
 
   useEffect(() => {
+    if (isLogin) {
+      setEmailAvailable(null);
+      setCheckingEmail(false);
+      return;
+    }
+
     if (emailTimerRef.current) {
       clearTimeout(emailTimerRef.current);
     }
@@ -129,7 +141,7 @@ export default function LoginContent() {
     return () => {
       clearTimeout(emailTimerRef.current);
     };
-  }, [email.value]);
+  }, [isLogin, email.value]);
 
   const dispatch = useDispatch();
 
