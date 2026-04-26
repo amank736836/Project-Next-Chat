@@ -134,7 +134,7 @@ const getPoolForUsername = async (username) => {
   return [...personalQuestions, ...globalQuestions];
 };
 
-const getBoardReplyShowcaseForUsername = async (username) => {
+const getBoardReplyShowcaseForUsername = async (username, { includeHidden = false } = {}) => {
   const owner = await User.findOne({ username }).select('_id username').lean();
 
   if (!owner?._id) return [];
@@ -143,12 +143,17 @@ const getBoardReplyShowcaseForUsername = async (username) => {
 
   if (!boardChat?._id) return [];
 
-  const replyMessages = await Message.find({
+  const replyQuery = {
     chat: boardChat._id,
     replyTo: { $exists: true },
     'replyTo.content': { $nin: ['', null] },
-    hiddenFromShowcase: { $ne: true },
-  })
+  };
+
+  if (!includeHidden) {
+    replyQuery.hiddenFromShowcase = { $ne: true };
+  }
+
+  const replyMessages = await Message.find(replyQuery)
     .populate('sender', 'name username')
     .sort({ createdAt: -1 })
     .limit(20)
@@ -157,6 +162,7 @@ const getBoardReplyShowcaseForUsername = async (username) => {
   return replyMessages.map((message) => ({
     id: `reply-${message._id}`,
     itemType: 'reply',
+    hiddenFromShowcase: Boolean(message.hiddenFromShowcase),
     question: message.replyTo?.content || 'Replied question',
     answer: normalizeShowcaseAnswer(message.content || ''),
     createdAt: message.createdAt,
@@ -183,23 +189,30 @@ export async function GET(request) {
       );
     }
 
+    const authUser = await getAuthenticatedUser(request);
+    const isOwnerViewer =
+      Boolean(authUser?.username) && authUser.username.toLowerCase() === username;
+
     const excludedSet = parseExclude(exclude);
     const pool = await getPoolForUsername(username);
 
     const unanswered = pool.filter((item) => !item.answer?.trim());
     const answered = pool
-      .filter((item) => item.answer?.trim() && !item.hiddenFromShowcase)
+      .filter((item) => item.answer?.trim() && (isOwnerViewer || !item.hiddenFromShowcase))
       .sort((a, b) => new Date(b.answeredAt || b.updatedAt) - new Date(a.answeredAt || a.updatedAt))
       .slice(0, 20)
       .map((item) => ({
         id: item._id,
         itemType: 'question',
+        hiddenFromShowcase: Boolean(item.hiddenFromShowcase),
         question: item.question,
         answer: normalizeShowcaseAnswer(item.answer),
         createdAt: item.answeredAt || item.updatedAt,
       }));
 
-    const boardReplyAnswered = await getBoardReplyShowcaseForUsername(username);
+    const boardReplyAnswered = await getBoardReplyShowcaseForUsername(username, {
+      includeHidden: isOwnerViewer,
+    });
 
     const answeredKeys = new Set(
       answered.map((item) => `${normalizeQuestion(item.question)}::${normalizeQuestion(item.answer)}`)
@@ -221,6 +234,13 @@ export async function GET(request) {
       .filter((item) => item.targetUsername === username)
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
 
+    const askedQuestionSet = new Set(
+      personalUnanswered
+        .filter((item) => (item.askedCount || 0) > 0)
+        .map((item) => item.normalizedQuestion)
+        .filter(Boolean)
+    );
+
     const customQuestions = personalUnanswered.map((item) => ({
       id: item._id,
       question: item.question,
@@ -229,10 +249,15 @@ export async function GET(request) {
     }));
 
     const filteredUnanswered = unanswered
-      .filter((item) => !excludedSet.has(item.normalizedQuestion))
+      .filter(
+        (item) =>
+          !excludedSet.has(item.normalizedQuestion) &&
+          !askedQuestionSet.has(item.normalizedQuestion)
+      )
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
 
     const personalSuggestions = personalUnanswered
+      .filter((item) => (item.askedCount || 0) === 0)
       .map((item) => item.question);
 
     const globalSuggestions = filteredUnanswered
@@ -252,6 +277,7 @@ export async function GET(request) {
         suggestions,
         answered: mergedAnswered.slice(0, 20),
         customQuestions,
+        ownerView: isOwnerViewer,
       },
       { status: 200 }
     );
@@ -285,41 +311,93 @@ export async function POST(request) {
 
     const normalizedQuestion = normalizeQuestion(trimmedQuestion);
 
-    let existing;
+    let existing = await SuggestedQuestion.findOne({
+      targetUsername: normalizedUsername,
+      normalizedQuestion,
+    });
 
-    try {
-      existing = await SuggestedQuestion.findOneAndUpdate(
-        { targetUsername: normalizedUsername, normalizedQuestion },
+    if (existing?.answer?.trim()) {
+      return NextResponse.json(
         {
-          $setOnInsert: {
-            targetUsername: normalizedUsername,
-            question: trimmedQuestion,
-            normalizedQuestion,
-            answer: '',
-            answeredAt: null,
-          },
-          $inc: { askedCount: 1 },
+          success: true,
+          alreadyAsked: true,
+          alreadyAnswered: true,
+          question: existing.question,
+          answer: existing.answer,
         },
-        { upsert: true, new: true }
+        { status: 200 }
       );
-    } catch (error) {
-      const duplicateError = error?.code === 11000;
-      if (!duplicateError) throw error;
+    }
 
-      existing = await SuggestedQuestion.findOneAndUpdate(
-        { targetUsername: normalizedUsername, normalizedQuestion },
+    if (existing && (existing.askedCount || 0) > 0) {
+      return NextResponse.json(
         {
+          success: true,
+          alreadyAsked: true,
+          alreadyAnswered: false,
+        },
+        { status: 200 }
+      );
+    }
+
+    if (existing) {
+      existing = await SuggestedQuestion.findOneAndUpdate(
+        { _id: existing._id },
+        {
+          $set: { question: trimmedQuestion },
           $inc: { askedCount: 1 },
         },
         { new: true }
       );
-    }
+    } else {
+      try {
+        existing = await SuggestedQuestion.findOneAndUpdate(
+          { targetUsername: normalizedUsername, normalizedQuestion },
+          {
+            $setOnInsert: {
+              targetUsername: normalizedUsername,
+              question: trimmedQuestion,
+              normalizedQuestion,
+              answer: '',
+              answeredAt: null,
+            },
+            $inc: { askedCount: 1 },
+          },
+          { upsert: true, new: true }
+        );
+      } catch (error) {
+        const duplicateError = error?.code === 11000;
+        if (!duplicateError) throw error;
 
-    if (!existing) {
-      existing = await SuggestedQuestion.findOne({
-        targetUsername: normalizedUsername,
-        normalizedQuestion,
-      });
+        existing = await SuggestedQuestion.findOne({
+          targetUsername: normalizedUsername,
+          normalizedQuestion,
+        });
+
+        if (existing && (existing.askedCount || 0) > 0) {
+          return NextResponse.json(
+            {
+              success: true,
+              alreadyAsked: true,
+              alreadyAnswered: Boolean(existing.answer?.trim()),
+              question: existing.answer?.trim() ? existing.question : undefined,
+              answer: existing.answer?.trim() ? existing.answer : undefined,
+            },
+            { status: 200 }
+          );
+        }
+
+        if (existing) {
+          existing = await SuggestedQuestion.findOneAndUpdate(
+            { _id: existing._id },
+            {
+              $set: { question: trimmedQuestion },
+              $inc: { askedCount: 1 },
+            },
+            { new: true }
+          );
+        }
+      }
     }
 
     if (!existing) {
@@ -336,6 +414,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           success: true,
+          alreadyAsked: true,
           alreadyAnswered: true,
           question: existing.question,
           answer: existing.answer,
@@ -347,6 +426,7 @@ export async function POST(request) {
     return NextResponse.json(
       {
         success: true,
+        alreadyAsked: false,
         alreadyAnswered: false,
       },
       { status: 200 }
@@ -461,8 +541,9 @@ export async function PATCH(request) {
       );
     }
 
-    const { username, itemId, itemType } = await request.json();
+    const { username, itemId, itemType, action = 'hide' } = await request.json();
     const normalizedUsername = (username || '').trim().toLowerCase();
+    const shouldHide = action !== 'show';
 
     if (!normalizedUsername || normalizedUsername !== authUser.username.toLowerCase()) {
       return NextResponse.json(
@@ -486,7 +567,7 @@ export async function PATCH(request) {
         },
         {
           $set: {
-            hiddenFromShowcase: true,
+            hiddenFromShowcase: shouldHide,
           },
         },
         { new: true }
@@ -528,7 +609,7 @@ export async function PATCH(request) {
         },
         {
           $set: {
-            hiddenFromShowcase: true,
+            hiddenFromShowcase: shouldHide,
           },
         },
         { new: true }
@@ -550,7 +631,9 @@ export async function PATCH(request) {
     return NextResponse.json(
       {
         success: true,
-        message: 'Showcase item hidden successfully',
+        message: shouldHide
+          ? 'Showcase item hidden successfully'
+          : 'Showcase item shown successfully',
       },
       { status: 200 }
     );

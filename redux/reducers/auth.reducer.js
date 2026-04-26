@@ -62,6 +62,7 @@ const authSlice = createSlice({
         });
       })
       .addCase(getAdmin.rejected, (state, action) => {
+        state.isAdmin = false;
         state.loader = false;
       })
       .addCase(adminLogout.fulfilled, (state, action) => {

@@ -65,6 +65,7 @@ export default function Username() {
   const [answeredShowcase, setAnsweredShowcase] = useState([]);
   const [customQuestions, setCustomQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
+  const [selectedSuggestionTemplate, setSelectedSuggestionTemplate] = useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
   const [deletingQuestionId, setDeletingQuestionId] = useState(null);
   const [hidingShowcaseId, setHidingShowcaseId] = useState(null);
@@ -79,6 +80,13 @@ export default function Username() {
     const startIndex = (answerShowcasePage - 1) * ANSWER_SHOWCASE_PAGE_SIZE;
     return answeredShowcase.slice(startIndex, startIndex + ANSWER_SHOWCASE_PAGE_SIZE);
   }, [answerShowcasePage, answeredShowcase]);
+  const isSelectedSuggestionUnedited =
+    Boolean(selectedSuggestionTemplate.trim()) &&
+    newQuestion.trim() === selectedSuggestionTemplate.trim();
+  const canSaveCustomQuestion =
+    Boolean(newQuestion.trim()) &&
+    savingQuestionId !== "new" &&
+    !isSelectedSuggestionUnedited;
 
   useEffect(() => {
     let isMounted = true;
@@ -167,6 +175,7 @@ export default function Username() {
       if (response.data.success) {
         toast.success("Question saved successfully");
         setNewQuestion("");
+        setSelectedSuggestionTemplate("");
         fetchSuggestedMessages({ exclude: messageString });
       }
     } catch (error) {
@@ -222,6 +231,13 @@ export default function Username() {
         sender: user,
       });
 
+      if (response.data.success && response.data.alreadyAsked && !response.data.alreadyAnswered) {
+        toast("This question was already asked. Please ask a different one.");
+        await fetchSuggestedMessages({ refresh: false, exclude: askedQuestion });
+        setContent("");
+        return;
+      }
+
       if (response.data.success && response.data.alreadyAnswered) {
         toast.success("This question is already answered. Showing existing answer.");
         setAnsweredShowcase((prev) => {
@@ -249,12 +265,12 @@ export default function Username() {
           toast.success("Message saved. They'll see it when they come online.");
         }
         setContent("");
-        await fetchSuggestedMessages({ refresh: true, exclude: messageString });
+        await fetchSuggestedMessages({ refresh: true, exclude: `${messageString}${specialChar}${askedQuestion}` });
       } else if (response.data.success && !response.data.alreadyAnswered) {
         // Message was saved to DB even if socket delivery had issues
         toast.success("Message saved successfully.");
         setContent("");
-        await fetchSuggestedMessages({ refresh: true, exclude: messageString });
+        await fetchSuggestedMessages({ refresh: true, exclude: `${messageString}${specialChar}${askedQuestion}` });
       } else {
         toast.error("Failed to send message. Please try again.");
       }
@@ -294,30 +310,39 @@ export default function Username() {
   const handleSuggestionTemplateClick = (msg) => {
     if (!isOwner) return;
     setNewQuestion(msg);
+    setSelectedSuggestionTemplate(msg);
   };
 
   const suggestionVisibleCount = isMobileView ? 3 : 4;
 
-  const hideShowcaseItem = async (item) => {
+  const toggleShowcaseVisibility = async (item) => {
     if (!isOwner || !item?.id || !item?.itemType) return;
 
     setHidingShowcaseId(item.id);
     try {
+      const isHidden = Boolean(item.hiddenFromShowcase);
       const response = await axios.patch(NEXT_QUESTIONS_API_BASE, {
         username,
         itemId: item.id,
         itemType: item.itemType,
+        action: isHidden ? "show" : "hide",
       });
 
       if (response.data.success) {
-        setAnsweredShowcase((prev) => prev.filter((entry) => entry.id !== item.id));
-        toast.success("Showcase item hidden");
+        setAnsweredShowcase((prev) =>
+          prev.map((entry) =>
+            entry.id === item.id
+              ? { ...entry, hiddenFromShowcase: !isHidden }
+              : entry
+          )
+        );
+        toast.success(isHidden ? "Showcase item shown" : "Showcase item hidden");
       } else {
-        toast.error("Failed to hide showcase item");
+        toast.error(isHidden ? "Failed to show showcase item" : "Failed to hide showcase item");
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to hide showcase item");
+      toast.error("Failed to update showcase item");
     } finally {
       setHidingShowcaseId(null);
     }
@@ -377,11 +402,16 @@ export default function Username() {
           />
           <Button
             variant="contained"
-            disabled={!newQuestion.trim() || savingQuestionId === "new"}
+            disabled={!canSaveCustomQuestion}
             onClick={() => saveQuestion({ question: newQuestion })}
           >
             {savingQuestionId === "new" ? <CircularProgress size={20} /> : "Save Custom Question"}
           </Button>
+          {isSelectedSuggestionUnedited && (
+            <Typography variant="caption" color="text.secondary">
+              Edit the selected suggestion before saving.
+            </Typography>
+          )}
 
           <Box>
             <Typography
@@ -537,11 +567,17 @@ export default function Username() {
                 <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                   <Button
                     size="small"
-                    color="error"
-                    onClick={() => hideShowcaseItem(item)}
+                    color={item.hiddenFromShowcase ? "primary" : "error"}
+                    onClick={() => toggleShowcaseVisibility(item)}
                     disabled={hidingShowcaseId === item.id}
                   >
-                    {hidingShowcaseId === item.id ? "Hiding..." : "Hide"}
+                    {hidingShowcaseId === item.id
+                      ? item.hiddenFromShowcase
+                        ? "Showing..."
+                        : "Hiding..."
+                      : item.hiddenFromShowcase
+                        ? "Show"
+                        : "Hide"}
                   </Button>
                 </Box>
               )}
@@ -555,6 +591,11 @@ export default function Username() {
               <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
                 {item.answer}
               </Typography>
+              {isOwner && item.hiddenFromShowcase && (
+                <Typography variant="caption" color="warning.main" sx={{ mt: 1, display: "block" }}>
+                  Hidden from public showcase
+                </Typography>
+              )}
             </Paper>
           ))}
         </Stack>

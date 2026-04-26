@@ -4,6 +4,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { nextBackend, socketBackend } from "../../constants/config";
 
 const getSocketBackedUrl = (path) => {
+  if (!socketBackend) {
+    throw new Error(
+      "Socket backend URL is not configured. Set NEXT_PUBLIC_SOCKET_SERVER_URL to use realtime-backed endpoints."
+    );
+  }
   return `${socketBackend}${path}`;
 };
 

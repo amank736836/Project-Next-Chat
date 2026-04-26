@@ -7,7 +7,7 @@ export const socketServer =
 
 export const socketBackend = socketServer
 	? `${socketServer.replace(/\/$/, "")}/api/v1`
-	: nextBackend;
+	: "";
 
 // Backward-compat alias for old imports.
 export const server = nextBackend;

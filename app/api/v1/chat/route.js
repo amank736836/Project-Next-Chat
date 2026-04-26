@@ -27,7 +27,7 @@ export async function GET(request) {
 
       return {
         _id,
-        name: groupChat ? name : otherMember?.name || 'Anonymous Inbox',
+        name: groupChat ? name : otherMember?.name || user?.username || 'Anonymous Inbox',
         groupChat,
         avatar: groupChat
           ? members.slice(0, 3).map(({ avatar }) => avatar?.url || '')
