@@ -158,16 +158,14 @@ function GroupsContent() {
   }, [chatId]);
 
   const groupsList = useMemo(() => myGroups?.groups || [], [myGroups?.groups]);
-  const shouldShowIntro = !chatId || !groupDetails?.chat;
+  const shouldShowIntro = !chatId || !groupDetails?.chat || isLoadingGroupDetails;
 
   const BackButtonToolbar = (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "flex-end",
-        padding: "1rem",
-        background: gradientBg,
-        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          position: "absolute",
+          top: "2rem",
+          right: "2rem",
       }}
     >
       <Tooltip title="Back">
@@ -300,7 +298,7 @@ function GroupsContent() {
           flexDirection: "column",
           alignItems: "center",
           position: "relative",
-          padding: "1.5rem 2rem",
+          padding: "0 0 1.5rem 0",
           background: gradientBg,
           color: "white",
         }}
