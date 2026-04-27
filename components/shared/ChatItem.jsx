@@ -1,6 +1,8 @@
 "use client";
 
-import { Box, Stack, Typography } from "@mui/material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
+import { Logout as LogoutIcon } from "@mui/icons-material";
+import { Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { memo } from "react";
@@ -63,6 +65,39 @@ function ChatItem({
             <Typography>{newMessageCount} New Messages</Typography>
           )}
         </Stack>
+
+        {Boolean(handleDeleteChat) && (
+          <Tooltip title={groupChat ? "Leave group" : "Delete chat"} arrow>
+            <IconButton
+              size="medium"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDeleteChat(e, _id, groupChat);
+              }}
+              sx={{
+                position: "absolute",
+                right: isOnline ? "2.4rem" : "0.5rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+                display: {
+                  xs: "inline-flex",
+                  sm: "none",
+                },
+                color: sameSender ? "white" : "#d32f2f",
+                width: 34,
+                height: 34,
+                zIndex: 2,
+              }}
+            >
+              {groupChat ? (
+                <LogoutIcon fontSize="medium" />
+              ) : (
+                <DeleteIcon fontSize="medium" />
+              )}
+            </IconButton>
+          </Tooltip>
+        )}
 
         {isOnline && (
           <Box

@@ -3,7 +3,10 @@
 import {
   Box,
   Button,
+  Chip,
   CircularProgress,
+  Drawer,
+  Skeleton,
   Paper,
   Tab,
   Tabs,
@@ -13,15 +16,27 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { nextBackend, socketBackend } from "../../../constants/config";
 import { gradientBg } from "../../../constants/color";
 import Header from "../../../components/layout/Header";
+import ChatList from "../../../components/shared/ChatList";
+import Profile from "../../../components/shared/Profile";
+import DeleteChatMenu from "../../../components/dialog/DeleteChatMenu";
+import { useGetMyChatsQuery } from "../../../redux/api/api";
+import { userExists } from "../../../redux/reducers/auth.reducer";
+import { setNotificationCount } from "../../../redux/reducers/chat.reducer";
+import {
+  setIsDeleteMenu,
+  setIsMobile,
+  setIsProfile,
+  setSelectedDeleteChat,
+} from "../../../redux/reducers/misc.reducer";
 
 const NEXT_QUESTIONS_API_BASE = `${nextBackend}/chat/questions`;
 const ASK_AND_RECORD_API_BASE = `${socketBackend}/chat/ask-and-record`;
@@ -44,8 +59,11 @@ export default function Username() {
   const username = params.username;
   const theme = useTheme();
   const isMobileView = useMediaQuery(theme.breakpoints.down("sm"));
+  const dispatch = useDispatch();
+  const deleteOptionAnchor = useRef(null);
 
   const { user } = useSelector((state) => state.auth);
+  const { isMobile, isProfile } = useSelector((state) => state.misc);
   const [viewerUsername, setViewerUsername] = useState("");
   const [viewerUser, setViewerUser] = useState(null);
 
@@ -67,6 +85,7 @@ export default function Username() {
   const [completionError, setCompletionError] = useState(null);
   const [answeredShowcase, setAnsweredShowcase] = useState([]);
   const [customQuestions, setCustomQuestions] = useState([]);
+  const [priorityQuestions, setPriorityQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
   const [selectedSuggestionTemplate, setSelectedSuggestionTemplate] = useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
@@ -91,6 +110,33 @@ export default function Username() {
     savingQuestionId !== "new" &&
     !isSelectedSuggestionUnedited;
 
+  const {
+    data: chatsData,
+    isLoading: isLoadingChats,
+  } = useGetMyChatsQuery("", {
+    skip: !isLoggedInViewer,
+  });
+
+  const chatListData = useMemo(() => chatsData?.chats || [], [chatsData?.chats]);
+
+  const handleMobileClose = useCallback(() => {
+    dispatch(setIsMobile(false));
+  }, [dispatch]);
+
+  const handleProfileClose = useCallback(() => {
+    dispatch(setIsProfile(false));
+  }, [dispatch]);
+
+  const handleDeleteChat = useCallback(
+    (e, chatId, groupChat) => {
+      e.preventDefault();
+      deleteOptionAnchor.current = e.currentTarget;
+      dispatch(setIsDeleteMenu(true));
+      dispatch(setSelectedDeleteChat({ chatId, groupChat }));
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     let isMounted = true;
 
@@ -103,6 +149,10 @@ export default function Username() {
         if (isMounted) {
           setViewerUser(data?.user || null);
           setViewerUsername(data?.user?.username || "");
+          if (data?.user) {
+            dispatch(userExists(data.user));
+            dispatch(setNotificationCount(data.notificationCount || 0));
+          }
         }
       } catch {
         if (isMounted) {
@@ -135,6 +185,7 @@ export default function Username() {
         setMessageString(nextSuggestions);
         setAnsweredShowcase(response.data.answered || []);
         setCustomQuestions(response.data.customQuestions || []);
+        setPriorityQuestions(response.data.priorityQuestions || []);
 
         setCompletionError(null);
       } else {
@@ -468,6 +519,38 @@ export default function Username() {
               </Typography>
             )}
           </Box>
+
+          <Box>
+            <Typography
+              variant={isMobileView ? "subtitle2" : "subtitle1"}
+              sx={{ mb: 1, fontSize: { xs: "0.8rem", sm: "1rem" } }}
+            >
+              Priority Questions (Most Asked)
+            </Typography>
+
+            {priorityQuestions.length > 0 ? (
+              <Stack spacing={1}>
+                {priorityQuestions.map((item) => (
+                  <Paper key={item.id} variant="outlined" sx={{ p: 1 }}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+                      <Typography variant="body2" sx={{ flex: 1 }}>
+                        {item.question}
+                      </Typography>
+                      <Chip
+                        color="error"
+                        size="small"
+                        label={`${item.askedCount} asks`}
+                      />
+                    </Stack>
+                  </Paper>
+                ))}
+              </Stack>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No repeated asks yet.
+              </Typography>
+            )}
+          </Box>
         </Stack>
       )}
 
@@ -644,6 +727,60 @@ export default function Username() {
   return (
     <>
       {isLoggedInViewer && <Header />}
+      {isLoggedInViewer && <DeleteChatMenu deleteOptionAnchor={deleteOptionAnchor} />}
+      {isLoggedInViewer && (
+        <Drawer
+          open={isMobile}
+          onClose={handleMobileClose}
+          anchor="right"
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: "80vw",
+              background: gradientBg,
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            },
+          }}
+          onClick={handleMobileClose}
+        >
+          {isLoadingChats ? (
+            <Stack spacing={"1rem"}>
+              {Array.from({ length: 8 }, (_, index) => (
+                <Skeleton key={index} variant="rounded" height={95} />
+              ))}
+            </Stack>
+          ) : (
+            <ChatList
+              w="80vw"
+              chats={chatListData}
+              chatId={null}
+              newMessagesAlert={[]}
+              onlineUsers={[]}
+              handleDeleteChat={handleDeleteChat}
+              onSelectChat={() => dispatch(setIsMobile(false))}
+            />
+          )}
+        </Drawer>
+      )}
+      {isLoggedInViewer && (
+        <Drawer
+          open={isProfile}
+          onClose={handleProfileClose}
+          anchor="left"
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: {
+                xs: "85vw",
+                sm: "75vw",
+                md: "42vw",
+              },
+              background: gradientBg,
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            },
+          }}
+        >
+          <Profile />
+        </Drawer>
+      )}
       <Box
         sx={{
           minHeight: "100vh",

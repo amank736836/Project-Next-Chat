@@ -7,10 +7,10 @@ import {
   Link as LinkIcon,
   AlternateEmail as UsernameIcon,
 } from "@mui/icons-material";
-import { Avatar, Box, Stack, Switch, Typography } from "@mui/material";
+import { Avatar, Box, Skeleton, Stack, Switch, Typography } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { gradientBg } from "../../constants/color";
@@ -35,6 +35,10 @@ export default function Profile() {
   const [isAcceptingMessage, setIsAcceptingMessage] = useState(
     user?.isAcceptingMessage || false
   );
+
+  useEffect(() => {
+    setIsAcceptingMessage(Boolean(user?.isAcceptingMessage));
+  }, [user?.isAcceptingMessage]);
 
   const handleAcceptMessages = useCallback(async () => {
     const nextState = !isAcceptingMessage;
@@ -78,7 +82,39 @@ export default function Profile() {
     }
   }, [isAcceptingMessage]);
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <Box
+        sx={{
+          minHeight: "calc(100vh - 4rem)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: gradientBg,
+          padding: "2rem",
+        }}
+      >
+        <Stack
+          spacing={2}
+          sx={{
+            width: "100%",
+            maxWidth: "500px",
+            padding: "1rem",
+            borderRadius: "16px",
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            boxShadow: "0px 6px 25px rgba(0, 0, 0, 0.15)",
+            alignItems: "center",
+          }}
+        >
+          <Skeleton variant="circular" width={150} height={150} />
+          <Skeleton variant="rounded" width="100%" height={56} />
+          <Skeleton variant="rounded" width="100%" height={56} />
+          <Skeleton variant="rounded" width="100%" height={56} />
+          <Skeleton variant="rounded" width="100%" height={56} />
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Box

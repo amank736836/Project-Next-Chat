@@ -26,8 +26,24 @@ const GLOBAL_SEED_QUESTIONS = [
 const normalizeQuestion = (value = '') =>
   value
     .trim()
+    .replace(/[^a-z0-9\s]/gi, ' ')
     .replace(/\s+/g, ' ')
     .toLowerCase();
+
+const normalizeQuestionLegacy = (value = '') =>
+  value
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+
+const getNormalizedQuestionCandidates = (value = '') => {
+  const normalized = normalizeQuestion(value);
+  const legacyNormalized = normalizeQuestionLegacy(value);
+
+  return [normalized, legacyNormalized].filter(
+    (item, index, arr) => Boolean(item) && arr.indexOf(item) === index
+  );
+};
 
 const parseExclude = (exclude = '') => {
   if (!exclude) return new Set();
@@ -248,22 +264,36 @@ export async function GET(request) {
     const askedQuestionSet = new Set(
       personalUnanswered
         .filter((item) => (item.askedCount || 0) > 0)
-        .map((item) => item.normalizedQuestion)
+        .map((item) => normalizeQuestion(item.question || item.normalizedQuestion || ''))
         .filter(Boolean)
     );
 
-    const customQuestions = personalUnanswered.map((item) => ({
+    const priorityQuestions = personalUnanswered
+      .filter((item) => (item.askedCount || 0) > 0)
+      .sort((a, b) => (b.askedCount || 0) - (a.askedCount || 0))
+      .slice(0, 10)
+      .map((item) => ({
+        id: item._id,
+        question: item.question,
+        askedCount: item.askedCount || 0,
+        createdAt: item.createdAt,
+      }));
+
+    const customQuestions = personalUnanswered
+      .filter((item) => (item.askedCount || 0) === 0)
+      .map((item) => ({
       id: item._id,
       question: item.question,
       askedCount: item.askedCount || 0,
       createdAt: item.createdAt,
-    }));
+      }));
 
     const filteredUnanswered = unanswered
       .filter(
-        (item) =>
-          !excludedSet.has(item.normalizedQuestion) &&
-          !askedQuestionSet.has(item.normalizedQuestion)
+        (item) => {
+          const normalized = normalizeQuestion(item.question || item.normalizedQuestion || '');
+          return !excludedSet.has(normalized) && !askedQuestionSet.has(normalized);
+        }
       )
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
 
@@ -290,6 +320,7 @@ export async function GET(request) {
         suggestions,
         answered: mergedAnswered.slice(0, 20),
         customQuestions,
+        priorityQuestions,
         ownerView: isOwnerViewer,
       },
       { status: 200 }
@@ -323,13 +354,20 @@ export async function POST(request) {
     }
 
     const normalizedQuestion = normalizeQuestion(trimmedQuestion);
+    const normalizedQuestionCandidates = getNormalizedQuestionCandidates(trimmedQuestion);
 
     let existing = await SuggestedQuestion.findOne({
       targetUsername: normalizedUsername,
-      normalizedQuestion,
+      normalizedQuestion: { $in: normalizedQuestionCandidates },
     });
 
     if (existing?.answer?.trim()) {
+      existing = await SuggestedQuestion.findOneAndUpdate(
+        { _id: existing._id },
+        { $inc: { askedCount: 1 } },
+        { new: true }
+      );
+
       return NextResponse.json(
         {
           success: true,
@@ -343,6 +381,12 @@ export async function POST(request) {
     }
 
     if (existing && (existing.askedCount || 0) > 0) {
+      existing = await SuggestedQuestion.findOneAndUpdate(
+        { _id: existing._id },
+        { $inc: { askedCount: 1 } },
+        { new: true }
+      );
+
       return NextResponse.json(
         {
           success: true,
@@ -357,7 +401,10 @@ export async function POST(request) {
       existing = await SuggestedQuestion.findOneAndUpdate(
         { _id: existing._id },
         {
-          $set: { question: trimmedQuestion },
+          $set: {
+            question: trimmedQuestion,
+            normalizedQuestion,
+          },
           $inc: { askedCount: 1 },
         },
         { new: true }
@@ -384,10 +431,16 @@ export async function POST(request) {
 
         existing = await SuggestedQuestion.findOne({
           targetUsername: normalizedUsername,
-          normalizedQuestion,
+          normalizedQuestion: { $in: normalizedQuestionCandidates },
         });
 
         if (existing && (existing.askedCount || 0) > 0) {
+          existing = await SuggestedQuestion.findOneAndUpdate(
+            { _id: existing._id },
+            { $inc: { askedCount: 1 } },
+            { new: true }
+          );
+
           return NextResponse.json(
             {
               success: true,
@@ -404,7 +457,10 @@ export async function POST(request) {
           existing = await SuggestedQuestion.findOneAndUpdate(
             { _id: existing._id },
             {
-              $set: { question: trimmedQuestion },
+              $set: {
+                question: trimmedQuestion,
+                normalizedQuestion,
+              },
               $inc: { askedCount: 1 },
             },
             { new: true }
@@ -487,10 +543,35 @@ export async function PUT(request) {
     }
 
     const normalizedQuestion = normalizeQuestion(trimmedQuestion);
+    const normalizedQuestionCandidates = getNormalizedQuestionCandidates(trimmedQuestion);
+
+    const askedDuplicate = await SuggestedQuestion.findOne({
+      targetUsername: normalizedUsername,
+      normalizedQuestion: { $in: normalizedQuestionCandidates },
+      askedCount: { $gt: 0 },
+      ...(questionId ? { _id: { $ne: questionId } } : {}),
+    }).lean();
+
+    if (askedDuplicate) {
+      return NextResponse.json(
+        {
+          success: true,
+          alreadyAsked: true,
+          alreadyAnswered: Boolean(askedDuplicate.answer?.trim()),
+          question: askedDuplicate.question,
+          answer: askedDuplicate.answer?.trim() ? askedDuplicate.answer : undefined,
+          message: 'This question was already asked and cannot be added as custom.',
+        },
+        { status: 200 }
+      );
+    }
 
     const filter = questionId
       ? { _id: questionId, targetUsername: normalizedUsername }
-      : { targetUsername: normalizedUsername, normalizedQuestion };
+      : {
+          targetUsername: normalizedUsername,
+          normalizedQuestion: { $in: normalizedQuestionCandidates },
+        };
 
     let updated;
 
