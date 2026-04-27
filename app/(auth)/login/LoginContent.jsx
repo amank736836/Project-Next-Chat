@@ -430,6 +430,7 @@ export default function LoginContent() {
                 <CameraAltIcon />
                 <VisuallyHiddenInput
                   type="file"
+                  accept="image/png, image/jpeg, image/jpg, image/webp, image/gif"
                   onChange={avatar.changeHandler}
                 />
               </IconButton>
@@ -529,7 +530,6 @@ export default function LoginContent() {
               slotProps={hydrationSafeInputSlotProps}
               suppressHydrationWarning
             />
-            <PasswordStrengthBar password={password.value} />
             <TextField
               required
               fullWidth
@@ -558,6 +558,7 @@ export default function LoginContent() {
                   : ""
               }
             />
+            <PasswordStrengthBar password={password.value} />
             <Button
               fullWidth
               variant="contained"

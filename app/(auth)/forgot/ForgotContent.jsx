@@ -252,7 +252,6 @@ export default function ForgotContent() {
               value={password.value}
               onChange={password.changeHandler}
             />
-            <PasswordStrengthBar password={password.value} />
             <TextField
               required
               fullWidth
@@ -263,6 +262,7 @@ export default function ForgotContent() {
               value={confirmPassword.value}
               onChange={confirmPassword.changeHandler}
             />
+            <PasswordStrengthBar password={password.value} />
 
             <Button
               fullWidth
