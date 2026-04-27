@@ -6,7 +6,6 @@ import {
   Done as DoneIcon,
   Edit as EditIcon,
   KeyboardBackspace as KeyboardBackspaceIcon,
-  Menu as MenuIcon,
 } from "@mui/icons-material";
 import {
   Backdrop,
@@ -161,43 +160,32 @@ function GroupsContent() {
   const groupsList = useMemo(() => myGroups?.groups || [], [myGroups?.groups]);
   const shouldShowIntro = !chatId || !groupDetails?.chat;
 
-  const IconButtons = (
-    <>
-      <Box
-        sx={{
-          display: { xs: "block", sm: "none" },
-          position: "absolute",
-          top: "1rem",
-          right: "1rem",
-        }}
-      >
-        <Tooltip title="Menu">
-          <IconButton onClick={handleMobileOpen}>
-            <MenuIcon sx={{ color: "white" }} />
-          </IconButton>
-        </Tooltip>
-      </Box>
-
+  const BackButtonToolbar = (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "flex-end",
+        padding: "1rem",
+        background: gradientBg,
+        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+      }}
+    >
       <Tooltip title="Back">
         <IconButton
+          onClick={navigateBack}
           sx={{
-            position: "absolute",
-            top: "1.5rem",
-            left: "1.5rem",
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
             color: "white",
             transition: "all 0.3s ease-in-out",
             "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
               transform: "scale(1.1)",
             },
           }}
-          onClick={navigateBack}
         >
           <KeyboardBackspaceIcon />
         </IconButton>
       </Tooltip>
-    </>
+    </Box>
   );
 
   const GroupName = (
@@ -317,7 +305,7 @@ function GroupsContent() {
           color: "white",
         }}
       >
-        {IconButtons}
+        {BackButtonToolbar}
 
         {groupName && (
           <>

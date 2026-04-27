@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAuthenticatedAdmin, STEALTHY_NOTE_ADMIN_TOKEN_NAME, cookieOptions } from './lib/server/auth';
+import { verifyAdminToken, STEALTHY_NOTE_ADMIN_TOKEN_NAME, cookieOptions } from './lib/middleware-utils';
 
 const adminRoutes = ['/admin', '/admin/dashboard', '/admin/users', '/admin/chats', '/admin/messages'];
 
@@ -26,7 +26,7 @@ export async function middleware(request) {
   }
 
   try {
-    const admin = await getAuthenticatedAdmin();
+    const admin = await verifyAdminToken();
     
     if (!admin) {
       return NextResponse.redirect(new URL('/admin/login', request.url));

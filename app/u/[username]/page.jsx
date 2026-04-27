@@ -37,6 +37,7 @@ import {
   setIsProfile,
   setSelectedDeleteChat,
 } from "../../../redux/reducers/misc.reducer";
+import { useSocket } from "../../../providers/SocketProvider";
 
 const NEXT_QUESTIONS_API_BASE = `${nextBackend}/chat/questions`;
 const ASK_AND_RECORD_API_BASE = `${socketBackend}/chat/ask-and-record`;
@@ -372,6 +373,49 @@ export default function Username() {
   useEffect(() => {
     setAnswerShowcasePage((currentPage) => Math.min(currentPage, totalAnswerShowcasePages));
   }, [totalAnswerShowcasePages]);
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket || !isOwner) return;
+
+    const handleQuestionAsked = (data) => {
+      const { questionId, question, askedCount, normalizedQuestion } = data;
+
+      setPriorityQuestions((prev) => {
+        // Check if question already exists in priority list
+        const existingIndex = prev.findIndex((q) => q.id === questionId);
+
+        if (existingIndex !== -1) {
+          // Update existing question's ask count
+          const updated = [...prev];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            askedCount,
+          };
+          // Re-sort by askedCount descending
+          return updated.sort((a, b) => (b.askedCount || 0) - (a.askedCount || 0));
+        } else {
+          // Add new priority question
+          return [
+            ...prev,
+            {
+              id: questionId,
+              question,
+              askedCount,
+              normalizedQuestion,
+            },
+          ].sort((a, b) => (b.askedCount || 0) - (a.askedCount || 0));
+        }
+      });
+    };
+
+    socket.on("QUESTION_ASKED", handleQuestionAsked);
+
+    return () => {
+      socket.off("QUESTION_ASKED", handleQuestionAsked);
+    };
+  }, [socket, isOwner]);
 
   const handleMessageClick = (msg) => {
     if (isOwner) return;
