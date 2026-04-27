@@ -27,7 +27,10 @@ import { useState, lazy, Suspense } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { userNotExists } from "../../redux/reducers/auth.reducer";
-import { resetNotificationCount } from "../../redux/reducers/chat.reducer";
+import {
+  resetNotificationCount,
+  setNotificationCount,
+} from "../../redux/reducers/chat.reducer";
 import {
   setIsMobile,
   setIsNewGroup,
@@ -83,6 +86,7 @@ export default function Header() {
       });
 
       dispatch(userNotExists());
+      dispatch(setNotificationCount(0));
 
       toast.success(data.message, {
         duration: 1000,
@@ -163,6 +167,8 @@ export default function Header() {
               onClick={openNotification}
               icon={<NotificationsIcon />}
               value={notificationCount}
+              showZero
+              badgeColor={notificationCount > 0 ? "error" : "info"}
             />
             <IconBtn
               title="Manage Groups"
@@ -212,7 +218,9 @@ export default function Header() {
   );
 }
 
-const IconBtn = ({ title, onClick, icon, value }) => {
+const IconBtn = ({ title, onClick, icon, value, showZero = false, badgeColor = "error" }) => {
+  const shouldShowBadge = showZero || Boolean(value);
+
   return (
     <Tooltip title={title} arrow>
       <IconButton
@@ -227,8 +235,8 @@ const IconBtn = ({ title, onClick, icon, value }) => {
           },
         }}
       >
-        {value ? (
-          <Badge color="error" badgeContent={value}>
+        {shouldShowBadge ? (
+          <Badge color={badgeColor} badgeContent={value} showZero={showZero}>
             {icon}
           </Badge>
         ) : (

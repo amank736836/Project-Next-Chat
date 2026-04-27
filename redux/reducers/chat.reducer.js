@@ -25,6 +25,10 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    setNotificationCount: (state, action) => {
+      const count = Number(action.payload) || 0;
+      state.notificationCount = Math.max(count, 0);
+    },
     incrementNotificationCount: (state) => {
       state.notificationCount += 1;
     },
@@ -58,6 +62,7 @@ const chatSlice = createSlice({
 export default chatSlice;
 
 export const {
+  setNotificationCount,
   incrementNotificationCount,
   resetNotificationCount,
   setNewMessagesAlert,

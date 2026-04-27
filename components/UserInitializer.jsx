@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { usePathname } from "next/navigation";
 import { userExists, userNotExists } from "../redux/reducers/auth.reducer";
+import { setNotificationCount } from "../redux/reducers/chat.reducer";
 
 const AUTH_API_BASE = "/api/v1/user";
 const PUBLIC_PATHS = new Set([
@@ -24,6 +25,7 @@ export default function UserInitializer() {
 
     if (PUBLIC_PATHS.has(pathname) || pathname.startsWith("/u/")) {
       dispatch(userNotExists());
+      dispatch(setNotificationCount(0));
       return;
     }
 
@@ -33,8 +35,10 @@ export default function UserInitializer() {
           withCredentials: true,
         });
         dispatch(userExists(data.user));
+        dispatch(setNotificationCount(data.notificationCount || 0));
       } catch (error) {
         dispatch(userNotExists());
+        dispatch(setNotificationCount(0));
       }
     };
 

@@ -90,6 +90,17 @@ const mixSuggestionsWithUserRatio = ({ personal, global, limit, shuffle = false 
   return mixed;
 };
 
+const dedupeQuestions = (questions = []) => {
+  const seen = new Set();
+
+  return questions.filter((question) => {
+    const normalized = normalizeQuestion(question);
+    if (!normalized || seen.has(normalized)) return false;
+    seen.add(normalized);
+    return true;
+  });
+};
+
 const ensureGlobalSeeds = async () => {
   const operations = GLOBAL_SEED_QUESTIONS.map((question) => {
     const normalized = normalizeQuestion(question);
@@ -264,12 +275,14 @@ export async function GET(request) {
       .filter((item) => item.targetUsername !== username)
       .map((item) => item.question);
 
-    const suggestions = mixSuggestionsWithUserRatio({
+    const suggestions = dedupeQuestions(
+      mixSuggestionsWithUserRatio({
       personal: personalSuggestions,
       global: globalSuggestions,
       limit: SUGGESTION_LIMIT,
       shuffle: shouldRefresh,
-    });
+      })
+    );
 
     return NextResponse.json(
       {

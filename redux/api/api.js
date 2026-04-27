@@ -90,6 +90,15 @@ const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    sendAnonymousFriendRequest: builder.mutation({
+      query: (messageId) => ({
+        url: getSocketBackedUrl("/chat/anonymous-request"),
+        body: { messageId },
+        method: "PUT",
+        credentials: "include",
+      }),
+      invalidatesTags: ["Request"],
+    }),
     acceptFriendRequest: builder.mutation({
       query: (data) => ({
         url: getSocketBackedUrl("/user/acceptRequest"),
@@ -220,6 +229,7 @@ export const {
   useGetMessagesDashboardStatsQuery,
   useGetChatsDashboardStatsQuery,
   useSendFriendRequestMutation,
+  useSendAnonymousFriendRequestMutation,
   useAcceptFriendRequestMutation,
   useSendChatMessageMutation,
   useSendAttachmentsMutation,

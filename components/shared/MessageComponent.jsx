@@ -8,7 +8,10 @@ import { useSelector } from "react-redux";
 import { lightBlue } from "../../constants/color";
 import { fileFormat } from "../../lib/features";
 import RenderAttachment from "./RenderAttachment";
-import { useSendFriendRequestMutation } from "../../redux/api/api";
+import {
+  useSendAnonymousFriendRequestMutation,
+  useSendFriendRequestMutation,
+} from "../../redux/api/api";
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 
 function MessageComponent({ message, onReply }) {
@@ -39,11 +42,23 @@ function MessageComponent({ message, onReply }) {
       error: sendFriendRequestErrorData,
     },
   ] = useAsyncMutation(useSendFriendRequestMutation);
+  const [
+    sendAnonymousFriendRequest,
+    {
+      isLoading: isLoadingAnonymousFriendRequest,
+      isError: anonymousFriendRequestError,
+      error: anonymousFriendRequestErrorData,
+    },
+  ] = useAsyncMutation(useSendAnonymousFriendRequestMutation);
 
   useErrors([
     {
       isError: sendFriendRequestError,
       error: sendFriendRequestErrorData,
+    },
+    {
+      isError: anonymousFriendRequestError,
+      error: anonymousFriendRequestErrorData,
     },
   ]);
 
@@ -51,6 +66,11 @@ function MessageComponent({ message, onReply }) {
     if (!userId) return;
     await sendFriendRequest("Sending friend request...", userId);
   }, [sendFriendRequest]);
+
+  const sendAnonymousFriendRequestHandler = useCallback(async (messageId) => {
+    if (!messageId) return;
+    await sendAnonymousFriendRequest("Sending friend request...", messageId);
+  }, [sendAnonymousFriendRequest]);
 
   const handleReplyClick = useCallback(() => {
     if (!onReply) return;
@@ -82,7 +102,10 @@ function MessageComponent({ message, onReply }) {
         </Typography>
       )}
 
-      {!isSender && !isAnonymousMessage && sender?._id && message.chat === user._id && (
+      {!isSender &&
+        !isAnonymousMessage &&
+        sender?._id &&
+        String(message.chat || "") === String(user?._id || "") && (
         <Button
           onClick={() => sendFriendRequestHandler(sender._id)}
           disabled={isLoadingSendFriendRequest}
@@ -95,6 +118,24 @@ function MessageComponent({ message, onReply }) {
           }}
         >
           {isLoadingSendFriendRequest ? "Sending..." : "Add Friend"}
+        </Button>
+      )}
+
+      {!isSender &&
+        isAnonymousMessage &&
+        message?.canAddFriend && (
+        <Button
+          onClick={() => sendAnonymousFriendRequestHandler(message._id)}
+          disabled={isLoadingAnonymousFriendRequest}
+          variant="outlined"
+          size="small"
+          sx={{
+            marginLeft: "0.5rem",
+            color: lightBlue,
+            borderColor: lightBlue,
+          }}
+        >
+          {isLoadingAnonymousFriendRequest ? "Sending..." : "Add Friend"}
         </Button>
       )}
 

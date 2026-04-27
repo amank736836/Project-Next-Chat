@@ -47,6 +47,7 @@ export default function Username() {
 
   const { user } = useSelector((state) => state.auth);
   const [viewerUsername, setViewerUsername] = useState("");
+  const [viewerUser, setViewerUser] = useState(null);
 
   const normalizedUsername = (username || "").toLowerCase();
   const normalizedUserUsername = (user?.username || "").toLowerCase();
@@ -100,10 +101,12 @@ export default function Username() {
         });
 
         if (isMounted) {
+          setViewerUser(data?.user || null);
           setViewerUsername(data?.user?.username || "");
         }
       } catch {
         if (isMounted) {
+          setViewerUser(null);
           setViewerUsername("");
         }
       }
@@ -129,7 +132,7 @@ export default function Username() {
 
       if (response.data.success) {
         const nextSuggestions = (response.data.suggestions || []).join(specialChar);
-        setMessageString(nextSuggestions || initialMessageString);
+        setMessageString(nextSuggestions);
         setAnsweredShowcase(response.data.answered || []);
         setCustomQuestions(response.data.customQuestions || []);
 
@@ -225,12 +228,27 @@ export default function Username() {
     setIsLoading(true);
     try {
       const askedQuestion = content.trim();
+      const senderPayload = user?._id
+        ? {
+            _id: user._id,
+            name: user.name,
+            username: user.username,
+          }
+        : viewerUser?._id
+          ? {
+              _id: viewerUser._id,
+              name: viewerUser.name,
+              username: viewerUser.username,
+            }
+          : null;
 
       const response = await axios.post(ASK_AND_RECORD_API_BASE, {
         username,
         question: askedQuestion,
         content: askedQuestion,
-        sender: user,
+        sender: senderPayload,
+      }, {
+        withCredentials: true,
       });
 
       if (response.data.success && response.data.alreadyAsked && !response.data.alreadyAnswered) {
@@ -625,7 +643,7 @@ export default function Username() {
 
   return (
     <>
-      {isOwner && <Header />}
+      {isLoggedInViewer && <Header />}
       <Box
         sx={{
           minHeight: "100vh",
