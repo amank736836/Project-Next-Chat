@@ -52,7 +52,14 @@ export async function POST(request) {
       verifyCodeExpiry: new Date(Date.now() + 10 * 60 * 1000),
     });
 
-    await sendVerificationEmail(email, verifyCode, name);
+    const baseUrl = new URL(request.url).origin;
+    await sendVerificationEmail({
+      email,
+      code: verifyCode,
+      name,
+      identifier: username || email,
+      baseUrl,
+    });
 
     await Chat.create({
       name: username,

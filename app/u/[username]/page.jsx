@@ -51,6 +51,7 @@ export default function Username() {
   const normalizedUsername = (username || "").toLowerCase();
   const normalizedUserUsername = (user?.username || "").toLowerCase();
   const normalizedViewerUsername = (viewerUsername || "").toLowerCase();
+  const isLoggedInViewer = Boolean(normalizedUserUsername || normalizedViewerUsername);
   const isOwner = Boolean(
     normalizedUsername &&
       (normalizedUserUsername === normalizedUsername ||
@@ -526,7 +527,7 @@ export default function Username() {
         )}
       </Box>
 
-      {!isOwner && (
+      {!isOwner && !isLoggedInViewer && (
         <Box textAlign="center" mt={2}>
           <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
             Get Your Own Message Board

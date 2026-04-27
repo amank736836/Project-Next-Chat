@@ -25,7 +25,14 @@ export async function POST(request) {
     user.verifyCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    const emailSent = await sendForgotPasswordEmail(user.email, verifyCode, user.name);
+    const baseUrl = new URL(request.url).origin;
+    const emailSent = await sendForgotPasswordEmail({
+      email: user.email,
+      code: verifyCode,
+      name: user.name,
+      identifier: user.username || user.email,
+      baseUrl,
+    });
 
     if (!emailSent) {
       return NextResponse.json(
