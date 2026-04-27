@@ -19,7 +19,7 @@ import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { VisuallyHiddenInput } from "../../../components/styles/StyledComponents";
-import PasswordStrengthBar from "../../../components/shared/PasswordStrengthBar";
+import PasswordStrengthBar, { isPasswordStrong } from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
@@ -64,6 +64,7 @@ export default function LoginContent() {
   const confirmPassword = useStrongPassword("");
   const avatar = useFileHandler("single", 2);
   const [isLoading, setIsLoading] = useState(false);
+  const isStrongPassword = isPasswordStrong(password.value);
 
   useEffect(() => {
     if (isLogin) {
@@ -228,6 +229,14 @@ export default function LoginContent() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    if (!isStrongPassword) {
+      toast.error("Password is too weak. Please use a stronger password.", {
+        duration: 2000,
+      });
+      setIsLoading(false);
+      return;
+    }
     
     // Check email availability
     if (!emailAvailable) {
@@ -557,6 +566,7 @@ export default function LoginContent() {
               sx={{ mt: 2 }}
               disabled={
                 password.value !== confirmPassword.value || 
+                !isStrongPassword ||
                 isLoading || 
                 !usernameAvailable || 
                 !emailAvailable

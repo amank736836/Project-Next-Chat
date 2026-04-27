@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
-import PasswordStrengthBar from "../../../components/shared/PasswordStrengthBar";
+import PasswordStrengthBar, { isPasswordStrong } from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
@@ -40,6 +40,7 @@ export default function ForgotContent() {
   }, [verifyCode]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const isStrongPassword = isPasswordStrong(password.value);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -87,6 +88,12 @@ export default function ForgotContent() {
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
+
+    if (!isStrongPassword) {
+      toast.error("Password is too weak. Please use a stronger password.");
+      return;
+    }
+
     setIsLoading(true);
 
     const toastId = toast.loading("Updating password...");
@@ -265,6 +272,7 @@ export default function ForgotContent() {
               sx={{ mt: 2 }}
               disabled={
                 password.value !== confirmPassword.value ||
+                !isStrongPassword ||
                 verifyCode.length !== 6 ||
                 isLoading
               }

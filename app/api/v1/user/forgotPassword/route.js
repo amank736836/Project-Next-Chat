@@ -25,15 +25,23 @@ export async function POST(request) {
     user.verifyCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    await sendForgotPasswordEmail(user.email, verifyCode, user.name);
+    const emailSent = await sendForgotPasswordEmail(user.email, verifyCode, user.name);
+
+    if (!emailSent) {
+      return NextResponse.json(
+        { success: false, message: 'Failed to send verification email. Please try again.' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       { success: true, message: 'Verification code sent to your email' },
       { status: 200 }
     );
   } catch (error) {
+    console.error('ForgotPassword API Error:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to send verification code' },
+      { success: false, message: error.message || 'Failed to send verification code' },
       { status: 500 }
     );
   }

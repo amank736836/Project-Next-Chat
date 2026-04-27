@@ -3,7 +3,7 @@
 import { Box, LinearProgress, Typography } from "@mui/material";
 import { useMemo } from "react";
 
-const getStrengthMeta = (password) => {
+export const getPasswordStrengthMeta = (password) => {
   const value = (password || "").trim();
 
   if (!value) {
@@ -50,7 +50,7 @@ const getStrengthMeta = (password) => {
 };
 
 export default function PasswordStrengthBar({ password }) {
-  const strength = useMemo(() => getStrengthMeta(password), [password]);
+  const strength = useMemo(() => getPasswordStrengthMeta(password), [password]);
   const progressValue = (Math.min(strength.score, 5) / 5) * 100;
 
   return (
@@ -84,3 +84,6 @@ export default function PasswordStrengthBar({ password }) {
     </Box>
   );
 }
+
+export const isPasswordStrong = (password) =>
+  getPasswordStrengthMeta(password).label === "Strong";
