@@ -432,13 +432,22 @@ function ChatContent() {
   }, [allMessages]);
 
   useEffect(() => {
-    if (!socket || !socket.connected || !user) return;
+    if (!socket || !user) return;
 
-    socket.emit(CHAT_JOINED, {
-      chatId,
-      userId: user._id,
-      members,
-    });
+    const joinChat = () => {
+      socket.emit(CHAT_JOINED, {
+        chatId,
+        userId: user._id,
+        members,
+      });
+    };
+
+    if (socket.connected) {
+      joinChat();
+    } else {
+      socket.once("connect", joinChat);
+    }
+
     dispatch(removeNewMessagesAlert(chatId));
 
     return () => {
@@ -446,6 +455,7 @@ function ChatContent() {
       setPage(1);
       setOldMessages([]);
       setMessage("");
+      socket.off("connect", joinChat);
       if (socket && socket.connected) {
         socket.emit(CHAT_LEAVED, {
           chatId,
