@@ -1,21 +1,38 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAdmin } from "../../redux/thunks/admin.thunk.js";
+import AdminAsyncContent from "../layout/AdminAsyncContent";
 
 export default function AdminProtectedRoute({ children }) {
-  const { isAdmin, loader } = useSelector((state) => state.auth);
+  const { isAdmin } = useSelector((state) => state.auth);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const dispatch = useDispatch();
   const router = useRouter();
 
+  // A hard refresh has no Redux session yet, even when the admin cookie is valid.
   useEffect(() => {
-    if (!loader && !isAdmin) {
-      router.push("/admin/login");
-    }
-  }, [isAdmin, loader, router]);
+    let mounted = true;
+    dispatch(getAdmin()).finally(() => {
+      if (mounted) setIsCheckingSession(false);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [dispatch]);
 
-  if (loader || !isAdmin) {
-    return null;
+  useEffect(() => {
+    if (!isCheckingSession && !isAdmin) router.replace("/admin/login");
+  }, [isAdmin, isCheckingSession, router]);
+
+  if (isCheckingSession || !isAdmin) {
+    return (
+      <div className="admin-motion-root">
+        <AdminAsyncContent isLoading loadingLabel="Checking admin session…" />
+      </div>
+    );
   }
 
   return children;

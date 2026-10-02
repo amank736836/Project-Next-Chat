@@ -54,5 +54,7 @@ export async function middleware(request) {
 }
 
 export const config = {
+  // jsonwebtoken verifies signatures with Node crypto, which Edge cannot run.
+  runtime: 'nodejs',
   matcher: ['/admin', '/admin/:path*', '/dev', '/dev/:path*']
 };

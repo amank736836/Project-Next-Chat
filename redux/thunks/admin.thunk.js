@@ -20,7 +20,7 @@ const adminLogin = createAsyncThunk("admin/login", async (secretKey) => {
     );
     return data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error?.response?.data?.message || "Unable to sign in. Please try again.");
   }
 });
 
@@ -35,7 +35,7 @@ const getAdmin = createAsyncThunk("admin/getAdmin", async () => {
     const { data } = await axios.get(`${ADMIN_API_BASE}`, config);
     return data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error?.response?.data?.message || "Unable to verify the admin session.");
   }
 });
 
@@ -50,7 +50,7 @@ const adminLogout = createAsyncThunk("admin/logout", async () => {
     const { data } = await axios.get(`${ADMIN_API_BASE}/logout`, config);
     return data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error?.response?.data?.message || "Unable to log out. Please try again.");
   }
 });
 

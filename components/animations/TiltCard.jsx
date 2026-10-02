@@ -64,7 +64,8 @@ export default function TiltCard({ children, controls, maxTilt = 7 }) {
     <div style={{ perspective: 1200, width: "100%" }}>
       {/* entrance + error shake (driven by AuthShell's animation controls) */}
       <motion.div
-        initial={CARD_ENTRANCE.initial}
+        data-auth-card=""
+        initial={reducedMotion ? false : CARD_ENTRANCE.initial}
         animate={controls}
         style={{ width: "100%" }}
       >
@@ -74,8 +75,8 @@ export default function TiltCard({ children, controls, maxTilt = 7 }) {
           onPointerMove={handlePointerMove}
           onPointerLeave={handlePointerLeave}
           style={{
-            rotateX,
-            rotateY,
+            rotateX: tiltEnabled ? rotateX : 0,
+            rotateY: tiltEnabled ? rotateY : 0,
             transformStyle: "preserve-3d",
             willChange: tiltEnabled ? "transform" : undefined,
           }}

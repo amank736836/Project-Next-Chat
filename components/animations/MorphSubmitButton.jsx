@@ -1,12 +1,13 @@
 "use client";
 
+import useReducedMotionSafe from "./useReducedMotionSafe";
+
 import { useEffect, useState } from "react";
 import { Box, Button } from "@mui/material";
 import {
   AnimatePresence,
   motion,
   useMotionValue,
-  useReducedMotion,
   useSpring,
 } from "framer-motion";
 import { EASE_OUT_EXPO, seededRandom } from "./motionConfig";
@@ -23,7 +24,7 @@ const LOCKED_GRADIENT =
 
 /** Self-drawing tick shown on success. */
 function SuccessTick() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
 
   return (
     <motion.svg
@@ -53,7 +54,7 @@ function SuccessTick() {
 
 /** Deterministic confetti burst fired on success. */
 function Burst({ burstKey }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
   if (reducedMotion || !burstKey) return null;
 
   return (
@@ -67,7 +68,8 @@ function Burst({ burstKey }) {
       }}
     >
       {Array.from({ length: BURST_COUNT }, (_, index) => {
-        const angle = (index / BURST_COUNT) * Math.PI * 2 + seededRandom(index) * 0.5;
+        const angle =
+          (index / BURST_COUNT) * Math.PI * 2 + seededRandom(index) * 0.5;
         const distance = 52 + seededRandom(index + 31) * 58;
         const size = 5 + seededRandom(index + 71) * 5;
 
@@ -118,13 +120,21 @@ export default function MorphSubmitButton({
   sx,
   ...buttonProps
 }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
   const [burstKey, setBurstKey] = useState(0);
 
   const magnetX = useMotionValue(0);
   const magnetY = useMotionValue(0);
-  const springX = useSpring(magnetX, { stiffness: 220, damping: 16, mass: 0.35 });
-  const springY = useSpring(magnetY, { stiffness: 220, damping: 16, mass: 0.35 });
+  const springX = useSpring(magnetX, {
+    stiffness: 220,
+    damping: 16,
+    mass: 0.35,
+  });
+  const springY = useSpring(magnetY, {
+    stiffness: 220,
+    damping: 16,
+    mass: 0.35,
+  });
 
   useEffect(() => {
     if (status === "success") setBurstKey((key) => key + 1);
@@ -156,6 +166,13 @@ export default function MorphSubmitButton({
     magnetY.set(0);
   };
 
+  useEffect(() => {
+    if (reducedMotion || busy) {
+      magnetX.set(0);
+      magnetY.set(0);
+    }
+  }, [busy, magnetX, magnetY, reducedMotion]);
+
   return (
     <Box sx={{ position: "relative", width: "100%" }}>
       <Burst burstKey={burstKey} />
@@ -167,7 +184,10 @@ export default function MorphSubmitButton({
         onPointerLeave={resetMagnet}
         whileHover={reducedMotion || busy ? undefined : { scale: 1.02 }}
         whileTap={reducedMotion || busy ? undefined : { scale: 0.97 }}
-        style={{ x: springX, y: springY }}
+        style={{
+          x: reducedMotion ? 0 : springX,
+          y: reducedMotion ? 0 : springY,
+        }}
         className={isError || locked ? undefined : "auth-cta"}
         sx={{
           position: "relative",
@@ -222,7 +242,7 @@ export default function MorphSubmitButton({
             initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reducedMotion ? undefined : { opacity: 0, y: -12 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            transition={{ duration: reducedMotion ? 0 : 0.22, ease: "easeOut" }}
             style={{
               display: "inline-flex",
               alignItems: "center",
