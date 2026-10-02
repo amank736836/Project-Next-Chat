@@ -1,25 +1,38 @@
 "use client";
 
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
-import { CameraAlt as CameraAltIcon, Cancel as CancelIcon, CheckCircle as CheckCircleIcon } from "@mui/icons-material";
-import CircularProgress from "@mui/material/CircularProgress";
 import {
-  Avatar,
-  Button,
-  IconButton,
-  Link as MuiLink,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+  AlternateEmail as AlternateEmailIcon,
+  ArrowBack as ArrowBackIcon,
+  ArrowForward as ArrowForwardIcon,
+  BadgeOutlined as BadgeOutlinedIcon,
+  LockOutline as LockOutlineIcon,
+  LockPersonOutlined as LockPersonOutlinedIcon,
+  MailOutline as MailOutlineIcon,
+  PersonOutline as PersonOutlineIcon,
+} from "@mui/icons-material";
+import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
 import axios from "axios";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { VisuallyHiddenInput } from "../../../components/styles/StyledComponents";
-import PasswordStrengthBar, { isPasswordStrong } from "../../../components/shared/PasswordStrengthBar";
+import AnimatedAvatarUpload from "../../../components/animations/AnimatedAvatarUpload";
+import AnimatedField, {
+  RevealPasswordToggle,
+  ValidityIcon,
+} from "../../../components/animations/AnimatedField";
+import AnimatedHeading from "../../../components/animations/AnimatedHeading";
+import AnimatedLogo from "../../../components/animations/AnimatedLogo";
+import AnimatedToggleButton from "../../../components/animations/AnimatedToggleButton";
+import { useAuthShake } from "../../../components/animations/AuthShell";
+import MorphSubmitButton from "../../../components/animations/MorphSubmitButton";
+import SmoothHeight from "../../../components/animations/SmoothHeight";
+import PasswordStrengthBar, {
+  isPasswordStrong,
+} from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
@@ -30,18 +43,27 @@ const hydrationSafeInputSlotProps = {
   },
 };
 
+/** How long the button stays in its red "error" state before resetting. */
+const ERROR_FLASH_MS = 900;
+
 export default function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [emailAvailable, setEmailAvailable] = useState(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [checkingEmail, setCheckingEmail] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState("idle");
+  const [revealPassword, setRevealPassword] = useState(false);
+  const [revealConfirmPassword, setRevealConfirmPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const identifierParam = searchParams.get("identifier");
+  const shakeCard = useAuthShake();
+  const reducedMotion = useReducedMotion();
 
   const timerRef = useRef(null);
   const emailTimerRef = useRef(null);
+  const errorTimerRef = useRef(null);
   const usernameParam = useRef('');
   const emailParam = useRef('');
 
@@ -55,7 +77,22 @@ export default function LoginContent() {
     }
   }, [identifierParam]);
 
-  const toggleLogin = () => setIsLogin((prev) => !prev);
+  useEffect(() => () => clearTimeout(errorTimerRef.current), []);
+
+  const toggleLogin = () => {
+    setIsLogin((prev) => !prev);
+    setSubmitStatus("idle");
+  };
+
+  /** Red flash on the CTA + a "nope" shake of the whole card. */
+  const flashError = () => {
+    setSubmitStatus("error");
+    shakeCard();
+    clearTimeout(errorTimerRef.current);
+    errorTimerRef.current = setTimeout(() => {
+      setSubmitStatus((current) => (current === "error" ? "idle" : current));
+    }, ERROR_FLASH_MS);
+  };
 
   const name = useInputValidation("");
   const email = useInputValidation(emailParam.current || "");
@@ -149,6 +186,8 @@ export default function LoginContent() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    clearTimeout(errorTimerRef.current);
+    setSubmitStatus("loading");
 
     const config = {
       headers: {
@@ -170,6 +209,7 @@ export default function LoginContent() {
       );
 
       dispatch(userExists(res.data.user));
+      setSubmitStatus("success");
 
       toast.success("Login successful!", {
         duration: 1000,
@@ -194,6 +234,8 @@ export default function LoginContent() {
           duration: 1000,
           id: toastId,
         });
+        setSubmitStatus("idle");
+        shakeCard();
         toggleLogin();
         return;
       }
@@ -202,6 +244,7 @@ export default function LoginContent() {
           duration: 1000,
           id: toastId,
         });
+        flashError();
         router.push(`/forgot?identifier=${usernameParam.current || username.value}`);
         return;
       }
@@ -210,6 +253,7 @@ export default function LoginContent() {
         duration: 1000,
         id: toastId,
       });
+      flashError();
       toast
         .promise(new Promise((resolve) => resolve()), {
           loading: "Redirecting...",
@@ -229,20 +273,23 @@ export default function LoginContent() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    clearTimeout(errorTimerRef.current);
 
     if (!isStrongPassword) {
       toast.error("Password is too weak. Please use a stronger password.", {
         duration: 2000,
       });
+      flashError();
       setIsLoading(false);
       return;
     }
-    
+
     // Check email availability
     if (!emailAvailable) {
       toast.error("Email already exists. Please use a different email.", {
         duration: 2000,
       });
+      flashError();
       setIsLoading(false);
       return;
     }
@@ -252,6 +299,7 @@ export default function LoginContent() {
       toast.error("Passwords do not match", {
         duration: 2000,
       });
+      flashError();
       setIsLoading(false);
       return;
     }
@@ -261,9 +309,12 @@ export default function LoginContent() {
       toast.error("Username already exists. Please use a different username.", {
         duration: 2000,
       });
+      flashError();
       setIsLoading(false);
       return;
     }
+
+    setSubmitStatus("loading");
 
     const formDate = new FormData();
     formDate.append("avatar", avatar.file);
@@ -284,6 +335,7 @@ export default function LoginContent() {
       const { data } = await axios.post(`${AUTH_API_BASE}/new`, formDate, config);
 
       dispatch(userExists(data.user));
+      setSubmitStatus("success");
 
       toast.success("Sign up successful!", {
         duration: 1000,
@@ -302,7 +354,7 @@ export default function LoginContent() {
     } catch (error) {
       console.error(error);
       const errorMsg = error?.response?.data?.message || "Sign up failed";
-      
+
       // Handle email already exists error
       if (errorMsg.toLowerCase().includes("email")) {
         toast.error("Email already exists. Please use a different email.", {
@@ -315,295 +367,380 @@ export default function LoginContent() {
           id: toastId,
         });
       }
+      flashError();
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Login always lives on the left, Sign Up on the right — like a pager.
+  const panelOffset = isLogin ? -30 : 30;
+  const panelTransition = reducedMotion
+    ? { duration: 0.15 }
+    : { duration: 0.38, ease: [0.16, 1, 0.3, 1] };
+
+  const usernameStateColor =
+    username.value && username.value.length >= 3
+      ? usernameAvailable === null
+        ? undefined
+        : usernameAvailable
+          ? "green"
+          : "red"
+      : undefined;
+
+  const emailStateColor =
+    email.value && email.value.includes("@")
+      ? emailAvailable === null
+        ? undefined
+        : emailAvailable
+          ? "green"
+          : "red"
+      : undefined;
+
+  const passwordsMatch = Boolean(confirmPassword.value && password.value);
+  const confirmPasswordStateColor = !passwordsMatch
+    ? undefined
+    : password.value === confirmPassword.value
+      ? "green"
+      : "red";
+
   return (
-    <>
-      {isLogin ? (
-        <>
-          <Typography variant="h5" fontWeight={600} color="primary">
-            Login
-          </Typography>
-          <form
-            style={{ width: "100%", marginTop: "1rem" }}
-            onSubmit={handleLogin}
-            suppressHydrationWarning
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <AnimatedLogo redrawKey={isLogin ? "login" : "signup"} />
+
+      <SmoothHeight>
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.div
+            key={isLogin ? "login-panel" : "signup-panel"}
+            initial={
+              reducedMotion
+                ? { opacity: 0 }
+                : { opacity: 0, x: panelOffset, filter: "blur(6px)" }
+            }
+            animate={
+              reducedMotion
+                ? { opacity: 1 }
+                : { opacity: 1, x: 0, filter: "blur(0px)" }
+            }
+            exit={
+              reducedMotion
+                ? { opacity: 0 }
+                : { opacity: 0, x: panelOffset, filter: "blur(6px)" }
+            }
+            transition={panelTransition}
+            style={{ width: "100%" }}
           >
-            <TextField
-              required
-              fullWidth
-              label="Username or Email"
-              margin="normal"
-              variant="outlined"
-              type="text"
-              autoComplete="username email"
-              autoFocus
-              value={username.value}
-              onChange={username.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-            />
-            <TextField
-              required
-              fullWidth
-              label="Password"
-              margin="normal"
-              variant="outlined"
-              type="password"
-              autoComplete="current-password"
-              value={password.value}
-              onChange={password.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ mt: 2 }}
-              disabled={isLoading}
-              suppressHydrationWarning
-            >
-              Login
-            </Button>
-            <Typography textAlign="center" mt={2}>
-              Don't have an account?{" "}
-            </Typography>
-            <Button
-              fullWidth
-              variant="outlined"
-              color="secondary"
-              onClick={toggleLogin}
-              sx={{ mt: 2 }}
-              disabled={isLoading}
-              suppressHydrationWarning
-            >
-              Sign Up
-            </Button>
-          </form>
-          <Typography textAlign={"center"} m={"0.5rem"}>
-            Forgot your password?{" "}
-            <Button
-              variant="text"
-              color="primary"
-              onClick={() =>
-                router.push(`/forgot?identifier=${usernameParam.current || username.value}`)
+            <AnimatedHeading
+              text={isLogin ? "Welcome back" : "Create account"}
+              subtext={
+                isLogin
+                  ? "Log in to pick up every conversation"
+                  : "Join Chat Champ — it takes less than a minute"
               }
-              sx={{ textTransform: "none" }}
-              suppressHydrationWarning
-            >
-              Reset it
-            </Button>
-          </Typography>
-        </>
-      ) : (
-        <>
-          <Typography variant="h5" fontWeight={600} color="primary">
-            Sign Up
-          </Typography>
-          <form
-            style={{ width: "100%", marginTop: "1rem" }}
-            onSubmit={handleSignUp}
-            suppressHydrationWarning
-          >
-            <Stack position="relative" width="8rem" margin="auto">
-              <Avatar
-                sx={{ width: "8rem", height: "8rem" }}
-                src={avatar.preview}
-                alt="Avatar"
-              />
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  bgcolor: "primary.main",
-                  color: "white",
-                  "&:hover": { bgcolor: "primary.dark" },
-                }}
-                component="label"
+            />
+
+            {isLogin ? (
+              <form
+                style={{ width: "100%", marginTop: "0.75rem" }}
+                onSubmit={handleLogin}
+                suppressHydrationWarning
               >
-                <CameraAltIcon />
-                <VisuallyHiddenInput
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg, image/webp, image/gif"
+                <AnimatedField
+                  index={0}
+                  required
+                  label="Username or Email"
+                  type="text"
+                  autoComplete="username email"
+                  autoFocus
+                  icon={<PersonOutlineIcon fontSize="small" />}
+                  value={username.value}
+                  onChange={username.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                />
+                <AnimatedField
+                  index={1}
+                  required
+                  label="Password"
+                  type={revealPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  icon={<LockOutlineIcon fontSize="small" />}
+                  value={password.value}
+                  onChange={password.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                  InputProps={{
+                    endAdornment: (
+                      <RevealPasswordToggle
+                        visible={revealPassword}
+                        onToggle={() => setRevealPassword((prev) => !prev)}
+                      />
+                    ),
+                  }}
+                />
+
+                <MorphSubmitButton
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  status={submitStatus}
+                  idleLabel="Login"
+                  loadingLabel="Logging in…"
+                  successLabel="Welcome back!"
+                  errorLabel="Login failed"
+                  disabled={isLoading}
+                  sx={{ mt: 2 }}
+                  suppressHydrationWarning
+                />
+
+                <Typography
+                  textAlign="center"
+                  mt={2}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Don't have an account?
+                </Typography>
+                <AnimatedToggleButton
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  onClick={toggleLogin}
+                  disabled={isLoading}
+                  sx={{ mt: 1 }}
+                  icon={<ArrowForwardIcon fontSize="small" />}
+                  suppressHydrationWarning
+                >
+                  Sign Up
+                </AnimatedToggleButton>
+
+                <Typography
+                  textAlign={"center"}
+                  m={"0.5rem"}
+                  mt={1.5}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Forgot your password?
+                  <Button
+                    className="auth-link"
+                    variant="text"
+                    color="primary"
+                    onClick={() =>
+                      router.push(
+                        `/forgot?identifier=${usernameParam.current || username.value}`
+                      )
+                    }
+                    sx={{ textTransform: "none", fontWeight: 600 }}
+                    suppressHydrationWarning
+                  >
+                    Reset it
+                  </Button>
+                </Typography>
+              </form>
+            ) : (
+              <form
+                style={{ width: "100%", marginTop: "0.75rem" }}
+                onSubmit={handleSignUp}
+                suppressHydrationWarning
+              >
+                <AnimatedAvatarUpload
+                  preview={avatar.preview}
                   onChange={avatar.changeHandler}
                 />
-              </IconButton>
-            </Stack>
-            <TextField
-              required
-              fullWidth
-              label="Name"
-              margin="normal"
-              variant="outlined"
-              type="text"
-              value={name.value}
-              onChange={name.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-            />
-            <TextField
-              required
-              fullWidth
-              label="Username"
-              margin="normal"
-              variant="outlined"
-              type="text"
-              value={username.value}
-              onChange={username.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor:
-                      username.value && username.value.length >= 3
-                        ? (usernameAvailable === null ? 'inherit' : (usernameAvailable ? 'green' : 'red'))
-                        : 'inherit',
-                  },
-                },
-              }}
-              InputProps={{
-                endAdornment: checkingUsername ? (
-                  <CircularProgress size={20} />
-                ) : usernameAvailable !== null && username.value.length >= 3 ? (
-                  usernameAvailable ? (
-                    <CheckCircleIcon color="success" />
-                  ) : (
-                    <CancelIcon color="error" />
-                  )
-                ) : null,
-              }}
-            />
-            <TextField
-              required
-              fullWidth
-              label="Email"
-              margin="normal"
-              variant="outlined"
-              type="email"
-              value={email.value}
-              onChange={email.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor:
-                      email.value && email.value.includes("@")
-                        ? (emailAvailable === null ? 'inherit' : (emailAvailable ? 'green' : 'red'))
-                        : 'inherit',
-                  },
-                },
-              }}
-              InputProps={{
-                endAdornment: checkingEmail ? (
-                  <CircularProgress size={20} />
-                ) : emailAvailable !== null && email.value.includes("@") ? (
-                  emailAvailable ? (
-                    <CheckCircleIcon color="success" />
-                  ) : (
-                    <CancelIcon color="error" />
-                  )
-                ) : null,
-              }}
-              helperText={
-                email.value && !emailAvailable && email.value.includes("@")
-                  ? "Email already exists"
-                  : ""
-              }
-            />
-            <TextField
-              required
-              fullWidth
-              label="Password"
-              margin="normal"
-              variant="outlined"
-              type="password"
-              value={password.value}
-              onChange={password.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-            />
-            <TextField
-              required
-              fullWidth
-              label="Confirm Password"
-              margin="normal"
-              variant="outlined"
-              type="password"
-              value={confirmPassword.value}
-              onChange={confirmPassword.changeHandler}
-              slotProps={hydrationSafeInputSlotProps}
-              suppressHydrationWarning
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: confirmPassword.value && password.value ?
-                      (password.value === confirmPassword.value ? 'green' : 'red') : 'inherit',
-                  },
-                },
-              }}
-              error={confirmPassword.value && password.value !== confirmPassword.value}
-              helperText={
-                confirmPassword.value && password.value !== confirmPassword.value
-                  ? "Passwords do not match"
-                  : confirmPassword.value && password.value === confirmPassword.value
-                  ? "Passwords match ✓"
-                  : ""
-              }
-            />
-            <PasswordStrengthBar password={password.value} />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ mt: 2 }}
-              disabled={
-                password.value !== confirmPassword.value || 
-                !isStrongPassword ||
-                isLoading || 
-                !usernameAvailable || 
-                !emailAvailable
-              }
-              suppressHydrationWarning
-            >
-              Sign Up
-            </Button>
-          </form>
-          <Typography textAlign="center" mt={2}>
-            Already have an account?{" "}
-          </Typography>
-          <Button
-            fullWidth
-            variant="outlined"
-            color="secondary"
-            onClick={toggleLogin}
-            sx={{ mt: 2 }}
-            disabled={isLoading}
-            suppressHydrationWarning
-          >
-            Login
-          </Button>
-          <Typography textAlign={"center"} m={"0.5rem"}>
-            By signing up, you agree to our{" "}
-            <MuiLink component={Link} href="/terms" underline="hover">
-              Terms of Service
-            </MuiLink>{" "}
-            and{" "}
-            <MuiLink component={Link} href="/privacy" underline="hover">
-              Privacy Policy
-            </MuiLink>
-            .
-          </Typography>
-        </>
-      )}
-    </>
+
+                <AnimatedField
+                  index={1}
+                  required
+                  label="Name"
+                  type="text"
+                  icon={<BadgeOutlinedIcon fontSize="small" />}
+                  value={name.value}
+                  onChange={name.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                />
+                <AnimatedField
+                  index={2}
+                  required
+                  label="Username"
+                  type="text"
+                  icon={<AlternateEmailIcon fontSize="small" />}
+                  value={username.value}
+                  onChange={username.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                  validColor={usernameStateColor}
+                  InputProps={{
+                    endAdornment: (
+                      <ValidityIcon
+                        state={
+                          username.value.length >= 3 ? usernameAvailable : null
+                        }
+                        checking={checkingUsername}
+                      />
+                    ),
+                  }}
+                />
+                <AnimatedField
+                  index={3}
+                  required
+                  label="Email"
+                  type="email"
+                  icon={<MailOutlineIcon fontSize="small" />}
+                  value={email.value}
+                  onChange={email.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                  validColor={emailStateColor}
+                  InputProps={{
+                    endAdornment: (
+                      <ValidityIcon
+                        state={email.value.includes("@") ? emailAvailable : null}
+                        checking={checkingEmail}
+                      />
+                    ),
+                  }}
+                  helperText={
+                    email.value && !emailAvailable && email.value.includes("@")
+                      ? "Email already exists"
+                      : ""
+                  }
+                />
+                <AnimatedField
+                  index={4}
+                  required
+                  label="Password"
+                  type={revealPassword ? "text" : "password"}
+                  icon={<LockOutlineIcon fontSize="small" />}
+                  value={password.value}
+                  onChange={password.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                  InputProps={{
+                    endAdornment: (
+                      <RevealPasswordToggle
+                        visible={revealPassword}
+                        onToggle={() => setRevealPassword((prev) => !prev)}
+                      />
+                    ),
+                  }}
+                />
+
+                <motion.div
+                  initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: reducedMotion ? 0 : 0.22 }}
+                >
+                  <PasswordStrengthBar password={password.value} />
+                </motion.div>
+
+                <AnimatedField
+                  index={6}
+                  required
+                  label="Confirm Password"
+                  type={revealConfirmPassword ? "text" : "password"}
+                  icon={<LockPersonOutlinedIcon fontSize="small" />}
+                  value={confirmPassword.value}
+                  onChange={confirmPassword.changeHandler}
+                  slotProps={hydrationSafeInputSlotProps}
+                  suppressHydrationWarning
+                  validColor={confirmPasswordStateColor}
+                  error={passwordsMatch && password.value !== confirmPassword.value}
+                  InputProps={{
+                    endAdornment: (
+                      <RevealPasswordToggle
+                        visible={revealConfirmPassword}
+                        onToggle={() =>
+                          setRevealConfirmPassword((prev) => !prev)
+                        }
+                      />
+                    ),
+                  }}
+                  helperText={
+                    confirmPassword.value && password.value !== confirmPassword.value
+                      ? "Passwords do not match"
+                      : confirmPassword.value &&
+                          password.value === confirmPassword.value
+                        ? "Passwords match ✓"
+                        : ""
+                  }
+                />
+
+                <MorphSubmitButton
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  status={submitStatus}
+                  idleLabel="Sign Up"
+                  loadingLabel="Creating account…"
+                  successLabel="Account created!"
+                  errorLabel="Fix the fields above"
+                  disabled={
+                    password.value !== confirmPassword.value ||
+                    !isStrongPassword ||
+                    isLoading ||
+                    !usernameAvailable ||
+                    !emailAvailable
+                  }
+                  sx={{ mt: 1.5 }}
+                  suppressHydrationWarning
+                />
+              </form>
+            )}
+
+            {!isLogin ? (
+              <Box sx={{ width: "100%" }}>
+                <Typography
+                  textAlign="center"
+                  mt={2}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Already have an account?
+                </Typography>
+                <AnimatedToggleButton
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  onClick={toggleLogin}
+                  disabled={isLoading}
+                  sx={{ mt: 1 }}
+                  icon={<ArrowBackIcon fontSize="small" />}
+                  suppressHydrationWarning
+                >
+                  Login
+                </AnimatedToggleButton>
+                <Typography
+                  textAlign={"center"}
+                  m={"0.5rem"}
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  By signing up, you agree to our{" "}
+                  <MuiLink component={Link} href="/terms" underline="hover">
+                    Terms of Service
+                  </MuiLink>{" "}
+                  and{" "}
+                  <MuiLink component={Link} href="/privacy" underline="hover">
+                    Privacy Policy
+                  </MuiLink>
+                  .
+                </Typography>
+              </Box>
+            ) : null}
+          </motion.div>
+        </AnimatePresence>
+      </SmoothHeight>
+    </Box>
   );
 }

@@ -8,3 +8,143 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
+/* ---------------------------------------------------------------------------
+   Auth (login / sign up) animation layer
+   Pure-CSS keyframes are used for infinite ambient loops because they are
+   cheaper than driving them from JS on every frame.
+--------------------------------------------------------------------------- */
+
+/* Animated gradient wash behind the auth card */
+@keyframes authGradientDrift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Light sweep across buttons / card edge */
+@keyframes authSheen {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(260%) skewX(-18deg);
+  }
+}
+
+/* Slow rotating halo behind the logo */
+@keyframes authSpinSlow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animated CTA gradient (slightly faster + brighter than the backdrop) */
+.auth-cta {
+  background-image: linear-gradient(
+    110deg,
+    #4facfe 0%,
+    #00f2fe 25%,
+    #4facfe 50%,
+    #00c6ff 75%,
+    #4facfe 100%
+  );
+  background-size: 250% 100%;
+  animation: authGradientDrift 6s linear infinite;
+}
+
+.auth-cta:hover .auth-shine,
+.auth-cta:focus-visible .auth-shine {
+  animation: authSheen 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-shine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* Card top-edge shimmer */
+.auth-card-edge {
+  background-image: linear-gradient(
+    90deg,
+    rgba(79, 172, 254, 0) 0%,
+    rgba(79, 172, 254, 0.9) 30%,
+    rgba(0, 242, 254, 0.9) 50%,
+    rgba(255, 126, 95, 0.9) 70%,
+    rgba(255, 126, 95, 0) 100%
+  );
+  background-size: 220% 100%;
+  animation: authGradientDrift 7s ease-in-out infinite;
+}
+
+.auth-logo-halo {
+  background: conic-gradient(
+    from 0deg,
+    rgba(79, 172, 254, 0.55),
+    rgba(0, 242, 254, 0.35),
+    rgba(255, 126, 95, 0.5),
+    rgba(254, 180, 123, 0.35),
+    rgba(79, 172, 254, 0.55)
+  );
+  animation: authSpinSlow 9s linear infinite;
+}
+
+/* Accessibility: kill the ambient CSS loops when the user asked for less motion.
+   Scoped to the auth shell so the rest of the app is untouched. */
+@media (prefers-reduced-motion: reduce) {
+  .auth-motion-root,
+  .auth-motion-root * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Secondary CTA: trailing icon slides forward on hover */
+.auth-slide-icon {
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-slide:hover .auth-slide-icon {
+  transform: translateX(5px);
+}
+
+/* Text links: underline draws itself on hover */
+.auth-link {
+  position: relative;
+}
+
+.auth-link::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 5px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-link:hover::after,
+.auth-link:focus-visible::after {
+  transform: scaleX(1);
+}
