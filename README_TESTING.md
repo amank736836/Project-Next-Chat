@@ -50,7 +50,7 @@ the dev server (or redeploy) after changing it.
 
 ### Live test bench: `/dev/socket`
 
-A dev-only page (it 404s in production builds) that connects to the configured
+A dev-only page that connects to the configured
 server and streams the handshake: status, time-to-connect, transport
 (polling → websocket upgrade), socket id, engine sid, heartbeats and every
 `connect` / `connect_error` / `disconnect` / reconnect event.
@@ -65,3 +65,12 @@ Useful checks:
 Note: the socket is only opened by `SocketProvider` once a user exists in Redux
 (`state.auth.user`), so the app itself connects after login — the test bench
 connects independently so the transport can be verified without credentials.
+
+Production builds answer `/dev/*` with a real **HTTP 404** (the app's 404 page).
+`middleware.js` blocks the path before it renders — a `notFound()` thrown while a
+page streams cannot change the already-sent 200 status line — and the page itself
+repeats the check as a second layer.
+
+To debug a deployed origin (where cookie/CORS behaviour differs from localhost)
+set `ENABLE_DEV_TOOLS=true` in the host's environment and the page is served
+again. Leave it unset otherwise.
