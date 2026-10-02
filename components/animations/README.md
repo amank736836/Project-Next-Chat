@@ -19,7 +19,7 @@ dependency) plus a few CSS keyframes in `app/globals.css`.
 | `AnimatedToggleButton.jsx` | Secondary CTA with a gradient sweep on hover and a sliding trailing icon. |
 | `AnimatedAvatarUpload.jsx` | Avatar picker with a spinning dashed ring and a spring pop when a photo is chosen. |
 | `motionConfig.js` | Shared springs, easings, variants and `seededRandom()` (deterministic, so SSR markup matches the client). |
-| `useReducedMotionSafe.js` | Hydration-safe `useReducedMotion()` for components that render on the server. |
+| `useReducedMotionSafe.js` | Hydration-safe, live reduced-motion preference subscription for server-rendered components. |
 
 ## Usage
 
@@ -56,3 +56,32 @@ shake();
   `devicePixelRatio` to 2 and pauses when the tab is hidden.
 - Decorative layers are `aria-hidden`; the animated headline keeps its text in
   the a11y tree through a visually-hidden span.
+
+## Admin portal
+
+The same kit now powers `/admin/login` and the existing recovery screen. The
+portal has a persistent shell in `app/admin/layout.jsx`: navigation remains
+mounted while each page fades/slides in, and the active tab's highlight moves
+between links. Desktop and mobile highlights use separate `LayoutGroup` IDs.
+
+- `AdminMotion.jsx` exports `AdminReveal` (short, staggerable surface entrances
+  and an optional hover lift) and `AnimatedCounter` (count-up values with a
+  stable screen-reader value and animation cleanup on update/unmount).
+- `AdminAsyncContent.jsx` cross-fades skeleton, error/retry, and ready states.
+  Initial loading is separate from background refetching, so existing data
+  stays visible during refreshes.
+- Admin tables use opacity-only row entrances, capped staggering, and a 650 ms
+  entrance window. No transforms are applied to virtualised rows, and scrolling
+  does not keep replaying animations. Sorting, filtering, and pagination keep
+  the same DataGrid instance.
+- Chart.js animations, counters, drawer transitions, hover transforms, card
+  shakes, and ambient CSS loops respect reduced motion. The shared hook uses
+  `useSyncExternalStore` to hydrate safely and react to live preference changes.
+- Existing authentication and APIs are retained. The admin guard checks the
+  cookie on a hard refresh before redirecting, and middleware uses the Node
+  runtime required by `jsonwebtoken`.
+
+Co-located regression tests cover entrances, counters and cleanup, loading and
+retry states, table animation windows, charts, preference changes/hydration,
+and admin session restoration. Run them with `npm run test:unit`; they do not
+require a database or backend server.

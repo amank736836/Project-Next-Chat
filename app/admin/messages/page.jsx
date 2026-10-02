@@ -2,14 +2,13 @@
 
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import moment from "moment";
-import { useEffect, useState } from "react";
-import AdminLayout from "../../../components/layout/AdminLayout";
+import { useMemo } from "react";
+import AdminAsyncContent from "../../../components/layout/AdminAsyncContent";
 import RenderAttachment from "../../../components/shared/RenderAttachment";
 import Table from "../../../components/shared/Table";
 import { useErrors } from "../../../hooks/useHooks";
 import { fileFormat, transformImageUrl } from "../../../lib/features";
 import { useGetMessagesDashboardStatsQuery } from "../../../redux/api/api";
-import AdminProtectedRoute from "../../../components/auth/AdminProtectedRoute";
 
 const columns = [
   {
@@ -105,12 +104,13 @@ const columns = [
   },
 ];
 
-function MessagesContent() {
+export default function Messages() {
   const {
     data: messagesDashboardData,
     isLoading: loadingMessagesDashboardData,
     isError: errorMessagesDashboardData,
     error: errorMessagesDashboardDataMessage,
+    refetch,
   } = useGetMessagesDashboardStatsQuery();
 
   useErrors([
@@ -120,83 +120,37 @@ function MessagesContent() {
     },
   ]);
 
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    if (!messagesDashboardData) return;
-    setRows(
-      messagesDashboardData.messages.map((message) => ({
+  const rows = useMemo(
+    () =>
+      (messagesDashboardData?.messages || []).map((message) => ({
         ...message,
         id: message._id,
         sender: message.sender
           ? {
-            ...message.sender,
-            avatar: transformImageUrl(message.sender.avatar, 50),
-          }
+              ...message.sender,
+              avatar: transformImageUrl(message.sender.avatar, 50),
+            }
           : { name: "Unknown", avatar: "" },
         createdAt: moment(message.createdAt).format("MMMM Do YYYY, h:mm:ss a"),
-      }))
-    );
-  }, [messagesDashboardData]);
-
-  return (
-    <AdminLayout>
-      {loadingMessagesDashboardData ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            fontSize={"2rem"}
-            fontWeight={600}
-            color={"black"}
-            textAlign={"center"}
-            margin={"2rem 0"}
-          >
-            Loading Messages...
-          </Typography>
-        </div>
-      ) : errorMessagesDashboardData ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            fontSize={"2rem"}
-            fontWeight={600}
-            color={"black"}
-            textAlign={"center"}
-            margin={"2rem 0"}
-          >
-            {errorMessagesDashboardDataMessage?.data?.message || errorMessagesDashboardDataMessage?.message || "An error occurred"}
-          </Typography>
-        </div>
-      ) : (
-        <Table
-          headings={"All Messages"}
-          columns={columns}
-          rows={rows}
-          rowHeight={200}
-        />
-      )}
-    </AdminLayout>
+      })),
+    [messagesDashboardData],
   );
-}
 
-export default function Messages() {
   return (
-    <AdminProtectedRoute>
-      <MessagesContent />
-    </AdminProtectedRoute>
+    <AdminAsyncContent
+      isLoading={loadingMessagesDashboardData}
+      error={
+        errorMessagesDashboardData ? errorMessagesDashboardDataMessage : null
+      }
+      loadingLabel="Loading messages…"
+      onRetry={refetch}
+    >
+      <Table
+        headings="All Messages"
+        columns={columns}
+        rows={rows}
+        rowHeight={200}
+      />
+    </AdminAsyncContent>
   );
 }

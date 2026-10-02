@@ -9,10 +9,11 @@ import {
   Suspense,
 } from "react";
 import { Box, CircularProgress, Container } from "@mui/material";
-import { useAnimationControls } from "framer-motion";
+import { MotionConfig, useAnimationControls } from "framer-motion";
 import AuthBackdrop from "./AuthBackdrop";
 import TiltCard from "./TiltCard";
 import { CARD_ENTRANCE, SHAKE_KEYFRAMES } from "./motionConfig";
+import useReducedMotionSafe from "./useReducedMotionSafe";
 
 /**
  * Lets any descendant (e.g. the login form) shake the whole card on failure:
@@ -36,8 +37,10 @@ export default function AuthShell({
   fallback,
   maxTilt = 7,
   maxWidth = "xs",
+  className = "",
 }) {
   const controls = useAnimationControls();
+  const reducedMotion = useReducedMotionSafe();
   const [shakeNonce, setShakeNonce] = useState(0);
 
   const shake = useCallback(() => {
@@ -45,60 +48,66 @@ export default function AuthShell({
   }, []);
 
   useEffect(() => {
-    controls.start(CARD_ENTRANCE.animate);
-  }, [controls]);
+    if (reducedMotion) {
+      controls.set({ opacity: 1, y: 0, scale: 1, rotateX: 0, x: 0, rotate: 0 });
+    } else {
+      controls.start(CARD_ENTRANCE.animate);
+    }
+  }, [controls, reducedMotion]);
 
   useEffect(() => {
-    if (shakeNonce > 0) controls.start(SHAKE_KEYFRAMES);
-  }, [shakeNonce, controls]);
+    if (shakeNonce > 0 && !reducedMotion) controls.start(SHAKE_KEYFRAMES);
+  }, [shakeNonce, controls, reducedMotion]);
 
   return (
     <AuthShakeContext.Provider value={shake}>
-      <Box
-        className="auth-motion-root"
-        sx={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          overflowX: "clip",
-          isolation: "isolate",
-          py: { xs: 3, sm: 5 },
-          "@supports (min-height: 100dvh)": { minHeight: "100dvh" },
-        }}
-      >
-        <AuthBackdrop />
-
-        <Container
-          component="main"
-          maxWidth={maxWidth}
+      <MotionConfig reducedMotion="user">
+        <Box
+          className={`auth-motion-root ${className}`.trim()}
           sx={{
             position: "relative",
-            zIndex: 1,
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
-            // auto margins (instead of relying on align-items) keep a tall
-            // sign-up form fully reachable when it exceeds the viewport
-            my: "auto",
+            justifyContent: "center",
+            minHeight: "100vh",
+            overflowX: "clip",
+            isolation: "isolate",
+            py: { xs: 3, sm: 5 },
+            "@supports (min-height: 100dvh)": { minHeight: "100dvh" },
           }}
         >
-          <TiltCard controls={controls} maxTilt={maxTilt}>
-            <Suspense
-              fallback={
-                fallback || (
-                  <Box sx={{ p: 4, display: "grid", placeItems: "center" }}>
-                    <CircularProgress color="primary" />
-                  </Box>
-                )
-              }
-            >
-              {children}
-            </Suspense>
-          </TiltCard>
-        </Container>
-      </Box>
+          <AuthBackdrop />
+
+          <Container
+            component="main"
+            maxWidth={maxWidth}
+            sx={{
+              position: "relative",
+              zIndex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              // auto margins (instead of relying on align-items) keep a tall
+              // sign-up form fully reachable when it exceeds the viewport
+              my: "auto",
+            }}
+          >
+            <TiltCard controls={controls} maxTilt={maxTilt}>
+              <Suspense
+                fallback={
+                  fallback || (
+                    <Box sx={{ p: 4, display: "grid", placeItems: "center" }}>
+                      <CircularProgress color="primary" />
+                    </Box>
+                  )
+                }
+              >
+                {children}
+              </Suspense>
+            </TiltCard>
+          </Container>
+        </Box>
+      </MotionConfig>
     </AuthShakeContext.Provider>
   );
 }

@@ -1,12 +1,14 @@
 "use client";
 
+import useReducedMotionSafe from "./useReducedMotionSafe";
+
 import { useState } from "react";
 import { IconButton, TextField } from "@mui/material";
 import {
   VisibilityOffOutlined as VisibilityOffIcon,
   VisibilityOutlined as VisibilityIcon,
 } from "@mui/icons-material";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { EASE_OUT_EXPO, SPRING_BOUNCY } from "./motionConfig";
 
 const ACCENT = "79, 172, 254";
@@ -15,6 +17,7 @@ const SUCCESS = "46, 125, 50";
 
 /** Leading icon that reacts when its field is focused. */
 function FieldIcon({ icon, active, tone }) {
+  const reducedMotion = useReducedMotionSafe();
   const color =
     tone === "error"
       ? `rgb(${DANGER})`
@@ -27,11 +30,11 @@ function FieldIcon({ icon, active, tone }) {
   return (
     <motion.span
       animate={
-        active
+        active && !reducedMotion
           ? { scale: 1.2, rotate: -8, y: -1 }
           : { scale: 1, rotate: 0, y: 0 }
       }
-      transition={SPRING_BOUNCY}
+      transition={reducedMotion ? { duration: 0 } : SPRING_BOUNCY}
       style={{
         display: "inline-flex",
         marginRight: 10,
@@ -64,7 +67,7 @@ export default function AnimatedField({
   ...textFieldProps
 }) {
   const [focused, setFocused] = useState(false);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
 
   const tone = error ? "error" : validColor === "green" ? "success" : "default";
   const glowRgb = error ? DANGER : validColor === "red" ? DANGER : ACCENT;
@@ -84,7 +87,7 @@ export default function AnimatedField({
     >
       <motion.div
         animate={reducedMotion ? {} : { y: focused ? -2 : 0 }}
-        transition={SPRING_BOUNCY}
+        transition={reducedMotion ? { duration: 0 } : SPRING_BOUNCY}
         onFocusCapture={() => setFocused(true)}
         onBlurCapture={() => setFocused(false)}
         style={{ width: "100%" }}
@@ -148,7 +151,7 @@ export default function AnimatedField({
  * Validity indicator that pops in/out (used as an endAdornment).
  */
 export function ValidityIcon({ state, checking }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -178,10 +181,12 @@ export function ValidityIcon({ state, checking }) {
       ) : state === null || state === undefined ? null : (
         <motion.span
           key={state ? "valid" : "invalid"}
-          initial={reducedMotion ? false : { opacity: 0, scale: 0.4, rotate: -25 }}
+          initial={
+            reducedMotion ? false : { opacity: 0, scale: 0.4, rotate: -25 }
+          }
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           exit={reducedMotion ? undefined : { opacity: 0, scale: 0.4 }}
-          transition={SPRING_BOUNCY}
+          transition={reducedMotion ? { duration: 0 } : SPRING_BOUNCY}
           style={{ display: "inline-flex" }}
         >
           {state ? (
@@ -202,7 +207,11 @@ export function ValidityIcon({ state, checking }) {
                 strokeLinejoin="round"
                 initial={reducedMotion ? false : { pathLength: 0 }}
                 animate={{ pathLength: 1 }}
-                transition={{ duration: 0.35, ease: EASE_OUT_EXPO, delay: 0.08 }}
+                transition={{
+                  duration: 0.35,
+                  ease: EASE_OUT_EXPO,
+                  delay: 0.08,
+                }}
               />
             </svg>
           ) : (
@@ -236,7 +245,7 @@ export function ValidityIcon({ state, checking }) {
  * Show/hide password affordance with a rotating eye swap.
  */
 export function RevealPasswordToggle({ visible, onToggle, disabled }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
 
   return (
     <IconButton
@@ -250,9 +259,13 @@ export function RevealPasswordToggle({ visible, onToggle, disabled }) {
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={visible ? "hide" : "show"}
-          initial={reducedMotion ? false : { opacity: 0, rotate: -45, scale: 0.6 }}
+          initial={
+            reducedMotion ? false : { opacity: 0, rotate: -45, scale: 0.6 }
+          }
           animate={{ opacity: 1, rotate: 0, scale: 1 }}
-          exit={reducedMotion ? undefined : { opacity: 0, rotate: 45, scale: 0.6 }}
+          exit={
+            reducedMotion ? undefined : { opacity: 0, rotate: 45, scale: 0.6 }
+          }
           transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
           style={{ display: "inline-flex" }}
         >

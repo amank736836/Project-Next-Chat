@@ -15,6 +15,7 @@ import {
 import { Doughnut, Line } from "react-chartjs-2";
 import { lightOrange, lightPurple, orange, purple } from "../constants/color";
 import { getLast7Days } from "../lib/features";
+import useReducedMotionSafe from "../components/animations/useReducedMotionSafe";
 
 ChartJS.register(
   CategoryScale,
@@ -24,7 +25,7 @@ ChartJS.register(
   PointElement,
   Filler,
   ArcElement,
-  Legend
+  Legend,
 );
 
 const LineChartOptions = {
@@ -55,6 +56,16 @@ const LineChartOptions = {
 const labels = getLast7Days();
 
 export function LineChart({ value = [] }) {
+  const reducedMotion = useReducedMotionSafe();
+  const options = useMemo(
+    () => ({
+      ...LineChartOptions,
+      animation: reducedMotion
+        ? false
+        : { duration: 900, easing: "easeOutQuart" },
+    }),
+    [reducedMotion],
+  );
   const data = useMemo(
     () => ({
       labels,
@@ -68,10 +79,17 @@ export function LineChart({ value = [] }) {
         },
       ],
     }),
-    [value]
+    [value],
   );
 
-  return <Line data={data} options={LineChartOptions} />;
+  return (
+    <Line
+      data={data}
+      options={options}
+      role="img"
+      aria-label="Messages over the last seven days"
+    />
+  );
 }
 
 const DoughnutChartOptions = {
@@ -88,6 +106,21 @@ const DoughnutChartOptions = {
 };
 
 export function DoughnutChart({ value = [], labels = [] }) {
+  const reducedMotion = useReducedMotionSafe();
+  const options = useMemo(
+    () => ({
+      ...DoughnutChartOptions,
+      animation: reducedMotion
+        ? false
+        : {
+            duration: 1000,
+            easing: "easeOutQuart",
+            animateRotate: true,
+            animateScale: true,
+          },
+    }),
+    [reducedMotion],
+  );
   const data = useMemo(
     () => ({
       labels,
@@ -102,13 +135,15 @@ export function DoughnutChart({ value = [], labels = [] }) {
         },
       ],
     }),
-    [labels, value]
+    [labels, value],
   );
 
   return (
     <Doughnut
       data={data}
-      options={DoughnutChartOptions}
+      options={options}
+      role="img"
+      aria-label={`Chat breakdown: ${labels.join(", ")}`}
       style={{ zIndex: 1 }}
     />
   );

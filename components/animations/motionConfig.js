@@ -1,5 +1,5 @@
 /**
- * Shared motion primitives for the animated auth screens.
+ * Shared motion primitives for the animated auth screens and admin portal.
  *
  * Keeping the curves/variants in one place means every animation on the login
  * flow shares the same "feel" and can be tuned from a single file.

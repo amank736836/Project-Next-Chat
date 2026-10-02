@@ -148,3 +148,87 @@ body {
 .auth-link:focus-visible::after {
   transform: scaleX(1);
 }
+
+/* ---------------------------------------------------------------------------
+   Admin portal: quiet ambient motion and opacity-only virtualised row reveals.
+--------------------------------------------------------------------------- */
+@keyframes adminAmbientDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-35px, 25px, 0); }
+}
+
+@keyframes adminRowReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes adminSpinner {
+  to { transform: rotate(360deg); }
+}
+
+.admin-ambient-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(65%, 720px);
+  height: 400px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 85% 0%, rgba(79, 172, 254, 0.1), transparent 65%),
+    radial-gradient(ellipse at 35% 20%, rgba(255, 126, 95, 0.06), transparent 60%);
+  animation: adminAmbientDrift 18s ease-in-out infinite alternate;
+}
+
+.admin-loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 2px solid rgba(38, 148, 171, 0.18);
+  border-top-color: #2694ab;
+  border-radius: 50%;
+  animation: adminSpinner 0.8s linear infinite;
+}
+
+.admin-skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1500;
+  padding: 12px 18px;
+  border-radius: 12px;
+  color: white;
+  background: #1c1c1c;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+.admin-skip-link:focus {
+  transform: translateY(0);
+  outline: 3px solid #4facfe;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-motion-root,
+  .admin-motion-root *,
+  .admin-motion-root *::before,
+  .admin-motion-root *::after,
+  .auth-motion-root *::before,
+  .auth-motion-root *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* Make SSR entrances readable immediately, before the motion hook mounts. */
+  .admin-motion-root [data-admin-reveal],
+  .auth-motion-root [data-auth-card] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .admin-ambient-glow,
+  .admin-loading-spinner {
+    animation: none !important;
+  }
+}
