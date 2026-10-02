@@ -1,7 +1,7 @@
 "use client";
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { nextBackend, socketBackend } from "../../constants/config";
+import { apiBackend, socketBackend } from "../../constants/config";
 
 const getSocketBackedUrl = (path) => {
   if (!socketBackend) {
@@ -15,7 +15,9 @@ const getSocketBackedUrl = (path) => {
 const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: nextBackend,
+    baseUrl: apiBackend,
+    // cookies must ride along when apiBackend points at the remote origin
+    credentials: "include",
   }),
   tagTypes: ["Chat", "User", "Request"],
   refetchOnFocus: true,

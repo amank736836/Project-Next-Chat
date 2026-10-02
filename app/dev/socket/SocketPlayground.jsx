@@ -14,7 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 import { io } from "socket.io-client";
-import { socketBackend, socketServer } from "../../../constants/config";
+import {
+  remoteAuthEnabled,
+  socketBackend,
+  socketServer,
+} from "../../../constants/config";
 
 const STATUS_META = {
   idle: { label: "Idle", color: "default" },
@@ -42,6 +46,10 @@ const stamp = () =>
  * Live socket.io test bench: connects to the configured backend, streams every
  * engine/socket event into a log and reports handshake metadata (transport,
  * sid, time-to-connect, heartbeats).
+ *
+ * The "backend session" block logs in against the remote API from the browser,
+ * which is what puts the session cookie on the backend's own origin — without
+ * it the socket handshake is rejected with "Please Login".
  */
 export default function SocketPlayground() {
   const socketRef = useRef(null);
@@ -63,14 +71,14 @@ export default function SocketPlayground() {
   const [transportMode, setTransportMode] = useState("default");
   const [withCredentials, setWithCredentials] = useState(true);
 
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [authBusy, setAuthBusy] = useState(false);
+  const [session, setSession] = useState(null);
+
   const addLog = useCallback((level, message) => {
     logIdRef.current += 1;
-    const entry = {
-      id: logIdRef.current,
-      at: stamp(),
-      level,
-      message,
-    };
+    const entry = { id: logIdRef.current, at: stamp(), level, message };
     setLogs((previous) => [...previous.slice(-199), entry]);
   }, []);
 
@@ -96,11 +104,7 @@ export default function SocketPlayground() {
 
     disconnect();
 
-    const options = {
-      withCredentials,
-      reconnectionAttempts: 3,
-      timeout: 15000,
-    };
+    const options = { withCredentials, reconnectionAttempts: 3, timeout: 15000 };
     if (transportMode !== "default") options.transports = [transportMode];
 
     const trimmedToken = token.trim();
@@ -150,7 +154,7 @@ export default function SocketPlayground() {
       if (String(error?.message || "").includes("Please Login")) {
         addLog(
           "warn",
-          "Backend rejected the handshake (auth). It expects a session cookie/token it can verify — see the notes below."
+          "Handshake rejected: the backend could not verify a session. Log in on the backend first (below) so its cookie is on its own origin."
         );
       }
     });
@@ -171,10 +175,7 @@ export default function SocketPlayground() {
 
     const engine = instance.io?.engine;
     engine?.on?.("heartbeat", () => {
-      setMeta((previous) => ({
-        ...previous,
-        heartbeats: previous.heartbeats + 1,
-      }));
+      setMeta((previous) => ({ ...previous, heartbeats: previous.heartbeats + 1 }));
     });
     engine?.on?.("upgrade", (transport) => {
       setMeta((previous) => ({ ...previous, transport: transport?.name }));
@@ -184,6 +185,91 @@ export default function SocketPlayground() {
       addLog("warn", `Engine closed: ${reason}`);
     });
   }, [addLog, disconnect, token, transportMode, withCredentials]);
+
+  /**
+   * Logs in against the remote backend from the browser, then verifies the
+   * session with /user/me and opens the socket.
+   */
+  const loginOnBackend = useCallback(async () => {
+    if (!socketBackend) {
+      addLog("error", "No backend URL configured (NEXT_PUBLIC_SOCKET_SERVER_URL)");
+      return;
+    }
+    const who = identifier.trim();
+    if (!who || !password) {
+      addLog("warn", "Enter both a username/email and a password");
+      return;
+    }
+
+    setAuthBusy(true);
+    addLog("info", `POST ${socketBackend}/user/login as "${who}"`);
+
+    try {
+      const response = await fetch(`${socketBackend}/user/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        // identifier for this repo's route, username/email for the MERN backend
+        body: JSON.stringify({
+          identifier: who,
+          password,
+          ...(who.includes("@") ? { email: who } : { username: who }),
+        }),
+      });
+
+      const text = await response.text();
+      let data = null;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        /* non-JSON body, logged raw below */
+      }
+
+      addLog(
+        response.ok ? "success" : "error",
+        `login -> HTTP ${response.status} ${
+          data?.message ? `· ${data.message}` : text ? `· ${text.slice(0, 160)}` : ""
+        }`
+      );
+
+      if (!response.ok || !data) {
+        setSession({ ok: false, status: response.status });
+        return;
+      }
+
+      setSession({ ok: true, status: response.status, user: data.user || null });
+      if (data.user?.name || data.user?.username) {
+        addLog("success", `Session established for ${data.user.name || data.user.username}`);
+      }
+
+      // Confirm the cookie actually rides along on a follow-up request.
+      try {
+        const me = await fetch(`${socketBackend}/user/me`, { credentials: "include" });
+        addLog(
+          me.ok ? "success" : "warn",
+          `GET /user/me -> HTTP ${me.ok ? 200 : me.status} ${
+            me.ok ? "(cookie accepted by backend)" : "(cookie not accepted)"
+          }`
+        );
+      } catch {
+        addLog("warn", "GET /user/me blocked — see the CORS note above");
+      }
+
+      connect();
+    } catch (error) {
+      // fetch throws TypeError when the browser blocks the request (CORS/network)
+      addLog("error", `login request failed: ${error?.message || error}`);
+      addLog(
+        "warn",
+        `The browser blocked the call to ${socketServer}. The backend must allow this origin (${
+          typeof window !== "undefined" ? window.location.origin : "the app origin"
+        }) in its CORS config with credentials:true, and set its cookie SameSite=None; Secure.`
+      );
+      setSession({ ok: false, blocked: true });
+    } finally {
+      setAuthBusy(false);
+    }
+  }, [addLog, connect, identifier, password]);
 
   // Never leak a socket out of the page.
   useEffect(() => () => disconnect(), [disconnect]);
@@ -198,7 +284,7 @@ export default function SocketPlayground() {
             Socket diagnostics
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Dev-only test bench for the realtime connection (this route 404s in
+            Dev-only test bench for the realtime connection (blocked in
             production builds).
           </Typography>
         </Box>
@@ -210,6 +296,12 @@ export default function SocketPlayground() {
               <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
                 {socketServer || "⚠ no socket server configured"}
               </Typography>
+              <Chip
+                size="small"
+                variant="outlined"
+                color={remoteAuthEnabled ? "success" : "default"}
+                label={remoteAuthEnabled ? "app auth → remote backend" : "app auth → local Next routes"}
+              />
             </Stack>
 
             {!socketServer ? (
@@ -221,6 +313,58 @@ export default function SocketPlayground() {
 
             <Divider />
 
+            <Typography variant="subtitle2" fontWeight={700}>
+              1 · Backend session
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              The socket server verifies the handshake against a cookie on its
+              own origin, so log in there first. Nothing is stored — the request
+              goes straight from this browser to the backend.
+            </Typography>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+              <TextField
+                label="Username or email"
+                size="small"
+                value={identifier}
+                onChange={(event) => setIdentifier(event.target.value)}
+                autoComplete="username"
+                sx={{ flex: 1 }}
+              />
+              <TextField
+                label="Password"
+                size="small"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                autoComplete="current-password"
+                sx={{ flex: 1 }}
+              />
+              <Button
+                variant="contained"
+                onClick={loginOnBackend}
+                disabled={authBusy || !socketBackend}
+                sx={{ minWidth: 170 }}
+              >
+                {authBusy ? "Working…" : "Log in & connect"}
+              </Button>
+            </Stack>
+            {session ? (
+              <Alert severity={session.ok ? "success" : "error"}>
+                {session.ok
+                  ? `Logged in (HTTP ${session.status})${
+                      session.user?.username ? ` as ${session.user.username}` : ""
+                    } — socket handshake should now be accepted.`
+                  : session.blocked
+                    ? "Request blocked by the browser (CORS or network)."
+                    : `Backend rejected the login (HTTP ${session.status}).`}
+              </Alert>
+            ) : null}
+
+            <Divider />
+
+            <Typography variant="subtitle2" fontWeight={700}>
+              2 · Connection options
+            </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
               <TextField
                 select
@@ -258,17 +402,12 @@ export default function SocketPlayground() {
               <Button
                 variant="text"
                 color="inherit"
-                onClick={() => setLogs([])}
-                sx={{ ml: "auto" }}
-              >
-                Clear log
-              </Button>
-              <Button
-                variant="text"
-                color="inherit"
                 onClick={() => setWithCredentials((value) => !value)}
               >
                 credentials: {withCredentials ? "on" : "off"}
+              </Button>
+              <Button variant="text" color="inherit" onClick={() => setLogs([])} sx={{ ml: "auto" }}>
+                Clear log
               </Button>
             </Stack>
           </Stack>
@@ -307,9 +446,7 @@ export default function SocketPlayground() {
             }}
           >
             {logs.length === 0 ? (
-              <Box sx={{ opacity: 0.6 }}>
-                Waiting for events — press Connect.
-              </Box>
+              <Box sx={{ opacity: 0.6 }}>Waiting for events — log in or press Connect.</Box>
             ) : (
               logs.map((entry) => (
                 <Box key={entry.id} sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
@@ -339,11 +476,12 @@ export default function SocketPlayground() {
 
         <Alert severity="info">
           <Typography variant="body2">
-            <strong>What “Please Login” means:</strong> the backend verifies the
-            handshake against its own session cookie. A cookie set by this Next
-            app lives on the app&apos;s origin, so the browser will not send it
-            to a different backend origin — paste a JWT the backend can verify
-            into the token field above to test an authenticated connection.
+            <strong>Why login comes first:</strong> a cookie set by this app on
+            its own origin is never sent to the backend&apos;s origin, so the
+            socket handshake fails with <code>Please Login</code>. Logging in
+            against the backend (step 1) puts the session cookie where the
+            socket can see it. Set <code>NEXT_PUBLIC_REMOTE_AUTH=true</code> to
+            make the whole app authenticate that way.
           </Typography>
         </Alert>
       </Stack>

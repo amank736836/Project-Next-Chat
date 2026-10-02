@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  authApiBase as AUTH_API_BASE,
+  remoteAuthEnabled,
+} from "../../../constants/config";
+
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
 import {
   AlternateEmail as AlternateEmailIcon,
@@ -36,7 +41,6 @@ import PasswordStrengthBar, {
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
-const AUTH_API_BASE = "/api/v1/user";
 const hydrationSafeInputSlotProps = {
   htmlInput: {
     suppressHydrationWarning: true,
@@ -198,13 +202,23 @@ export default function LoginContent() {
 
     const toastId = toast.loading("Logging in...");
 
+    // The local Next route reads `identifier`; the deployed MERN backend keys
+    // off `username`/`email`. Send the right alias(es) for whichever is active.
+    const identifier = usernameParam.current || username.value;
+    const credentials = remoteAuthEnabled
+      ? {
+          identifier,
+          password: password.value,
+          ...(identifier.includes("@")
+            ? { email: identifier }
+            : { username: identifier }),
+        }
+      : { identifier, password: password.value };
+
     try {
       const res = await axios.post(
         `${AUTH_API_BASE}/login`,
-        {
-          identifier: usernameParam.current || username.value,
-          password: password.value,
-        },
+        credentials,
         config
       );
 
