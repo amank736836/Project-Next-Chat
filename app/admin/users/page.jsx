@@ -1,13 +1,12 @@
 "use client";
 
-import { Avatar, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import AdminLayout from "../../../components/layout/AdminLayout";
+import { Avatar } from "@mui/material";
+import { useMemo } from "react";
+import AdminAsyncContent from "../../../components/layout/AdminAsyncContent";
 import Table from "../../../components/shared/Table";
 import { useErrors } from "../../../hooks/useHooks";
 import { transformImageUrl } from "../../../lib/features";
 import { useGetUsersDashboardStatsQuery } from "../../../redux/api/api";
-import AdminProtectedRoute from "../../../components/auth/AdminProtectedRoute";
 
 const UserColumns = [
   {
@@ -63,12 +62,13 @@ const UserColumns = [
   },
 ];
 
-function UsersContent() {
+export default function Users() {
   const {
     data: userDashboardData,
     isLoading: loadingUserDashboardData,
     isError: errorUserDashboardData,
     error: errorUserDashboardDataMessage,
+    refetch,
   } = useGetUsersDashboardStatsQuery();
 
   useErrors([
@@ -78,72 +78,24 @@ function UsersContent() {
     },
   ]);
 
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    if (!userDashboardData) return;
-    setRows(
-      userDashboardData.users.map((user) => ({
+  const rows = useMemo(
+    () =>
+      (userDashboardData?.users || []).map((user) => ({
         ...user,
         id: user._id,
         avatar: transformImageUrl(user.avatar, 50),
-      }))
-    );
-  }, [userDashboardData]);
-
-  return (
-    <AdminLayout>
-      {loadingUserDashboardData ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            fontSize={"2rem"}
-            fontWeight={600}
-            color={"black"}
-            textAlign={"center"}
-            margin={"2rem 0"}
-          >
-            Loading Users...
-          </Typography>
-        </div>
-      ) : errorUserDashboardData ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            fontSize={"2rem"}
-            fontWeight={600}
-            color={"black"}
-            textAlign={"center"}
-            margin={"2rem 0"}
-          >
-            {errorUserDashboardDataMessage?.data?.message || errorUserDashboardDataMessage?.message || "An error occurred"}
-          </Typography>
-        </div>
-      ) : (
-        <Table headings={"All Users"} columns={UserColumns} rows={rows} />
-      )}
-    </AdminLayout>
+      })),
+    [userDashboardData],
   );
-}
 
-export default function Users() {
   return (
-    <AdminProtectedRoute>
-      <UsersContent />
-    </AdminProtectedRoute>
+    <AdminAsyncContent
+      isLoading={loadingUserDashboardData}
+      error={errorUserDashboardData ? errorUserDashboardDataMessage : null}
+      loadingLabel="Loading users…"
+      onRetry={refetch}
+    >
+      <Table headings="All Users" columns={UserColumns} rows={rows} />
+    </AdminAsyncContent>
   );
 }

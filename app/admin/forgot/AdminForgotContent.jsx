@@ -1,19 +1,31 @@
 "use client";
 
 import { useInputValidation, useStrongPassword } from "6pp";
-import { Button, TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
-import PasswordStrengthBar, { isPasswordStrong } from "../../../components/shared/PasswordStrengthBar";
+import PasswordStrengthBar, {
+  isPasswordStrong,
+} from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
+import AnimatedField from "../../../components/animations/AnimatedField";
+import AnimatedHeading from "../../../components/animations/AnimatedHeading";
+import AnimatedToggleButton from "../../../components/animations/AnimatedToggleButton";
+import { useAuthShake } from "../../../components/animations/AuthShell";
+import MorphSubmitButton from "../../../components/animations/MorphSubmitButton";
+import SmoothHeight from "../../../components/animations/SmoothHeight";
+import useReducedMotionSafe from "../../../components/animations/useReducedMotionSafe";
 
 const AUTH_API_BASE = "/api/v1/user";
 
 export default function AdminForgotContent() {
+  const reducedMotion = useReducedMotionSafe();
+  const shake = useAuthShake();
   const [isForgotPassword, setIsForgotPassword] = useState(true);
   const searchParams = useSearchParams();
   const usernameParam = searchParams.get("identifier");
@@ -57,7 +69,7 @@ export default function AdminForgotContent() {
         {
           identifier: identifier.value,
         },
-        config
+        config,
       );
 
       dispatch(userExists(res.data.user));
@@ -69,7 +81,7 @@ export default function AdminForgotContent() {
 
       setIsForgotPassword(false);
     } catch (error) {
-      console.error(error);
+      shake();
       toast.error(error?.response?.data?.message || "Failed to send code", {
         duration: 1000,
         id: toastId,
@@ -105,7 +117,7 @@ export default function AdminForgotContent() {
           password: password.value,
           verifyCode: verifyCode,
         },
-        config
+        config,
       );
 
       dispatch(userExists(data.user));
@@ -125,7 +137,7 @@ export default function AdminForgotContent() {
           router.push("/");
         });
     } catch (error) {
-      console.error(error);
+      shake();
       toast.error(error?.response?.data?.message || "Update failed", {
         duration: 1000,
         id: toastId,
@@ -136,144 +148,158 @@ export default function AdminForgotContent() {
   };
 
   return (
-    <>
-      {isForgotPassword ? (
-        <>
-          <Typography variant="h5" fontWeight={600} color="primary">
-            Forgot Password
-          </Typography>
-          <form
-            style={{ width: "100%", marginTop: "1rem" }}
-            onSubmit={handleForgotPassword}
-            suppressHydrationWarning
-          >
-            <TextField
-              required
-              fullWidth
-              label="Username or Email"
-              margin="normal"
-              variant="outlined"
-              type="text"
-              autoComplete="identifier email"
-              autoFocus
-              value={identifier.value}
-              onChange={identifier.changeHandler}
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ mt: 2 }}
-              disabled={isLoading}
-            >
-              Send Verification Code
-            </Button>
-            <Typography textAlign="center" mt={2}>
-              OR
-            </Typography>
-            <Button
-              fullWidth
-              variant="outlined"
-              color="secondary"
-              onClick={toggleVerify}
-              sx={{ mt: 2 }}
-              disabled={isLoading}
-            >
-              Verify Forgot Password
-            </Button>
-          </form>
-        </>
-      ) : (
-        <>
-          <Typography variant="h5" fontWeight={600} color="primary">
-            Verify Forgot Password
-          </Typography>
-          <form
-            style={{ width: "100%", marginTop: "1rem" }}
-            onSubmit={handleUpdatePassword}
-            suppressHydrationWarning
-          >
-            <TextField
-              required
-              fullWidth
-              label="Username"
-              margin="normal"
-              variant="outlined"
-              type="text"
-              value={identifier.value}
-              onChange={identifier.changeHandler}
-            />
-            <TextField
-              required
-              fullWidth
-              label="Verification Code"
-              margin="normal"
-              variant="outlined"
-              type="text"
-              value={verifyCode}
-              onChange={(e) => {
-                if (
-                  (RegExp(/^[0-9]+$/).test(e.target.value) ||
-                    e.target.value === "") &&
-                  (verifyCode.length < 6 || e.target.value.length < 6)
-                ) {
-                  setVerifyCode(e.target.value);
-                }
-              }}
-            />
-            <TextField
-              required
-              fullWidth
-              label="Password"
-              margin="normal"
-              variant="outlined"
-              type="password"
-              value={password.value}
-              onChange={password.changeHandler}
-            />
-            <TextField
-              required
-              fullWidth
-              label="Confirm Password"
-              margin="normal"
-              variant="outlined"
-              type="password"
-              value={confirmPassword.value}
-              onChange={confirmPassword.changeHandler}
-            />
-            <PasswordStrengthBar password={password.value} />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ mt: 2 }}
-              disabled={
-                password.value !== confirmPassword.value ||
-                !isStrongPassword ||
-                verifyCode.length !== 6 ||
-                isLoading
-              }
-            >
-              Update Password
-            </Button>
-          </form>
-          <Typography textAlign="center" mt={2}>
-            OR
-          </Typography>
-          <Button
-            fullWidth
-            variant="outlined"
-            color="secondary"
-            onClick={toggleVerify}
-            sx={{ mt: 2 }}
-            disabled={isLoading}
-          >
-            Forgot Password
-          </Button>
-        </>
-      )}
-    </>
+    <SmoothHeight>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={isForgotPassword ? "request-code" : "verify-code"}
+          initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
+          transition={{ duration: reducedMotion ? 0 : 0.2 }}
+        >
+          {isForgotPassword ? (
+            <>
+              <AnimatedHeading
+                text="Forgot Password"
+                subtext="Let's get you back into your account."
+              />
+              <form
+                style={{ width: "100%", marginTop: "1rem" }}
+                onSubmit={handleForgotPassword}
+                suppressHydrationWarning
+              >
+                <AnimatedField
+                  required
+                  fullWidth
+                  label="Username or Email"
+                  margin="normal"
+                  variant="outlined"
+                  type="text"
+                  autoComplete="identifier email"
+                  autoFocus
+                  value={identifier.value}
+                  onChange={identifier.changeHandler}
+                />
+                <MorphSubmitButton
+                  fullWidth
+                  variant="contained"
+                  type="submit"
+                  status={isLoading ? "loading" : "idle"}
+                  idleLabel="Send Verification Code"
+                  loadingLabel="Sending code…"
+                  sx={{ mt: 2 }}
+                />
+                <Typography textAlign="center" mt={2}>
+                  OR
+                </Typography>
+                <AnimatedToggleButton
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  onClick={toggleVerify}
+                  sx={{ mt: 2 }}
+                  disabled={isLoading}
+                >
+                  Verify Forgot Password
+                </AnimatedToggleButton>
+              </form>
+            </>
+          ) : (
+            <>
+              <AnimatedHeading
+                text="Verify Forgot Password"
+                subtext="Enter your code and choose a new password."
+              />
+              <form
+                style={{ width: "100%", marginTop: "1rem" }}
+                onSubmit={handleUpdatePassword}
+                suppressHydrationWarning
+              >
+                <AnimatedField
+                  required
+                  fullWidth
+                  label="Username"
+                  margin="normal"
+                  variant="outlined"
+                  type="text"
+                  value={identifier.value}
+                  onChange={identifier.changeHandler}
+                />
+                <AnimatedField
+                  required
+                  fullWidth
+                  index={1}
+                  label="Verification Code"
+                  margin="normal"
+                  variant="outlined"
+                  type="text"
+                  value={verifyCode}
+                  onChange={(e) => {
+                    if (
+                      (RegExp(/^[0-9]+$/).test(e.target.value) ||
+                        e.target.value === "") &&
+                      (verifyCode.length < 6 || e.target.value.length < 6)
+                    ) {
+                      setVerifyCode(e.target.value);
+                    }
+                  }}
+                />
+                <AnimatedField
+                  required
+                  fullWidth
+                  index={2}
+                  label="Password"
+                  margin="normal"
+                  variant="outlined"
+                  type="password"
+                  value={password.value}
+                  onChange={password.changeHandler}
+                />
+                <AnimatedField
+                  required
+                  fullWidth
+                  index={3}
+                  label="Confirm Password"
+                  margin="normal"
+                  variant="outlined"
+                  type="password"
+                  value={confirmPassword.value}
+                  onChange={confirmPassword.changeHandler}
+                />
+                <PasswordStrengthBar password={password.value} />
+                <MorphSubmitButton
+                  fullWidth
+                  variant="contained"
+                  type="submit"
+                  status={isLoading ? "loading" : "idle"}
+                  idleLabel="Update Password"
+                  loadingLabel="Updating password…"
+                  sx={{ mt: 2 }}
+                  disabled={
+                    password.value !== confirmPassword.value ||
+                    !isStrongPassword ||
+                    verifyCode.length !== 6 ||
+                    isLoading
+                  }
+                />
+              </form>
+              <Typography textAlign="center" mt={2}>
+                OR
+              </Typography>
+              <AnimatedToggleButton
+                fullWidth
+                variant="outlined"
+                color="secondary"
+                onClick={toggleVerify}
+                sx={{ mt: 2 }}
+                disabled={isLoading}
+              >
+                Forgot Password
+              </AnimatedToggleButton>
+            </>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </SmoothHeight>
   );
 }

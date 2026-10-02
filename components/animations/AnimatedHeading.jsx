@@ -1,7 +1,9 @@
 "use client";
 
+import useReducedMotionSafe from "./useReducedMotionSafe";
+
 import { Box, Typography } from "@mui/material";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { EASE_OUT_EXPO } from "./motionConfig";
 
 /** Keeps the animated letters out of the a11y tree while AT still gets the word. */
@@ -54,7 +56,7 @@ export default function AnimatedHeading({
   align = "center",
   color = "text.primary",
 }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
   const characters = Array.from(text);
 
   return (
@@ -80,7 +82,6 @@ export default function AnimatedHeading({
           >
             {characters.map((character, index) => (
               <motion.span
-                // eslint-disable-next-line react/no-array-index-key
                 key={`${text}-${index}`}
                 variants={reducedMotion ? undefined : charVariants}
                 style={{

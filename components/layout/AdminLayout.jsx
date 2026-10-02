@@ -1,150 +1,336 @@
 "use client";
 
 import {
+  AdminPanelSettingsOutlined as AdminPanelSettingsIcon,
   Close as CloseIcon,
   ExitToApp as ExitToAppIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Drawer,
-  Grid,
   IconButton,
   Stack,
   styled,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { LayoutGroup, motion } from "framer-motion";
+import { useId, useState } from "react";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { adminTabs } from "../../constants/adminTabs";
 import { grayColor, matBlack } from "../../constants/color";
 import { adminLogout } from "../../redux/thunks/admin.thunk.js";
+import {
+  EASE_OUT_EXPO,
+  SPRING_SOFT,
+  staggerContainer,
+} from "../animations/motionConfig";
+import useReducedMotionSafe from "../animations/useReducedMotionSafe";
 
-const LinkComponent = styled(Link)`
-  text-decoration: none;
-  border-radius: 2rem;
-  padding: 1rem 1rem;
-  color: black;
-  transition: all 0.3s ease-in-out;
-  &:hover {
-    color: rgba(0, 0, 0, 0.54);
-    transform: scale(1.05);
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  display: inline-block;
-`;
+const LinkComponent = styled(Link)({
+  position: "relative",
+  display: "block",
+  textDecoration: "none",
+  borderRadius: "1rem",
+  padding: "1rem 1.25rem",
+  color: matBlack,
+  transition: "color 0.2s ease, background-color 0.2s ease",
+  "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
+  "&:focus-visible": { outline: "3px solid #4facfe", outlineOffset: "3px" },
+});
 
-const Sidebar = ({ w = "100%" }) => {
-  const pathname = usePathname();
-  const dispatch = useDispatch();
-
-  const logoutHandler = () => {
-    dispatch(adminLogout());
-  };
-
-  return (
-    <Stack
-      width={w}
-      spacing={"3rem"}
-      sx={{
-        padding: {
-          xs: "2rem 0.5rem",
-          sm: "2rem 2rem",
-          md: "2rem 3rem",
-          lg: "2rem 4rem",
-        },
-      }}
-    >
-      <Typography variant="h5" textTransform={"uppercase"}>
-        Stealthy Note
-      </Typography>
-
-      <Stack spacing={"1rem"}>
-        {adminTabs.map((tab) => (
-          <LinkComponent
-            key={tab.path}
-            href={tab.path}
-            sx={
-              pathname === tab.path && {
-                backgroundColor: matBlack,
-                color: "white",
-                "&:hover": {
-                  backgroundColor: matBlack,
-                  color: grayColor,
-                },
-              }
-            }
-          >
-            <Stack direction={"row"} alignItems={"center"} spacing={"1rem"}>
-              {tab.icon}
-              <Typography fontSize={"1.2rem"} fontWeight={600}>
-                {tab.name}
-              </Typography>
-            </Stack>
-          </LinkComponent>
-        ))}
-        <LinkComponent href="/admin/login">
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            spacing={"1rem"}
-            onClick={logoutHandler}
-          >
-            <ExitToAppIcon />
-            <Typography fontSize={"1.2rem"} fontWeight={600}>
-              Logout
-            </Typography>
-          </Stack>
-        </LinkComponent>
-      </Stack>
-    </Stack>
-  );
+const navItemVariants = {
+  hidden: { opacity: 0, x: -12 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.35, ease: EASE_OUT_EXPO },
+  },
 };
 
-export default function AdminLayout({ children }) {
-  const [isMobile, setIsMobile] = useState(false);
+function Sidebar({ onNavigate }) {
+  const pathname = usePathname();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const reducedMotion = useReducedMotionSafe();
+  // Desktop and drawer highlights must never animate into one another.
+  const layoutId = useId();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleMobile = () => {
-    setIsMobile((prev) => !prev);
-  };
-
-  const handleClose = () => {
-    setIsMobile(false);
+  const logoutHandler = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await dispatch(adminLogout()).unwrap();
+      onNavigate?.();
+      router.replace("/admin/login");
+    } catch {
+      // The auth reducer already shows the server's error toast.
+      setIsLoggingOut(false);
+    }
   };
 
   return (
-    <Grid container minHeight={"100vh"}>
-      <Box
-        sx={{ display: { sm: "block", md: "none" } }}
-        position={"fixed"}
-        right={"1rem"}
-        top={"1rem"}
+    <Stack sx={{ p: 3, minHeight: "100dvh", position: "sticky", top: 0 }}>
+      <Stack
+        direction="row"
+        spacing={1.5}
+        alignItems="center"
+        sx={{ mb: 5, mt: 1 }}
       >
-        <IconButton color="inherit" onClick={handleMobile}>
-          {isMobile ? <CloseIcon /> : <MenuIcon />}
-        </IconButton>
-      </Box>
+        <motion.div
+          data-admin-reveal=""
+          initial={
+            reducedMotion ? false : { opacity: 0, scale: 0.8, rotate: -12 }
+          }
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.5,
+            ease: EASE_OUT_EXPO,
+          }}
+        >
+          <Box
+            sx={{
+              width: 44,
+              height: 44,
+              display: "grid",
+              placeItems: "center",
+              borderRadius: "14px",
+              background: "linear-gradient(135deg, #4facfe22, #00f2fe18)",
+              color: "#2694ab",
+            }}
+          >
+            <AdminPanelSettingsIcon aria-hidden="true" />
+          </Box>
+        </motion.div>
+        <Box sx={{ flex: 1 }}>
+          <Typography
+            fontSize="1rem"
+            fontWeight={800}
+            textTransform="uppercase"
+          >
+            Stealthy Note
+          </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            letterSpacing="0.08em"
+          >
+            ADMIN PORTAL
+          </Typography>
+        </Box>
+        {onNavigate && (
+          <IconButton
+            aria-label="Close admin navigation"
+            onClick={onNavigate}
+            size="small"
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
+      </Stack>
 
-      <Grid
-        size={{ md: 4, lg: 3 }}
+      <LayoutGroup id={layoutId}>
+        <motion.nav
+          aria-label="Admin navigation"
+          variants={reducedMotion ? undefined : staggerContainer(0.06, 0.08)}
+          initial={reducedMotion ? false : "hidden"}
+          animate="show"
+        >
+          <Stack spacing={1}>
+            {adminTabs.map((tab) => {
+              const active = pathname === tab.path;
+              return (
+                <motion.div
+                  key={tab.path}
+                  data-admin-reveal=""
+                  variants={reducedMotion ? undefined : navItemVariants}
+                  whileHover={reducedMotion ? undefined : { x: 3 }}
+                  whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+                  transition={reducedMotion ? { duration: 0 } : SPRING_SOFT}
+                >
+                  <LinkComponent
+                    href={tab.path}
+                    onClick={onNavigate}
+                    aria-current={active ? "page" : undefined}
+                    sx={
+                      active
+                        ? {
+                            color: "white",
+                            "&:hover": { backgroundColor: "transparent" },
+                          }
+                        : {}
+                    }
+                  >
+                    {active && (
+                      <motion.span
+                        aria-hidden="true"
+                        layoutId={
+                          reducedMotion ? undefined : "active-admin-tab"
+                        }
+                        transition={
+                          reducedMotion ? { duration: 0 } : SPRING_SOFT
+                        }
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          borderRadius: "1rem",
+                          background: matBlack,
+                          boxShadow: "0 8px 20px -10px rgba(28, 28, 28, 0.55)",
+                        }}
+                      />
+                    )}
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={1.5}
+                      sx={{ position: "relative", zIndex: 1 }}
+                    >
+                      {tab.icon}
+                      <Typography fontSize="1rem" fontWeight={600}>
+                        {tab.name}
+                      </Typography>
+                    </Stack>
+                  </LinkComponent>
+                </motion.div>
+              );
+            })}
+          </Stack>
+        </motion.nav>
+      </LayoutGroup>
+
+      <Box sx={{ flex: 1, minHeight: 48 }} />
+      <Button
+        onClick={logoutHandler}
+        disabled={isLoggingOut}
+        aria-busy={isLoggingOut}
+        startIcon={<ExitToAppIcon />}
+        sx={{
+          justifyContent: "flex-start",
+          px: 2.5,
+          py: 1.5,
+          borderRadius: "1rem",
+          color: matBlack,
+          textTransform: "none",
+          fontWeight: 600,
+          "&:focus-visible": { outline: "3px solid #4facfe", outlineOffset: 3 },
+        }}
+      >
+        {isLoggingOut ? "Logging out…" : "Logout"}
+      </Button>
+    </Stack>
+  );
+}
+
+/** Persistent admin shell, so navigation and its active indicator stay mounted. */
+export default function AdminLayout({ children }) {
+  const pathname = usePathname();
+  const reducedMotion = useReducedMotionSafe();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const closeDrawer = () => setIsDrawerOpen(false);
+
+  return (
+    <Box
+      className="admin-motion-root"
+      sx={{ display: "flex", minHeight: "100dvh", bgcolor: grayColor }}
+    >
+      <a className="admin-skip-link" href="#admin-content">
+        Skip to content
+      </a>
+      <Box
+        component="aside"
         sx={{
           display: { xs: "none", md: "block" },
+          width: 260,
+          flexShrink: 0,
+          bgcolor: "white",
+          borderRight: "1px solid rgba(15, 23, 42, 0.06)",
+          zIndex: 1,
         }}
       >
         <Sidebar />
-      </Grid>
-      <Grid
-        size={{ xs: 12, md: 8, lg: 9 }}
-        bgcolor={grayColor}
-      >
-        {children}
-      </Grid>
+      </Box>
 
-      <Drawer open={isMobile} onClose={handleClose}>
-        <Sidebar w="50vw" />
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          position: "relative",
+          isolation: "isolate",
+        }}
+      >
+        <Box className="admin-ambient-glow" aria-hidden="true" />
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            display: { xs: "flex", md: "none" },
+            px: 3,
+            py: 1.5,
+            position: "sticky",
+            top: 0,
+            zIndex: 1100,
+            bgcolor: "rgba(255, 255, 255, 0.96)",
+            borderBottom: "1px solid rgba(15, 23, 42, 0.06)",
+          }}
+        >
+          <Typography fontWeight={800}>Admin portal</Typography>
+          <IconButton
+            aria-label={
+              isDrawerOpen ? "Close admin navigation" : "Open admin navigation"
+            }
+            aria-expanded={isDrawerOpen}
+            aria-controls={isDrawerOpen ? "admin-navigation-drawer" : undefined}
+            onClick={() => setIsDrawerOpen((open) => !open)}
+          >
+            <motion.span
+              key={isDrawerOpen ? "close" : "menu"}
+              initial={reducedMotion ? false : { rotate: -45, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              transition={{ duration: reducedMotion ? 0 : 0.18 }}
+              style={{ display: "inline-flex" }}
+            >
+              {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
+            </motion.span>
+          </IconButton>
+        </Stack>
+
+        <motion.main
+          key={pathname}
+          id="admin-content"
+          tabIndex={-1}
+          data-admin-reveal=""
+          initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.3,
+            ease: EASE_OUT_EXPO,
+          }}
+          style={{ position: "relative", outline: "none" }}
+        >
+          {children}
+        </motion.main>
+      </Box>
+
+      <Drawer
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        transitionDuration={reducedMotion ? 0 : { enter: 260, exit: 180 }}
+        slotProps={{
+          paper: {
+            id: "admin-navigation-drawer",
+            className: "admin-motion-root",
+            sx: { width: "min(320px, calc(100vw - 32px))" },
+          },
+          backdrop: { transitionDuration: reducedMotion ? 0 : 180 },
+        }}
+      >
+        <Sidebar onNavigate={closeDrawer} />
       </Drawer>
-    </Grid>
+    </Box>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
+import useReducedMotionSafe from "./useReducedMotionSafe";
+
 import { Button } from "@mui/material";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const MotionButton = motion.create(Button);
 
@@ -17,7 +19,7 @@ export default function AnimatedToggleButton({
   sx,
   ...buttonProps
 }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotionSafe();
 
   return (
     <MotionButton
