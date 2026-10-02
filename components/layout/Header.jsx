@@ -1,5 +1,7 @@
 "use client";
 
+import { authApiBase as AUTH_API_BASE } from "../../constants/config";
+
 import {
   AccountCircle as AccountCircleIcon,
   Add as AddIcon,
@@ -43,8 +45,6 @@ import { useRouter } from "next/navigation";
 const SearchDialog = lazy(() => import("../../specific/Search"));
 const NotificationsDialog = lazy(() => import("../../specific/Notifications"));
 const NewGroupDialog = lazy(() => import("../../specific/NewGroup"));
-
-const AUTH_API_BASE = "/api/v1/user";
 
 export default function Header() {
   const dispatch = useDispatch();

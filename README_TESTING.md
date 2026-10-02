@@ -74,3 +74,48 @@ repeats the check as a second layer.
 To debug a deployed origin (where cookie/CORS behaviour differs from localhost)
 set `ENABLE_DEV_TOOLS=true` in the host's environment and the page is served
 again. Leave it unset otherwise.
+
+### Logging in when the backend lives on another origin: `NEXT_PUBLIC_REMOTE_AUTH`
+
+The app ships its own Next API routes (`app/api/v1/user/*`, backed by Mongo +
+JWT), so by default login/session calls stay same-origin. A session cookie set
+by *this* origin is never sent to a different backend origin — which is exactly
+why a socket pointed at `NEXT_PUBLIC_SOCKET_SERVER_URL` can fail its handshake
+with `connect_error: Please Login`.
+
+Set both variables to move authentication (and the RTK Query calls) onto the
+remote backend:
+
+```bash
+NEXT_PUBLIC_SOCKET_SERVER_URL=https://your-backend.example.com
+NEXT_PUBLIC_REMOTE_AUTH=true
+```
+
+What that does (see `constants/config.js`):
+
+- `apiBackend` becomes `${NEXT_PUBLIC_SOCKET_SERVER_URL}/api/v1` instead of
+  `/api/v1`, and `authApiBase` becomes `${apiBackend}/user`.
+- `login`, `me`, `logout`, `acceptMessage` and every RTK Query endpoint are
+  issued by the browser straight at the backend with `credentials: "include"`,
+  so the session cookie is stored on — and sent to — the backend's origin, and
+  the socket handshake carries it too.
+- The login body additionally sends `username` or `email` alongside `identifier`
+  so backends that key off those field names (e.g. the mern-chat-app server)
+  accept it.
+
+Leaving the flag unset/`false` keeps today's behaviour: local Next API routes,
+zero change for existing deployments. Note that `redux/thunks/admin.thunk.js`
+still targets the local `/api/v1/admin` routes either way, so the admin
+dashboard stays local-backed.
+
+Backend requirements for a browser to log in cross-origin:
+
+1. CORS must allow the frontend origin **with credentials** —
+   `Access-Control-Allow-Origin: <that exact origin>` (never `*`) plus
+   `Access-Control-Allow-Credentials: true`.
+2. The session cookie must be `SameSite=None; Secure` and served over HTTPS.
+
+`/dev/socket` has a **Backend session** card that performs exactly this login
+(username + password), reports the HTTP status and message, re-checks
+`GET /user/me` to prove the cookie landed, and only then opens the socket — the
+quickest way to separate a CORS/cookie problem from a socket problem.

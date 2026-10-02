@@ -1,5 +1,7 @@
 "use client";
 
+import { authApiBase as AUTH_API_BASE } from "../../constants/config";
+
 import {
   CalendarMonth as CalendarIcon,
   Email as EmailIcon,
@@ -15,8 +17,6 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { gradientBg } from "../../constants/color";
 import { transformImageUrl } from "../../lib/features";
-
-const AUTH_API_BASE = "/api/v1/user";
 
 export default function Profile() {
   const { user } = useSelector((state) => state.auth);

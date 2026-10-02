@@ -1,5 +1,7 @@
 "use client";
 
+import { authApiBase as AUTH_API_BASE } from "../../../constants/config";
+
 import { useInputValidation, useStrongPassword } from "6pp";
 import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
@@ -10,8 +12,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PasswordStrengthBar, { isPasswordStrong } from "../../../components/shared/PasswordStrengthBar";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
-
-const AUTH_API_BASE = "/api/v1/user";
 
 export default function ForgotContent() {
   const [isForgotPassword, setIsForgotPassword] = useState(true);

@@ -1,5 +1,7 @@
 "use client";
 
+import { authApiBase as AUTH_API_BASE } from "../constants/config";
+
 import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -7,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { userExists, userNotExists } from "../redux/reducers/auth.reducer";
 import { setNotificationCount } from "../redux/reducers/chat.reducer";
 
-const AUTH_API_BASE = "/api/v1/user";
 const PUBLIC_PATHS = new Set([
   "/login",
   "/forgot",

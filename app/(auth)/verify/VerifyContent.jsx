@@ -1,5 +1,7 @@
 "use client";
 
+import { authApiBase as AUTH_API_BASE } from "../../../constants/config";
+
 import { useInputValidation } from "6pp";
 import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
@@ -9,8 +11,6 @@ import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
-
-const AUTH_API_BASE = "/api/v1/user";
 
 export default function VerifyContent() {
   const searchParams = useSearchParams();
