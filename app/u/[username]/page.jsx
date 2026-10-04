@@ -6,6 +6,7 @@ import {
   Chip,
   CircularProgress,
   Drawer,
+  MenuItem,
   Skeleton,
   Paper,
   Tab,
@@ -95,6 +96,13 @@ export default function Username() {
   const [hidingShowcaseId, setHidingShowcaseId] = useState(null);
   const [mobileTab, setMobileTab] = useState("board");
   const [ownerTab, setOwnerTab] = useState("board");
+  const [hostFilter, setHostFilter] = useState("");
+  const [availableHosts, setAvailableHosts] = useState([]);
+
+  const mergeAvailableHosts = useCallback((hosts) => {
+    if (!Array.isArray(hosts)) return;
+    setAvailableHosts((prev) => [...new Set([...prev, ...hosts])]);
+  }, []);
   const [answerShowcasePage, setAnswerShowcasePage] = useState(1);
   const hasAnsweredShowcase = answeredShowcase.length > 0;
   const totalAnswerShowcasePages = Math.max(
@@ -180,6 +188,7 @@ export default function Username() {
           username,
           exclude,
           refresh,
+          ...(hostFilter ? { host: hostFilter } : {}),
         },
       });
 
@@ -189,6 +198,7 @@ export default function Username() {
         setAnsweredShowcase(response.data.answered || []);
         setCustomQuestions(response.data.customQuestions || []);
         setPriorityQuestions(response.data.priorityQuestions || []);
+        mergeAvailableHosts(response.data.availableHosts);
 
         setCompletionError(null);
       } else {
@@ -202,7 +212,7 @@ export default function Username() {
     } finally {
       setIsCompletionLoading(false);
     }
-  }, [username]);
+  }, [username, hostFilter, mergeAvailableHosts]);
 
   const fetchAnswerShowcase = useCallback(async () => {
     if (!username) return;
@@ -211,16 +221,18 @@ export default function Username() {
       const response = await axios.get(NEXT_QUESTIONS_API_BASE, {
         params: {
           username,
+          ...(hostFilter ? { host: hostFilter } : {}),
         },
       });
 
       if (response.data.success) {
         setAnsweredShowcase(response.data.answered || []);
+        mergeAvailableHosts(response.data.availableHosts);
       }
     } catch (error) {
       console.error(error);
     }
-  }, [username]);
+  }, [username, hostFilter, mergeAvailableHosts]);
 
   const saveQuestion = async ({ questionId = null, question }) => {
     setSavingQuestionId(questionId || "new");
@@ -433,6 +445,27 @@ export default function Username() {
 
   const suggestionVisibleCount = isMobileView ? 3 : 4;
 
+  const hostFilterControl = availableHosts.length > 0 && (
+    <TextField
+      select
+      size="small"
+      label="Website"
+      value={hostFilter}
+      onChange={(e) => {
+        setHostFilter(e.target.value);
+        setAnswerShowcasePage(1);
+      }}
+      sx={{ minWidth: 160 }}
+    >
+      <MenuItem value="">All websites</MenuItem>
+      {availableHosts.map((host) => (
+        <MenuItem key={host} value={host}>
+          {host}
+        </MenuItem>
+      ))}
+    </TextField>
+  );
+
   const toggleShowcaseVisibility = async (item) => {
     if (!isOwner || !item?.id || !item?.itemType) return;
 
@@ -485,6 +518,9 @@ export default function Username() {
       >
         {`Custom Questions (@${username})`}
       </Typography>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        {hostFilterControl}
+      </Box>
       <Stack spacing={1.5}>
           <Typography variant={isMobileView ? "subtitle1" : "h6"} sx={{ fontSize: { xs: "0.95rem", sm: "1.25rem" } }}>
             Create Custom Question
@@ -763,6 +799,11 @@ export default function Username() {
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
         Previously answered public board questions for @{username}
       </Typography>
+      {hostFilterControl && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          {hostFilterControl}
+        </Box>
+      )}
 
       {pagedAnsweredShowcase.length > 0 ? (
         <Stack spacing={1.5}>

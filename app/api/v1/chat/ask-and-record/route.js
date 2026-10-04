@@ -13,12 +13,17 @@ export async function POST(request) {
   try {
     const payload = await request.json();
 
+    // Forward cookies + origin so the backend can auth and attribute the host.
+    const headers = { Cookie: request.headers.get("cookie") || "" };
+    const origin = request.headers.get("origin");
+    const referer = request.headers.get("referer");
+    if (origin) headers.Origin = origin;
+    if (referer) headers.Referer = referer;
+
     const response = await axios.post(
       `${SOCKET_CHAT_API_BASE}/chat/ask-and-record`,
       payload,
-      {
-        withCredentials: true,
-      }
+      { headers }
     );
 
     return withCors(response.data, { status: response.status });

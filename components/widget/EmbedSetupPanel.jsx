@@ -133,7 +133,8 @@ export default function EmbedSetupPanel({ username }) {
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
         Add one small snippet to any site. Visitors get a floating feedback dialog — replies land on your board
-        (@{username}) as priority questions.
+        (@{username}) as priority questions. Use the same snippet on multiple sites:
+        every response is tagged with its website, so you can filter your board by host.
       </Typography>
 
       <Grid container spacing={2}>
@@ -358,6 +359,15 @@ export default function EmbedSetupPanel({ username }) {
           <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
             Responses appear on your board in Priority Questions + chat, same as direct /u/{username} messages.
           </Typography>
+          <Button
+            size="small"
+            variant="text"
+            href={`/showcase/${(username || "").toLowerCase()}`}
+            target="_blank"
+            sx={{ mt: 1 }}
+          >
+            Open public showcase (filterable per website)
+          </Button>
         </Grid>
       </Grid>
     </Paper>

@@ -8,6 +8,11 @@ import {
   buildTopicProfile,
   rankByRelevance,
   excludeNearDuplicates,
+  resolveAskHost,
+  buildQuestionHostsIndex,
+  hostsForQuestion,
+  filterByHost,
+  sanitizeHost,
 } from '../../../../../lib/questionFilters.js';
 import Chat from '../../../../../lib/server/models/chat.model.js';
 import Message from '../../../../../lib/server/models/message.model.js';
@@ -190,6 +195,7 @@ const getBoardReplyShowcaseForUsername = async (username, { includeHidden = fals
     id: `reply-${message._id}`,
     itemType: 'reply',
     hiddenFromShowcase: Boolean(message.hiddenFromShowcase),
+    host: message.host || null,
     question: message.replyTo?.content || 'Replied question',
     answer: normalizeShowcaseAnswer(message.content || ''),
     createdAt: message.createdAt,
@@ -226,6 +232,9 @@ export async function GET(request) {
 
     const excludedSet = parseExclude(exclude);
     const pool = await getPoolForUsername(username);
+    const hostParam = (url.searchParams.get('host') || '').trim();
+    const activeHost = hostParam ? sanitizeHost(hostParam) : null;
+    const questionHostsIndex = buildQuestionHostsIndex(pool);
 
     const unanswered = pool.filter((item) => !item.answer?.trim());
     const answered = pool
@@ -236,6 +245,7 @@ export async function GET(request) {
         id: item._id,
         itemType: 'question',
         hiddenFromShowcase: Boolean(item.hiddenFromShowcase),
+        hosts: [...new Set((item.hosts || []).map((h) => sanitizeHost(h)))],
         question: item.question,
         answer: normalizeShowcaseAnswer(item.answer),
         createdAt: item.answeredAt || item.updatedAt,
@@ -244,9 +254,18 @@ export async function GET(request) {
     const allBoardReplies = await getBoardReplyShowcaseForUsername(username, {
       includeHidden: true,
     });
-    const boardReplyAnswered = isOwnerViewer
+    const boardReplyAnswered = (isOwnerViewer
       ? allBoardReplies
-      : allBoardReplies.filter((item) => !item.hiddenFromShowcase);
+      : allBoardReplies.filter((item) => !item.hiddenFromShowcase)
+    ).map((item) => ({
+      ...item,
+      hosts: hostsForQuestion(item.question, questionHostsIndex, item.host),
+    }));
+
+    const availableHosts = [...new Set([
+      ...pool.flatMap((item) => item?.hosts || []),
+      ...allBoardReplies.map((item) => item.host).filter(Boolean),
+    ])].sort();
 
     // A question answered via a board reply must leave the unanswered pool
     // (priority / custom / suggestions), even if SuggestedQuestion.answer
@@ -272,6 +291,8 @@ export async function GET(request) {
       (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
     );
 
+    const visibleAnswered = filterByHost(mergedAnswered, activeHost, (item) => item.hosts || []);
+
     const personalUnanswered = openUnanswered
       .filter((item) => item.targetUsername === username)
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
@@ -283,23 +304,31 @@ export async function GET(request) {
         .filter(Boolean)
     );
 
-    const priorityQuestions = personalUnanswered
-      .filter((item) => (item.askedCount || 0) > 0)
+    const priorityQuestions = filterByHost(
+      personalUnanswered.filter((item) => (item.askedCount || 0) > 0),
+      activeHost,
+      (item) => item.hosts || []
+    )
       .sort((a, b) => (b.askedCount || 0) - (a.askedCount || 0))
       .slice(0, 10)
       .map((item) => ({
         id: item._id,
         question: item.question,
         askedCount: item.askedCount || 0,
+        hosts: [...new Set((item.hosts || []).map((h) => sanitizeHost(h)))],
         createdAt: item.createdAt,
       }));
 
-    const customQuestions = personalUnanswered
-      .filter((item) => (item.askedCount || 0) === 0)
+    const customQuestions = filterByHost(
+      personalUnanswered.filter((item) => (item.askedCount || 0) === 0),
+      activeHost,
+      (item) => item.hosts || []
+    )
       .map((item) => ({
       id: item._id,
       question: item.question,
       askedCount: item.askedCount || 0,
+      hosts: [...new Set((item.hosts || []).map((h) => sanitizeHost(h)))],
       createdAt: item.createdAt,
       }));
 
@@ -347,9 +376,11 @@ export async function GET(request) {
       {
         success: true,
         suggestions,
-        answered: mergedAnswered.slice(0, 20),
+        answered: visibleAnswered.slice(0, 20),
         customQuestions,
         priorityQuestions,
+        availableHosts,
+        activeHost,
         ownerView: isOwnerViewer,
       },
       { status: 200 }
@@ -370,10 +401,15 @@ export async function POST(request) {
   try {
     await connectDB();
     await ensureGlobalSeeds();
-    const { username, question } = await request.json();
+    const { username, question, host: bodyHost } = await request.json();
 
     const normalizedUsername = (username || '').trim().toLowerCase();
     const trimmedQuestion = (question || '').trim();
+    const askHost = resolveAskHost({
+      host: bodyHost,
+      origin: request.headers.get('origin'),
+      referer: request.headers.get('referer'),
+    });
 
     if (!normalizedUsername || !trimmedQuestion) {
       return withCors(
@@ -393,7 +429,7 @@ export async function POST(request) {
     if (existing?.answer?.trim()) {
       existing = await SuggestedQuestion.findOneAndUpdate(
         { _id: existing._id },
-        { $inc: { askedCount: 1 } },
+        { $inc: { askedCount: 1 }, $addToSet: { hosts: askHost } },
         { new: true }
       );
 
@@ -412,7 +448,7 @@ export async function POST(request) {
     if (existing && (existing.askedCount || 0) > 0) {
       existing = await SuggestedQuestion.findOneAndUpdate(
         { _id: existing._id },
-        { $inc: { askedCount: 1 } },
+        { $inc: { askedCount: 1 }, $addToSet: { hosts: askHost } },
         { new: true }
       );
 
@@ -434,7 +470,7 @@ export async function POST(request) {
             question: trimmedQuestion,
             normalizedQuestion,
           },
-          $inc: { askedCount: 1 },
+          $inc: { askedCount: 1 }, $addToSet: { hosts: askHost },
         },
         { new: true }
       );
@@ -450,7 +486,7 @@ export async function POST(request) {
               answer: '',
               answeredAt: null,
             },
-            $inc: { askedCount: 1 },
+            $inc: { askedCount: 1 }, $addToSet: { hosts: askHost },
           },
           { upsert: true, new: true }
         );
@@ -466,7 +502,7 @@ export async function POST(request) {
         if (existing && (existing.askedCount || 0) > 0) {
           existing = await SuggestedQuestion.findOneAndUpdate(
             { _id: existing._id },
-            { $inc: { askedCount: 1 } },
+            { $inc: { askedCount: 1 }, $addToSet: { hosts: askHost } },
             { new: true }
           );
 
@@ -490,7 +526,7 @@ export async function POST(request) {
                 question: trimmedQuestion,
                 normalizedQuestion,
               },
-              $inc: { askedCount: 1 },
+              $inc: { askedCount: 1 }, $addToSet: { hosts: askHost },
             },
             { new: true }
           );
