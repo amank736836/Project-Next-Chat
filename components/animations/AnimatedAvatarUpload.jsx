@@ -2,7 +2,7 @@
 
 import { Avatar, IconButton } from "@mui/material";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import { PersonOutline, CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import { EASE_OUT_EXPO, SPRING_BOUNCY } from "./motionConfig";
 import { VisuallyHiddenInput } from "../styles/StyledComponents";
 
@@ -17,6 +17,7 @@ export default function AnimatedAvatarUpload({
   onChange,
   size = "7rem",
   disabled,
+  accent = "79, 172, 254",
 }) {
   const reducedMotion = useReducedMotion();
 
@@ -35,9 +36,7 @@ export default function AnimatedAvatarUpload({
       {/* spinning dashed ring */}
       <motion.span
         aria-hidden
-        animate={
-          reducedMotion || !preview ? {} : { rotate: 360 }
-        }
+        animate={reducedMotion || !preview ? {} : { rotate: 360 }}
         transition={
           reducedMotion || !preview
             ? undefined
@@ -47,7 +46,7 @@ export default function AnimatedAvatarUpload({
           position: "absolute",
           inset: -7,
           borderRadius: "50%",
-          border: "2px dashed rgba(79, 172, 254, 0.55)",
+          border: `2px dashed rgba(${accent}, 0.55)`,
           opacity: preview ? 1 : 0.35,
           transition: "opacity 0.3s ease",
         }}
@@ -68,14 +67,14 @@ export default function AnimatedAvatarUpload({
             sx={{
               width: "100%",
               height: "100%",
-              bgcolor: preview ? "transparent" : "rgba(79, 172, 254, 0.12)",
-              color: "rgb(79, 172, 254)",
+              bgcolor: preview ? "transparent" : `rgba(${accent}, 0.12)`,
+              color: `rgb(${accent})`,
               border: "2px solid rgba(255,255,255,0.9)",
               boxShadow: "0 10px 26px -12px rgba(15, 23, 42, 0.55)",
               fontSize: "2rem",
             }}
           >
-            {preview ? null : "🙂"}
+            {preview ? null : <PersonOutline fontSize="large" />}
           </Avatar>
         </motion.div>
       </AnimatePresence>
@@ -87,17 +86,20 @@ export default function AnimatedAvatarUpload({
       >
         <IconButton
           component="label"
+          aria-label="Upload profile photo"
           disabled={disabled}
           sx={{
-            bgcolor: "primary.main",
+            bgcolor: `rgb(${accent})`,
             color: "white",
-            boxShadow: "0 8px 18px -8px rgba(25, 118, 210, 0.9)",
+            boxShadow: `0 8px 18px -8px rgba(${accent}, 0.4)`,
             "&:hover": { bgcolor: "primary.dark" },
           }}
         >
           <CameraAltIcon fontSize="small" />
           <VisuallyHiddenInput
             type="file"
+            aria-label="Upload profile photo"
+            disabled={disabled}
             accept="image/png, image/jpeg, image/jpg, image/webp, image/gif"
             onChange={onChange}
           />

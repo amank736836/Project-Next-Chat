@@ -5,6 +5,7 @@ import { Providers } from "../components/Providers";
 import NoContextMenu from "../components/NoContextMenu";
 import UserInitializer from "../components/UserInitializer";
 import "./globals.css";
+import "./welcome.css";
 
 export const metadata = {
   title: "Chat Champ",

@@ -9,8 +9,9 @@ import {
   Suspense,
 } from "react";
 import { Box, CircularProgress, Container } from "@mui/material";
-import { MotionConfig, useAnimationControls } from "framer-motion";
+import { motion, MotionConfig, useAnimationControls } from "framer-motion";
 import AuthBackdrop from "./AuthBackdrop";
+import WelcomeStage from "./WelcomeStage";
 import TiltCard from "./TiltCard";
 import { CARD_ENTRANCE, SHAKE_KEYFRAMES } from "./motionConfig";
 import useReducedMotionSafe from "./useReducedMotionSafe";
@@ -38,6 +39,8 @@ export default function AuthShell({
   maxTilt = 7,
   maxWidth = "xs",
   className = "",
+  layout,
+  onCreateAccount,
 }) {
   const controls = useAnimationControls();
   const reducedMotion = useReducedMotionSafe();
@@ -58,6 +61,30 @@ export default function AuthShell({
   useEffect(() => {
     if (shakeNonce > 0 && !reducedMotion) controls.start(SHAKE_KEYFRAMES);
   }, [shakeNonce, controls, reducedMotion]);
+
+  if (layout === "welcome") {
+    return (
+      <AuthShakeContext.Provider value={shake}>
+        <MotionConfig reducedMotion="user">
+          <WelcomeStage onCreateAccount={onCreateAccount}>
+            <motion.div animate={controls}>
+              <Suspense
+                fallback={
+                  fallback || (
+                    <Box sx={{ p: 8, textAlign: "center" }}>
+                      <CircularProgress />
+                    </Box>
+                  )
+                }
+              >
+                {children}
+              </Suspense>
+            </motion.div>
+          </WelcomeStage>
+        </MotionConfig>
+      </AuthShakeContext.Provider>
+    );
+  }
 
   return (
     <AuthShakeContext.Provider value={shake}>
