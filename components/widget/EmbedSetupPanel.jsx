@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  Chip,
   FormControlLabel,
   Grid,
   MenuItem,
@@ -13,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
   WIDGET_POSITIONS,
@@ -36,6 +37,43 @@ export default function EmbedSetupPanel({ username }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [origin, setOrigin] = useState("");
+  const [siteInput, setSiteInput] = useState("");
+  const [primarySite, setPrimarySite] = useState("");
+
+  const addSite = useCallback(() => {
+    const cleaned = siteInput.trim().toLowerCase();
+    if (!cleaned) return;
+    setSettings((prev) => {
+      const next = sanitizeWidgetSettings({ ...prev, sites: [...(prev.sites || []), cleaned] });
+      if (next.sites.length > (prev.sites || []).length) {
+        setPrimarySite((current) => current || next.sites[next.sites.length - 1]);
+      } else {
+        toast.error("That doesn't look like a valid hostname");
+      }
+      return next;
+    });
+    setSiteInput("");
+  }, [siteInput]);
+
+  const removeSite = useCallback(
+    (site) => {
+      setSettings((prev) => sanitizeWidgetSettings({
+        ...prev,
+        sites: (prev.sites || []).filter((s) => s !== site),
+      }));
+      setPrimarySite((current) => (current === site ? "" : current));
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!primarySite && settings.sites.length > 0) {
+      setPrimarySite(settings.sites[0]);
+    }
+    if (primarySite && !settings.sites.includes(primarySite)) {
+      setPrimarySite(settings.sites[0] || "");
+    }
+  }, [settings.sites, primarySite]);
 
   useEffect(() => {
     setOrigin(window.location.origin);
@@ -132,10 +170,45 @@ export default function EmbedSetupPanel({ username }) {
         Embed on your website
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Add one small snippet to any site. Visitors get a floating feedback dialog — replies land on your board
-        (@{username}) as priority questions. Use the same snippet on multiple sites:
-        every response is tagged with its website, so you can filter your board by host.
+        First tell us which website(s) you will paste the snippet on — responses get tagged per site.
+        One snippet works on all of them.
       </Typography>
+
+      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 1 }}>
+        <TextField
+          size="small"
+          label="Website hostname (e.g. myblog.com)"
+          value={siteInput}
+          onChange={(e) => setSiteInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addSite();
+            }
+          }}
+          sx={{ flex: 1, minWidth: 220 }}
+        />
+        <Button variant="contained" onClick={addSite} disabled={!siteInput.trim()}>
+          Add site
+        </Button>
+      </Box>
+      {settings.sites.length > 0 ? (
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+          {settings.sites.map((site) => (
+            <Chip
+              key={site}
+              label={site}
+              color={primarySite === site ? "primary" : "default"}
+              onClick={() => setPrimarySite(site)}
+              onDelete={() => removeSite(site)}
+            />
+          ))}
+        </Box>
+      ) : (
+        <Typography variant="body2" color="warning.main" sx={{ mb: 2 }}>
+          Add at least one website above to unlock your embed snippets.
+        </Typography>
+      )}
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
@@ -326,8 +399,18 @@ export default function EmbedSetupPanel({ username }) {
             </Box>
           </Box>
 
+          {settings.sites.length === 0 ? (
+            <Paper variant="outlined" sx={{ p: 2, mt: 2, borderRadius: 2, bgcolor: "#fafafa" }}>
+              <Typography variant="body2" color="text.secondary">
+                Your snippets will appear here once you add your first website above.
+                Save settings to keep the site list.
+              </Typography>
+            </Paper>
+          ) : (
+          <>
           <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
             Option 1 — Floating dialog (recommended)
+            {primarySite ? ` · for ${primarySite}` : ""}
           </Typography>
           <Paper variant="outlined" sx={{ p: 1.5, bgcolor: "#0f0f1a", color: "#d7ff8b" }}>
             <Typography variant="caption" component="pre" sx={{ whiteSpace: "pre-wrap", wordBreak: "break-all", m: 0 }}>
@@ -358,16 +441,21 @@ export default function EmbedSetupPanel({ username }) {
           </Box>
           <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
             Responses appear on your board in Priority Questions + chat, same as direct /u/{username} messages.
+            {primarySite
+              ? ` This snippet auto-tags responses from ${primarySite} — the same snippet works on your other sites too.`
+              : ""}
           </Typography>
           <Button
             size="small"
             variant="text"
-            href={`/showcase/${(username || "").toLowerCase()}`}
+            href={`/showcase/${(username || "").toLowerCase()}${primarySite ? `?host=${encodeURIComponent(primarySite)}` : ""}`}
             target="_blank"
             sx={{ mt: 1 }}
           >
-            Open public showcase (filterable per website)
+            Open public showcase{primarySite ? ` for ${primarySite}` : " (filterable per website)"}
           </Button>
+          </>
+          )}
         </Grid>
       </Grid>
     </Paper>

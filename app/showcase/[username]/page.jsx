@@ -11,13 +11,14 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { gradientBg } from "../../../constants/color";
 
 const esc = (v = '') => String(v ?? '');
 
 function ShowcaseContent() {
   const params = useParams();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const username = (params.username || "").toLowerCase();
 
@@ -53,6 +54,45 @@ function ShowcaseContent() {
     fetchShowcase();
   }, [fetchShowcase]);
 
+  // Keep the URL in sync so per-host views are shareable, e.g.
+  // /showcase/amank736836?host=myblog.com for a public FAQ wall.
+  const selectHost = useCallback(
+    (host) => {
+      setHostFilter(host);
+      router.replace(`/showcase/${username}${host ? `?host=${encodeURIComponent(host)}` : ""}`, {
+        scroll: false,
+      });
+    },
+    [router, username]
+  );
+
+  // Per-host tab title + FAQ structured data for search authority.
+  useEffect(() => {
+    document.title = hostFilter
+      ? `@${username} — Answers from ${hostFilter}`
+      : `@${username} — Answer Showcase`;
+  }, [username, hostFilter]);
+
+  useEffect(() => {
+    const scriptId = "sn-faq-schema";
+    document.getElementById(scriptId)?.remove();
+    if (answered.length === 0) return;
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: answered.slice(0, 20).map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
+    });
+    document.head.appendChild(script);
+    return () => document.getElementById(scriptId)?.remove();
+  }, [answered]);
+
   return (
     <Box
       sx={{
@@ -78,7 +118,7 @@ function ShowcaseContent() {
                 label="All websites"
                 clickable
                 color={hostFilter === "" ? "primary" : "default"}
-                onClick={() => setHostFilter("")}
+                onClick={() => selectHost("")}
               />
               {availableHosts.map((host) => (
                 <Chip
@@ -86,7 +126,7 @@ function ShowcaseContent() {
                   label={esc(host)}
                   clickable
                   color={hostFilter === host ? "primary" : "default"}
-                  onClick={() => setHostFilter(host)}
+                  onClick={() => selectHost(host)}
                 />
               ))}
             </Box>
