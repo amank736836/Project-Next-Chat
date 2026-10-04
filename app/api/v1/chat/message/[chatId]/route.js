@@ -18,14 +18,20 @@ export async function GET(request, { params }) {
     const page = parseInt(url.searchParams.get('page')) || 1;
     const limit = 20;
     const skip = (page - 1) * limit;
-    
-    const messages = await Message.find({ chat: chatId })
+
+    // Private AI answers are visible only to their owner.
+    const visibilityFilter = {
+      chat: chatId,
+      $or: [{ privateTo: null }, { privateTo: user._id }],
+    };
+
+    const messages = await Message.find(visibilityFilter)
       .populate('sender', 'name username avatar')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
-    
-    const totalMessages = await Message.countDocuments({ chat: chatId });
+
+    const totalMessages = await Message.countDocuments(visibilityFilter);
     const totalPages = Math.ceil(totalMessages / limit);
     
     return NextResponse.json(

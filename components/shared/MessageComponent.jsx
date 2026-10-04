@@ -14,7 +14,7 @@ import {
 } from "../../redux/api/api";
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 
-function MessageComponent({ message, onReply }) {
+function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
   const { user } = useSelector((state) => state.auth);
   const { sender, content, attachments = [], createdAt } = message;
   const isAnonymousMessage = useMemo(
@@ -31,6 +31,12 @@ function MessageComponent({ message, onReply }) {
     [isAnonymousMessage, sender?._id, user?._id]
   );
   const isRightAligned = isSender;
+  const isAi =
+    message?.aiOnly === true ||
+    String(sender?._id || "") === "ai" ||
+    String(sender?.name || "").toLowerCase() === "ai assistant";
+  // Persisted private AI answers carry privateTo; only their owner receives them.
+  const isPrivateAi = Boolean(message?.privateTo) || message?.aiOnly === true;
 
   const timeAgo = useMemo(() => moment(createdAt).fromNow(), [createdAt]);
 
@@ -90,7 +96,7 @@ function MessageComponent({ message, onReply }) {
       style={{
         alignSelf: isRightAligned ? "flex-end" : "flex-start",
         color: isRightAligned ? "white" : "black",
-        backgroundColor: isRightAligned ? "blue" : "lightgray",
+        backgroundColor: isAi ? "#ede7f6" : isRightAligned ? "blue" : "lightgray",
         borderRadius: "5px",
         padding: "0.5rem",
         width: "fit-content",
@@ -98,7 +104,7 @@ function MessageComponent({ message, onReply }) {
     >
       {!isRightAligned && (
         <Typography color={lightBlue} fontWeight={600} variant="caption">
-          {isAnonymousMessage ? "Anonymous" : sender?.name || "Anonymous"}
+          {isAi ? "✨ AI Assistant" : isAnonymousMessage ? "Anonymous" : sender?.name || "Anonymous"}
         </Typography>
       )}
 
@@ -161,6 +167,37 @@ function MessageComponent({ message, onReply }) {
 
       {content && <Typography>{content}</Typography>}
 
+      {isPrivateAi && (
+        <Typography variant="caption" sx={{ opacity: 0.6, display: "block" }}>
+          Only visible to you
+        </Typography>
+      )}
+
+      {isPrivateAi && (onShareAi || onDismissAi) && (
+        <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
+          {onShareAi && (
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => onShareAi(message)}
+              sx={{ textTransform: "none", borderRadius: "999px" }}
+            >
+              Share with chat
+            </Button>
+          )}
+          {onDismissAi && (
+            <Button
+              size="small"
+              variant="text"
+              onClick={() => onDismissAi(message)}
+              sx={{ textTransform: "none" }}
+            >
+              Dismiss
+            </Button>
+          )}
+        </Box>
+      )}
+
       <Box
         sx={{
           mt: 0.4,
@@ -172,20 +209,22 @@ function MessageComponent({ message, onReply }) {
         <Typography variant="caption" color={isRightAligned ? "white" : "black"}>
           {timeAgo}
         </Typography>
-        <Button
-          size="small"
-          variant="text"
-          onClick={handleReplyClick}
-          sx={{
-            minWidth: "auto",
-            p: 0,
-            lineHeight: 1,
-            textTransform: "none",
-            color: isRightAligned ? "white" : "#1976d2",
-          }}
-        >
-          Reply
-        </Button>
+        {!isAi && (
+          <Button
+            size="small"
+            variant="text"
+            onClick={handleReplyClick}
+            sx={{
+              minWidth: "auto",
+              p: 0,
+              lineHeight: 1,
+              textTransform: "none",
+              color: isRightAligned ? "white" : "#1976d2",
+            }}
+          >
+            Reply
+          </Button>
+        )}
       </Box>
     </motion.div>
   );

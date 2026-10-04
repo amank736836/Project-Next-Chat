@@ -3,12 +3,16 @@
 import { useInfiniteScrollTop } from "6pp";
 import {
   AttachFile as AttachFileIcon,
+  AutoAwesome as AutoAwesomeIcon,
   Send as SendIcon,
 } from "@mui/icons-material";
 import {
   Button,
+  CircularProgress,
+  FormControlLabel,
   IconButton,
   Stack,
+  Switch,
   Typography,
   Box,
   Drawer,
@@ -66,6 +70,7 @@ import {
 import { useSocket } from "../../../providers/SocketProvider";
 import DeleteChatMenu from "../../../components/dialog/DeleteChatMenu";
 import ProtectedRoute from "../../../components/auth/ProtectedRoute";
+import axios from "axios";
 
 const Header = dynamic(() => import("../../../components/layout/Header"));
 const ChatList = dynamic(() => import("../../../components/shared/ChatList"));
@@ -296,6 +301,121 @@ function ChatContent() {
     setMessage("");
   }, []);
 
+  const [aiEnabled, setAiEnabled] = useState(true);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof chatDetails?.chat?.aiEnabled === "boolean") {
+      setAiEnabled(chatDetails.chat.aiEnabled);
+    }
+  }, [chatDetails?.chat?.aiEnabled]);
+
+  const toggleAiMode = useCallback(
+    async (e) => {
+      const next = e.target.checked;
+      setAiEnabled(next);
+      try {
+        await axios.put("/api/v1/chat/ai-mode", { chatId, enabled: next });
+      } catch {
+        setAiEnabled(!next);
+        toast.error("Failed to update AI mode");
+      }
+    },
+    [chatId]
+  );
+
+  const askAiHandler = useCallback(async () => {
+    const question = message.trim();
+    if (!question || aiLoading) return;
+    setAiLoading(true);
+    try {
+      // Private first: saved visibly only to you, then choose to share or not.
+      const { data } = await axios.post("/api/v1/chat/ask-ai", {
+        chatId,
+        question,
+        mode: "private",
+      });
+      if (data?.success && data?.answer) {
+        if (!socket || !socket.connected) {
+          // Server emits to you alone, but that needs the socket —
+          // show it locally until the next refresh.
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              _id: `ai-${data?.messageId || Date.now()}`,
+              content: data.answer,
+              sender: { _id: "ai", name: "AI Assistant" },
+              privateTo: user?._id,
+              chat: chatId,
+              createdAt: new Date().toISOString(),
+            },
+          ]);
+        }
+      } else {
+        toast.error(data?.message || "AI could not answer right now.");
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "AI could not answer right now.");
+    } finally {
+      setAiLoading(false);
+    }
+  }, [message, aiLoading, chatId, socket, user?._id]);
+
+  const shareAiHandler = useCallback(
+    async (aiMessage) => {
+      if (!aiMessage?._id) return;
+      const isLocalOnly = String(aiMessage._id).startsWith("ai-");
+      try {
+        const { data } = await axios.post("/api/v1/chat/ask-ai/share", {
+          chatId,
+          messageId: isLocalOnly ? undefined : aiMessage._id,
+          answer: isLocalOnly ? aiMessage.content : undefined,
+        });
+        if (data?.success) {
+          if (isLocalOnly) {
+            // Legacy offline preview: drop it, the shared copy arrives via realtime.
+            setMessages((prevMessages) =>
+              prevMessages.filter((msg) => String(msg._id) !== String(aiMessage._id))
+            );
+          } else {
+            // Mark shared locally at once; the broadcast echo replaces by _id.
+            setMessages((prevMessages) =>
+              prevMessages.map((msg) =>
+                String(msg._id) === String(aiMessage._id)
+                  ? { ...msg, privateTo: null }
+                  : msg
+              )
+            );
+          }
+          toast.success("Shared with chat");
+        } else {
+          toast.error(data?.message || "Could not share with chat.");
+        }
+      } catch (err) {
+        toast.error(err?.response?.data?.message || "Could not share with chat.");
+      }
+    },
+    [chatId]
+  );
+
+  const dismissAiHandler = useCallback(
+    async (aiMessage) => {
+      if (!aiMessage?._id) return;
+      const messageId = aiMessage._id;
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => String(msg._id) !== String(messageId))
+      );
+      if (!String(messageId).startsWith("ai-")) {
+        try {
+          await axios.delete(`/api/v1/chat/ai-message/${messageId}`);
+        } catch {
+          // Already removed locally; server copy (if any) stays harmless.
+        }
+      }
+    },
+    []
+  );
+
   const renderedMessages = useMemo(
     () =>
       displayedMessages.map((msg) => (
@@ -303,9 +423,11 @@ function ChatContent() {
           message={msg}
           key={msg._id}
           onReply={handleReplyToMessage}
+          onShareAi={shareAiHandler}
+          onDismissAi={dismissAiHandler}
         />
       )),
-    [displayedMessages, handleReplyToMessage]
+    [displayedMessages, handleReplyToMessage, shareAiHandler, dismissAiHandler]
   );
 
   const handleMessageListScroll = useCallback(
@@ -343,7 +465,16 @@ function ChatContent() {
   const newMessagesListener = useCallback(
     (data) => {
       if (data.chatId !== chatId) return;
-      setMessages((prevMessages) => [...prevMessages, data.message]);
+      // Replace on same _id (e.g. a private AI answer that was just shared).
+      setMessages((prevMessages) => {
+        const incoming = data.message;
+        if (incoming?._id && prevMessages.some((msg) => String(msg._id) === String(incoming._id))) {
+          return prevMessages.map((msg) =>
+            String(msg._id) === String(incoming._id) ? { ...msg, ...incoming } : msg
+          );
+        }
+        return [...prevMessages, incoming];
+      });
     },
     [chatId]
   );
@@ -574,6 +705,37 @@ function ChatContent() {
 
         <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height={"100%"}>
           <Fragment>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                px: "1rem",
+                py: 0.25,
+                bgcolor: "#e8eaf6",
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  fontWeight: 600,
+                  color: "#333",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: "60%",
+                }}
+              >
+                {chatDetails?.chat?.name || "Chat"}
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch size="small" checked={aiEnabled} onChange={toggleAiMode} />
+                }
+                label={<Typography variant="caption">AI mode</Typography>}
+                sx={{ mr: 0 }}
+              />
+            </Box>
             <Stack
               ref={containerRef}
               boxSizing="border-box"
@@ -719,6 +881,28 @@ function ChatContent() {
                     boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
                   }}
                 />
+
+                {aiEnabled && (
+                  <IconButton
+                    onClick={askAiHandler}
+                    disabled={aiLoading || !message.trim()}
+                    title="Ask AI privately (share with chat afterwards if you want)"
+                    sx={{
+                      backgroundColor: "#4facfe",
+                      color: "white",
+                      marginLeft: "0.5rem",
+                      "&:hover": {
+                        backgroundColor: "#3d8bfd",
+                      },
+                    }}
+                  >
+                    {aiLoading ? (
+                      <CircularProgress size={20} sx={{ color: "white" }} />
+                    ) : (
+                      <AutoAwesomeIcon />
+                    )}
+                  </IconButton>
+                )}
 
                 <IconButton
                   type="submit"

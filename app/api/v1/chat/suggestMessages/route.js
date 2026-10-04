@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '../../../../../lib/server/db.js';
 import SuggestedQuestion from '../../../../../lib/server/models/suggestedQuestion.model.js';
+import { generateSuggestionsWithNvidia } from '../../../../../lib/server/nvidia.js';
 
 const SUGGESTION_SEPARATOR = '||';
 
@@ -142,13 +143,20 @@ export async function POST(request) {
     let pickedSuggestions = pickSuggestions(unaskedQuestions, excludedQuestions, 3);
 
     if (pickedSuggestions.length < 3) {
-      const aiText = await generateWithGeminiRest(exclude);
-      const aiSuggestions = aiText
-        ? aiText
-            .split(SUGGESTION_SEPARATOR)
-            .map((item) => item.trim())
-            .filter(Boolean)
-        : [];
+      // Fastest measured provider first (NVIDIA nemotron-3.5-lightning),
+      // Gemini as fallback. Either may be unconfigured — both return null then.
+      const nvidiaSuggestions =
+        (await generateSuggestionsWithNvidia({ exclude })) || [];
+      const geminiText =
+        nvidiaSuggestions.length >= 3
+          ? null
+          : await generateWithGeminiRest(exclude);
+      const aiSuggestions = [
+        ...nvidiaSuggestions,
+        ...(geminiText
+          ? geminiText.split(SUGGESTION_SEPARATOR).map((item) => item.trim()).filter(Boolean)
+          : []),
+      ];
 
       for (const suggestion of aiSuggestions) {
         await SuggestedQuestion.updateOne(
