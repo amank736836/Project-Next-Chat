@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
 import connectDB from '../../../../../lib/server/db.js';
+import { withCors, corsPreflight } from '../../../../../lib/server/cors.js';
+import {
+  normalizeBoardQuestion,
+  normalizeBoardQuestionLegacy,
+  excludeReplyAnswered,
+  buildTopicProfile,
+  rankByRelevance,
+  excludeNearDuplicates,
+} from '../../../../../lib/questionFilters.js';
 import Chat from '../../../../../lib/server/models/chat.model.js';
 import Message from '../../../../../lib/server/models/message.model.js';
 import SuggestedQuestion from '../../../../../lib/server/models/suggestedQuestion.model.js';
@@ -23,18 +32,9 @@ const GLOBAL_SEED_QUESTIONS = [
   'What habit has improved your life the most?',
 ];
 
-const normalizeQuestion = (value = '') =>
-  value
-    .trim()
-    .replace(/[^a-z0-9\s]/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .toLowerCase();
+const normalizeQuestion = normalizeBoardQuestion;
 
-const normalizeQuestionLegacy = (value = '') =>
-  value
-    .trim()
-    .replace(/\s+/g, ' ')
-    .toLowerCase();
+const normalizeQuestionLegacy = normalizeBoardQuestionLegacy;
 
 const getNormalizedQuestionCandidates = (value = '') => {
   const normalized = normalizeQuestion(value);
@@ -161,7 +161,7 @@ const getPoolForUsername = async (username) => {
   return [...personalQuestions, ...globalQuestions];
 };
 
-const getBoardReplyShowcaseForUsername = async (username, { includeHidden = false } = {}) => {
+const getBoardReplyShowcaseForUsername = async (username, { includeHidden = false, limit = 100 } = {}) => {
   const owner = await User.findOne({ username }).select('_id username').lean();
 
   if (!owner?._id) return [];
@@ -183,7 +183,7 @@ const getBoardReplyShowcaseForUsername = async (username, { includeHidden = fals
   const replyMessages = await Message.find(replyQuery)
     .populate('sender', 'name username')
     .sort({ createdAt: -1 })
-    .limit(20)
+    .limit(limit)
     .lean();
 
   return replyMessages.map((message) => ({
@@ -195,6 +195,10 @@ const getBoardReplyShowcaseForUsername = async (username, { includeHidden = fals
     createdAt: message.createdAt,
   }));
 };
+
+export async function OPTIONS() {
+  return corsPreflight();
+}
 
 export async function GET(request) {
   try {
@@ -210,7 +214,7 @@ export async function GET(request) {
     }
 
     if (!username) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'username is required' },
         { status: 400 }
       );
@@ -237,9 +241,20 @@ export async function GET(request) {
         createdAt: item.answeredAt || item.updatedAt,
       }));
 
-    const boardReplyAnswered = await getBoardReplyShowcaseForUsername(username, {
-      includeHidden: isOwnerViewer,
+    const allBoardReplies = await getBoardReplyShowcaseForUsername(username, {
+      includeHidden: true,
     });
+    const boardReplyAnswered = isOwnerViewer
+      ? allBoardReplies
+      : allBoardReplies.filter((item) => !item.hiddenFromShowcase);
+
+    // A question answered via a board reply must leave the unanswered pool
+    // (priority / custom / suggestions), even if SuggestedQuestion.answer
+    // was never backfilled for older replies.
+    const openUnanswered = excludeReplyAnswered(
+      unanswered,
+      allBoardReplies.map((item) => item.question)
+    );
 
     const answeredKeys = new Set(
       answered.map((item) => `${normalizeQuestion(item.question)}::${normalizeQuestion(item.answer)}`)
@@ -257,7 +272,7 @@ export async function GET(request) {
       (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
     );
 
-    const personalUnanswered = unanswered
+    const personalUnanswered = openUnanswered
       .filter((item) => item.targetUsername === username)
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
 
@@ -288,7 +303,7 @@ export async function GET(request) {
       createdAt: item.createdAt,
       }));
 
-    const filteredUnanswered = unanswered
+    const filteredUnanswered = openUnanswered
       .filter(
         (item) => {
           const normalized = normalizeQuestion(item.question || item.normalizedQuestion || '');
@@ -297,13 +312,27 @@ export async function GET(request) {
       )
       .sort((a, b) => a.askedCount - b.askedCount || a.question.localeCompare(b.question));
 
-    const personalSuggestions = personalUnanswered
-      .filter((item) => (item.askedCount || 0) === 0)
-      .map((item) => item.question);
+    // Steer suggestions toward topics this board already engages with
+    // (answered Q&A + repeatedly asked questions) and keep answered
+    // topics from being re-suggested as near-duplicates.
+    const topicProfile = buildTopicProfile({
+      answered: mergedAnswered,
+      priority: priorityQuestions,
+    });
+    const answeredQuestionTexts = mergedAnswered.map((item) => item.question);
 
-    const globalSuggestions = filteredUnanswered
-      .filter((item) => item.targetUsername !== username)
-      .map((item) => item.question);
+    const personalSuggestions = rankByRelevance(
+      personalUnanswered.filter((item) => (item.askedCount || 0) === 0),
+      topicProfile
+    ).map((item) => item.question);
+
+    const globalSuggestions = rankByRelevance(
+      excludeNearDuplicates(
+        filteredUnanswered.filter((item) => item.targetUsername !== username),
+        answeredQuestionTexts
+      ),
+      topicProfile
+    ).map((item) => item.question);
 
     const suggestions = dedupeQuestions(
       mixSuggestionsWithUserRatio({
@@ -314,7 +343,7 @@ export async function GET(request) {
       })
     );
 
-    return NextResponse.json(
+    return withCors(
       {
         success: true,
         suggestions,
@@ -326,7 +355,7 @@ export async function GET(request) {
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json(
+    return withCors(
       {
         success: false,
         message: 'Failed to fetch question pool',
@@ -347,7 +376,7 @@ export async function POST(request) {
     const trimmedQuestion = (question || '').trim();
 
     if (!normalizedUsername || !trimmedQuestion) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'username and question are required' },
         { status: 400 }
       );
@@ -368,7 +397,7 @@ export async function POST(request) {
         { new: true }
       );
 
-      return NextResponse.json(
+      return withCors(
         {
           success: true,
           alreadyAsked: true,
@@ -387,7 +416,7 @@ export async function POST(request) {
         { new: true }
       );
 
-      return NextResponse.json(
+      return withCors(
         {
           success: true,
           alreadyAsked: true,
@@ -441,7 +470,7 @@ export async function POST(request) {
             { new: true }
           );
 
-          return NextResponse.json(
+          return withCors(
             {
               success: true,
               alreadyAsked: true,
@@ -470,7 +499,7 @@ export async function POST(request) {
     }
 
     if (!existing) {
-      return NextResponse.json(
+      return withCors(
         {
           success: true,
           alreadyAnswered: false,
@@ -480,7 +509,7 @@ export async function POST(request) {
     }
 
     if (existing.answer?.trim()) {
-      return NextResponse.json(
+      return withCors(
         {
           success: true,
           alreadyAsked: true,
@@ -492,7 +521,7 @@ export async function POST(request) {
       );
     }
 
-    return NextResponse.json(
+    return withCors(
       {
         success: true,
         alreadyAsked: false,
@@ -501,7 +530,7 @@ export async function POST(request) {
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json(
+    return withCors(
       {
         success: false,
         message: 'Failed to record asked question',
@@ -518,7 +547,7 @@ export async function PUT(request) {
     const authUser = await getAuthenticatedUser();
 
     if (!authUser) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Please login to continue' },
         { status: 401 }
       );
@@ -528,7 +557,7 @@ export async function PUT(request) {
     const normalizedUsername = (username || '').trim().toLowerCase();
 
     if (!normalizedUsername || normalizedUsername !== authUser.username.toLowerCase()) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Unauthorized update attempt' },
         { status: 403 }
       );
@@ -536,7 +565,7 @@ export async function PUT(request) {
 
     const trimmedQuestion = (question || '').trim();
     if (!trimmedQuestion) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'question is required' },
         { status: 400 }
       );
@@ -553,7 +582,7 @@ export async function PUT(request) {
     }).lean();
 
     if (askedDuplicate) {
-      return NextResponse.json(
+      return withCors(
         {
           success: true,
           alreadyAsked: true,
@@ -604,7 +633,7 @@ export async function PUT(request) {
       }, { new: true });
     }
 
-    return NextResponse.json(
+    return withCors(
       {
         success: true,
         item: {
@@ -616,7 +645,7 @@ export async function PUT(request) {
       { status: 200 }
     );
   } catch {
-    return NextResponse.json(
+    return withCors(
       { success: false, message: 'Failed to save question' },
       { status: 500 }
     );
@@ -629,7 +658,7 @@ export async function PATCH(request) {
     const authUser = await getAuthenticatedUser();
 
     if (!authUser) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Please login to continue' },
         { status: 401 }
       );
@@ -640,14 +669,14 @@ export async function PATCH(request) {
     const shouldHide = action !== 'show';
 
     if (!normalizedUsername || normalizedUsername !== authUser.username.toLowerCase()) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Unauthorized hide attempt' },
         { status: 403 }
       );
     }
 
     if (!itemId || !itemType) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'itemId and itemType are required' },
         { status: 400 }
       );
@@ -668,7 +697,7 @@ export async function PATCH(request) {
       );
 
       if (!updated) {
-        return NextResponse.json(
+        return withCors(
           { success: false, message: 'Showcase item not found' },
           { status: 404 }
         );
@@ -677,7 +706,7 @@ export async function PATCH(request) {
       const owner = await User.findOne({ username: normalizedUsername }).select('_id').lean();
 
       if (!owner?._id) {
-        return NextResponse.json(
+        return withCors(
           { success: false, message: 'User not found' },
           { status: 404 }
         );
@@ -686,7 +715,7 @@ export async function PATCH(request) {
       const boardChat = await Chat.findById(owner._id).select('_id').lean();
 
       if (!boardChat?._id) {
-        return NextResponse.json(
+        return withCors(
           { success: false, message: 'Board chat not found' },
           { status: 404 }
         );
@@ -710,19 +739,19 @@ export async function PATCH(request) {
       );
 
       if (!updated) {
-        return NextResponse.json(
+        return withCors(
           { success: false, message: 'Reply showcase item not found' },
           { status: 404 }
         );
       }
     } else {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Invalid itemType' },
         { status: 400 }
       );
     }
 
-    return NextResponse.json(
+    return withCors(
       {
         success: true,
         message: shouldHide
@@ -732,7 +761,7 @@ export async function PATCH(request) {
       { status: 200 }
     );
   } catch {
-    return NextResponse.json(
+    return withCors(
       { success: false, message: 'Failed to hide showcase item' },
       { status: 500 }
     );
@@ -745,7 +774,7 @@ export async function DELETE(request) {
     const authUser = await getAuthenticatedUser();
 
     if (!authUser) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Please login to continue' },
         { status: 401 }
       );
@@ -755,14 +784,14 @@ export async function DELETE(request) {
     const normalizedUsername = (username || '').trim().toLowerCase();
 
     if (!normalizedUsername || normalizedUsername !== authUser.username.toLowerCase()) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Unauthorized delete attempt' },
         { status: 403 }
       );
     }
 
     if (!questionId) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'questionId is required' },
         { status: 400 }
       );
@@ -774,13 +803,13 @@ export async function DELETE(request) {
     });
 
     if (!deleted) {
-      return NextResponse.json(
+      return withCors(
         { success: false, message: 'Question not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(
+    return withCors(
       {
         success: true,
         message: 'Custom question deleted successfully',
@@ -788,7 +817,7 @@ export async function DELETE(request) {
       { status: 200 }
     );
   } catch {
-    return NextResponse.json(
+    return withCors(
       { success: false, message: 'Failed to delete custom question' },
       { status: 500 }
     );

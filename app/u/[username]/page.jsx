@@ -28,6 +28,7 @@ import Header from "../../../components/layout/Header";
 import ChatList from "../../../components/shared/ChatList";
 import Profile from "../../../components/shared/Profile";
 import DeleteChatMenu from "../../../components/dialog/DeleteChatMenu";
+import EmbedSetupPanel from "../../../components/widget/EmbedSetupPanel";
 import { useGetMyChatsQuery } from "../../../redux/api/api";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 import { setNotificationCount } from "../../../redux/reducers/chat.reducer";
@@ -93,6 +94,7 @@ export default function Username() {
   const [deletingQuestionId, setDeletingQuestionId] = useState(null);
   const [hidingShowcaseId, setHidingShowcaseId] = useState(null);
   const [mobileTab, setMobileTab] = useState("board");
+  const [ownerTab, setOwnerTab] = useState("board");
   const [answerShowcasePage, setAnswerShowcasePage] = useState(1);
   const hasAnsweredShowcase = answeredShowcase.length > 0;
   const totalAnswerShowcasePages = Math.max(
@@ -426,6 +428,7 @@ export default function Username() {
     if (!isOwner) return;
     setNewQuestion(msg);
     setSelectedSuggestionTemplate(msg);
+    setOwnerTab("questions");
   };
 
   const suggestionVisibleCount = isMobileView ? 3 : 4;
@@ -463,9 +466,9 @@ export default function Username() {
     }
   };
 
-  const boardPanel = (
+  const questionsPanel = (
     <Stack
-      spacing={3}
+      spacing={1.5}
       component={Paper}
       elevation={4}
       sx={{
@@ -480,32 +483,9 @@ export default function Username() {
         fontWeight={600}
         sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
       >
-        {isOwner ? `Manage Your Message Board (@${username})` : `Send Anonymous Message to @${username}`}
+        {`Custom Questions (@${username})`}
       </Typography>
-
-      {!isOwner ? (
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            placeholder="Write your anonymous message here"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            variant="outlined"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isLoading || !content}
-            sx={{ mt: 2 }}
-          >
-            {isLoading ? <CircularProgress size={24} /> : "Send Message"}
-          </Button>
-        </form>
-      ) : (
-        <Stack spacing={1.5}>
+      <Stack spacing={1.5}>
           <Typography variant={isMobileView ? "subtitle1" : "h6"} sx={{ fontSize: { xs: "0.95rem", sm: "1.25rem" } }}>
             Create Custom Question
           </Typography>
@@ -550,6 +530,7 @@ export default function Username() {
                         variant="outlined"
                         onClick={() => deleteCustomQuestion(item.id)}
                         disabled={deletingQuestionId === item.id}
+                        sx={{ flexShrink: 0 }}
                       >
                         {deletingQuestionId === item.id ? "Deleting..." : "Delete"}
                       </Button>
@@ -584,6 +565,7 @@ export default function Username() {
                         color="error"
                         size="small"
                         label={`${item.askedCount} asks`}
+                        sx={{ flexShrink: 0 }}
                       />
                     </Stack>
                   </Paper>
@@ -595,15 +577,18 @@ export default function Username() {
               </Typography>
             )}
           </Box>
-        </Stack>
-      )}
+      </Stack>
+    </Stack>
+  );
 
+  const suggestionsBlock = (
+    <>
       <Button
         fullWidth
         variant="outlined"
         onClick={() => fetchSuggestedMessages({ refresh: true, exclude: messageString })}
         disabled={isCompletionLoading}
-        sx={{ py: { xs: 0.75, sm: 1 } }}
+        sx={{ py: { xs: 1, sm: 1 }, minHeight: 42 }}
       >
         {isCompletionLoading ? <CircularProgress size={20} /> : "Suggest Messages"}
       </Button>
@@ -622,7 +607,7 @@ export default function Username() {
           messageArray.length > 0 ? (
             <>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
-                Click a suggestion to use it as a custom question.
+                Click a suggestion to load it into the Questions tab.
               </Typography>
               <Stack spacing={1}>
                 {messageArray.slice(0, suggestionVisibleCount).map((msg, i) => (
@@ -632,10 +617,11 @@ export default function Username() {
                     variant={newQuestion === msg ? "contained" : "outlined"}
                     fullWidth
                     sx={{
-                      justifyContent: "flex-start",
-                      fontSize: { xs: "0.72rem", sm: "0.875rem" },
-                      py: { xs: 0.7, sm: 1 },
-                      px: { xs: 1, sm: 1.5 },
+                    justifyContent: "flex-start",
+                    fontSize: { xs: "0.72rem", sm: "0.875rem" },
+                    py: { xs: 1, sm: 1 },
+                    px: { xs: 1.25, sm: 1.5 },
+                    minHeight: 40,
                     }}
                   >
                     {msg}
@@ -671,6 +657,76 @@ export default function Username() {
           <Typography sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>No messages to suggest</Typography>
         )}
       </Box>
+    </>
+  );
+
+  const ownerBoardPanel = (
+    <Stack
+      spacing={3}
+      component={Paper}
+      elevation={4}
+      sx={{
+        width: "100%",
+        padding: { xs: "1.25rem", sm: "2rem" },
+        borderRadius: "16px",
+      }}
+    >
+      <Typography
+        variant={isMobileView ? "h6" : "h5"}
+        align="center"
+        fontWeight={600}
+        sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
+      >
+        {`Manage Your Message Board (@${username})`}
+      </Typography>
+      {suggestionsBlock}
+    </Stack>
+  );
+
+  const boardPanel = (
+    <Stack
+      spacing={3}
+      component={Paper}
+      elevation={4}
+      sx={{
+        width: "100%",
+        padding: { xs: "1.25rem", sm: "2rem" },
+        borderRadius: "16px",
+      }}
+    >
+      <Typography
+        variant={isMobileView ? "h6" : "h5"}
+        align="center"
+        fontWeight={600}
+        sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
+      >
+        {`Send Anonymous Message to @${username}`}
+      </Typography>
+
+      {!isOwner && (
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            placeholder="Write your anonymous message here"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            variant="outlined"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={isLoading || !content}
+            sx={{ mt: 2, py: { xs: 1, sm: 1 }, minHeight: 42 }}
+          >
+            {isLoading ? <CircularProgress size={24} /> : "Send Message"}
+          </Button>
+        </form>
+      )}
+
+      {suggestionsBlock}
 
       {!isOwner && !isLoggedInViewer && (
         <Box textAlign="center" mt={2}>
@@ -848,7 +904,48 @@ export default function Username() {
             justifyItems: { md: hasAnsweredShowcase ? "stretch" : "center" },
           }}
         >
-        {hasAnsweredShowcase && (
+        {isOwner ? (
+          <Box sx={{ gridColumn: "1 / -1", width: "100%", maxWidth: 760, mx: "auto" }}>
+            <Paper elevation={2} sx={{ mb: 2, borderRadius: "14px", overflow: "hidden" }}>
+              <Tabs
+                value={ownerTab}
+                onChange={(_, nextTab) => setOwnerTab(nextTab)}
+                variant={isMobileView ? "fullWidth" : "scrollable"}
+                scrollButtons="auto"
+                allowScrollButtonsMobile={false}
+                indicatorColor="primary"
+                textColor="primary"
+                sx={{
+                  minHeight: { xs: 44, sm: 48 },
+                  "& .MuiTab-root": {
+                    minWidth: 0,
+                    px: { xs: 0.5, sm: 2 },
+                    py: { xs: 1, sm: 1.5 },
+                    fontSize: { xs: "0.7rem", sm: "0.875rem" },
+                    minHeight: { xs: 44, sm: 48 },
+                  },
+                }}
+              >
+                <Tab value="board" label="Board" />
+                <Tab
+                  value="questions"
+                  label={`Questions${priorityQuestions.length > 0 ? ` (${priorityQuestions.length})` : ""}`}
+                />
+                <Tab
+                  value="showcase"
+                  label={`Showcase${answeredShowcase.length > 0 ? ` (${answeredShowcase.length})` : ""}`}
+                />
+                <Tab value="embed" label="Embed" />
+              </Tabs>
+            </Paper>
+            {ownerTab === "board" && ownerBoardPanel}
+            {ownerTab === "questions" && questionsPanel}
+            {ownerTab === "showcase" && answerShowcasePanel}
+            {ownerTab === "embed" && <EmbedSetupPanel username={username} />}
+          </Box>
+        ) : (
+        <>
+        {!isOwner && hasAnsweredShowcase && (
           <Box sx={{ display: { xs: "block", md: "none" }, gridColumn: "1 / -1" }}>
             <Paper elevation={2} sx={{ mb: 1, borderRadius: "14px" }}>
               <Tabs
@@ -878,6 +975,8 @@ export default function Username() {
           <Box sx={{ display: { xs: mobileTab === "showcase" ? "block" : "none", md: "block" } }}>
             {answerShowcasePanel}
           </Box>
+        )}
+        </>
         )}
         </Box>
       </Box>
