@@ -16,7 +16,7 @@ import {
   MailOutline as MailOutlineIcon,
   PersonOutline as PersonOutlineIcon,
 } from "@mui/icons-material";
-import { Box, Button, Link as MuiLink, Typography } from "@mui/material";
+import { Box, Link as MuiLink, Typography } from "@mui/material";
 import axios from "axios";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
@@ -30,7 +30,7 @@ import AnimatedField, {
   ValidityIcon,
 } from "../../../components/animations/AnimatedField";
 import AnimatedHeading from "../../../components/animations/AnimatedHeading";
-import AnimatedLogo from "../../../components/animations/AnimatedLogo";
+import { ChampMark } from "../../../components/animations/WelcomeStage";
 import AnimatedToggleButton from "../../../components/animations/AnimatedToggleButton";
 import { useAuthShake } from "../../../components/animations/AuthShell";
 import MorphSubmitButton from "../../../components/animations/MorphSubmitButton";
@@ -42,6 +42,7 @@ import { usernameValidator } from "../../../lib/validators";
 import { userExists } from "../../../redux/reducers/auth.reducer";
 
 const hydrationSafeInputSlotProps = {
+  inputLabel: { shrink: true },
   htmlInput: {
     suppressHydrationWarning: true,
   },
@@ -50,8 +51,7 @@ const hydrationSafeInputSlotProps = {
 /** How long the button stays in its red "error" state before resetting. */
 const ERROR_FLASH_MS = 900;
 
-export default function LoginContent() {
-  const [isLogin, setIsLogin] = useState(true);
+export default function LoginContent({ isLogin, setIsLogin }) {
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [emailAvailable, setEmailAvailable] = useState(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
@@ -68,8 +68,8 @@ export default function LoginContent() {
   const timerRef = useRef(null);
   const emailTimerRef = useRef(null);
   const errorTimerRef = useRef(null);
-  const usernameParam = useRef('');
-  const emailParam = useRef('');
+  const usernameParam = useRef("");
+  const emailParam = useRef("");
 
   useEffect(() => {
     if (identifierParam) {
@@ -100,7 +100,7 @@ export default function LoginContent() {
 
   const name = useInputValidation("");
   const email = useInputValidation(emailParam.current || "");
-  const username = useInputValidation(usernameParam.current || "", usernameValidator);
+  const username = useInputValidation(identifierParam || "", usernameValidator);
   const password = useStrongPassword("");
   const confirmPassword = useStrongPassword("");
   const avatar = useFileHandler("single", 2);
@@ -128,7 +128,7 @@ export default function LoginContent() {
       const checkUsername = async () => {
         try {
           const response = await axios.get(
-            `${AUTH_API_BASE}/check-username?username=${username.value}`
+            `${AUTH_API_BASE}/check-username?username=${username.value}`,
           );
           setUsernameAvailable(response.data.available);
         } catch (error) {
@@ -167,7 +167,7 @@ export default function LoginContent() {
       const checkEmail = async () => {
         try {
           const response = await axios.get(
-            `${AUTH_API_BASE}/check-email?email=${email.value}`
+            `${AUTH_API_BASE}/check-email?email=${email.value}`,
           );
           setEmailAvailable(response.data.available);
         } catch (error) {
@@ -204,7 +204,7 @@ export default function LoginContent() {
 
     // The local Next route reads `identifier`; the deployed MERN backend keys
     // off `username`/`email`. Send the right alias(es) for whichever is active.
-    const identifier = usernameParam.current || username.value;
+    const identifier = username.value;
     const credentials = remoteAuthEnabled
       ? {
           identifier,
@@ -219,7 +219,7 @@ export default function LoginContent() {
       const res = await axios.post(
         `${AUTH_API_BASE}/login`,
         credentials,
-        config
+        config,
       );
 
       dispatch(userExists(res.data.user));
@@ -259,7 +259,9 @@ export default function LoginContent() {
           id: toastId,
         });
         flashError();
-        router.push(`/forgot?identifier=${usernameParam.current || username.value}`);
+        router.push(
+          `/forgot?identifier=${usernameParam.current || username.value}`,
+        );
         return;
       }
 
@@ -268,17 +270,9 @@ export default function LoginContent() {
         id: toastId,
       });
       flashError();
-      toast
-        .promise(new Promise((resolve) => resolve()), {
-          loading: "Redirecting...",
-          success: "Redirected!",
-          error: "Redirect failed",
-          id: toastId,
-          duration: 1000,
-        })
-        .then(() => {
-          router.push(`/verify?identifier=${usernameParam.current || username.value}`);
-        });
+      if (error?.response?.data?.message?.toLowerCase().includes("verify")) {
+        router.push(`/verify?identifier=${encodeURIComponent(username.value)}`);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -346,7 +340,11 @@ export default function LoginContent() {
         withCredentials: true,
       };
 
-      const { data } = await axios.post(`${AUTH_API_BASE}/new`, formDate, config);
+      const { data } = await axios.post(
+        `${AUTH_API_BASE}/new`,
+        formDate,
+        config,
+      );
 
       dispatch(userExists(data.user));
       setSubmitStatus("success");
@@ -427,11 +425,59 @@ export default function LoginContent() {
         alignItems: "center",
       }}
     >
-      <AnimatedLogo redrawKey={isLogin ? "login" : "signup"} />
+      <div className="account-tabs" role="tablist" aria-label="Account access">
+        <button
+          role="tab"
+          id="login-tab"
+          aria-controls="account-panel"
+          aria-selected={isLogin}
+          tabIndex={isLogin ? 0 : -1}
+          disabled={isLoading}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowRight") {
+              setIsLogin(false);
+              document.getElementById("signup-tab")?.focus();
+            }
+          }}
+          onClick={() => {
+            setIsLogin(true);
+            setSubmitStatus("idle");
+          }}
+        >
+          Log in
+        </button>
+        <button
+          role="tab"
+          id="signup-tab"
+          aria-controls="account-panel"
+          aria-selected={!isLogin}
+          tabIndex={isLogin ? -1 : 0}
+          disabled={isLoading}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft") {
+              setIsLogin(true);
+              document.getElementById("login-tab")?.focus();
+            }
+          }}
+          onClick={() => {
+            setIsLogin(false);
+            setSubmitStatus("idle");
+          }}
+        >
+          Sign up
+        </button>
+      </div>
+      <div className="form-welcome-icon">
+        <ChampMark />
+        <span>✦</span>
+      </div>
 
       <SmoothHeight>
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
+            id="account-panel"
+            role="tabpanel"
+            aria-labelledby={isLogin ? "login-tab" : "signup-tab"}
             key={isLogin ? "login-panel" : "signup-panel"}
             initial={
               reducedMotion
@@ -452,11 +498,12 @@ export default function LoginContent() {
             style={{ width: "100%" }}
           >
             <AnimatedHeading
-              text={isLogin ? "Welcome back" : "Create account"}
+              component="h2"
+              text={isLogin ? "Welcome back." : "Find your people."}
               subtext={
                 isLogin
-                  ? "Log in to pick up every conversation"
-                  : "Join Chat Champ — it takes less than a minute"
+                  ? "Good to see you. Let’s get you back in the loop."
+                  : "A new connection starts with a little hello."
               }
             />
 
@@ -469,10 +516,11 @@ export default function LoginContent() {
                 <AnimatedField
                   index={0}
                   required
-                  label="Username or Email"
+                  label="Username or email"
+                  placeholder="Enter your username or email"
+                  className="welcome-input"
                   type="text"
-                  autoComplete="username email"
-                  autoFocus
+                  autoComplete="username"
                   icon={<PersonOutlineIcon fontSize="small" />}
                   value={username.value}
                   onChange={username.changeHandler}
@@ -483,6 +531,8 @@ export default function LoginContent() {
                   index={1}
                   required
                   label="Password"
+                  placeholder="Enter your password"
+                  className="welcome-input"
                   type={revealPassword ? "text" : "password"}
                   autoComplete="current-password"
                   icon={<LockOutlineIcon fontSize="small" />}
@@ -500,13 +550,27 @@ export default function LoginContent() {
                   }}
                 />
 
+                <div className="login-form-options">
+                  <span>
+                    <LockOutlineIcon /> Just you. Just your account.
+                  </span>
+                  <Link
+                    href={`/forgot?identifier=${encodeURIComponent(username.value)}`}
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
                 <MorphSubmitButton
                   type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"
                   status={submitStatus}
-                  idleLabel="Login"
+                  idleLabel={
+                    <>
+                      Let’s talk <ArrowForwardIcon fontSize="small" />
+                    </>
+                  }
                   loadingLabel="Logging in…"
                   successLabel="Welcome back!"
                   errorLabel="Login failed"
@@ -515,50 +579,25 @@ export default function LoginContent() {
                   suppressHydrationWarning
                 />
 
-                <Typography
-                  textAlign="center"
-                  mt={2}
-                  variant="body2"
-                  color="text.secondary"
-                >
-                  Don't have an account?
-                </Typography>
-                <AnimatedToggleButton
-                  fullWidth
-                  variant="outlined"
-                  color="secondary"
-                  onClick={toggleLogin}
-                  disabled={isLoading}
-                  sx={{ mt: 1 }}
-                  icon={<ArrowForwardIcon fontSize="small" />}
-                  suppressHydrationWarning
-                >
-                  Sign Up
-                </AnimatedToggleButton>
-
-                <Typography
-                  textAlign={"center"}
-                  m={"0.5rem"}
-                  mt={1.5}
-                  variant="body2"
-                  color="text.secondary"
-                >
-                  Forgot your password?
-                  <Button
-                    className="auth-link"
-                    variant="text"
-                    color="primary"
-                    onClick={() =>
-                      router.push(
-                        `/forgot?identifier=${usernameParam.current || username.value}`
-                      )
-                    }
-                    sx={{ textTransform: "none", fontWeight: 600 }}
-                    suppressHydrationWarning
+                <div className="signup-divider">
+                  <span /> A good conversation starts here <span />
+                </div>
+                <p className="signup-prompt">
+                  New to Chat Champ?{" "}
+                  <button
+                    type="button"
+                    onClick={toggleLogin}
+                    disabled={isLoading}
                   >
-                    Reset it
-                  </Button>
-                </Typography>
+                    Create an account <ArrowForwardIcon />
+                  </button>
+                </p>
+                <p className="form-legal">
+                  By continuing, you agree to our{" "}
+                  <Link href="/terms">Terms of Service</Link>
+                  <br /> and <Link href="/privacy">Privacy Policy</Link>. Let’s
+                  keep it kind.
+                </p>
               </form>
             ) : (
               <form
@@ -567,6 +606,9 @@ export default function LoginContent() {
                 suppressHydrationWarning
               >
                 <AnimatedAvatarUpload
+                  size="5rem"
+                  accent="105, 144, 110"
+                  disabled={isLoading}
                   preview={avatar.preview}
                   onChange={avatar.changeHandler}
                 />
@@ -618,7 +660,9 @@ export default function LoginContent() {
                   InputProps={{
                     endAdornment: (
                       <ValidityIcon
-                        state={email.value.includes("@") ? emailAvailable : null}
+                        state={
+                          email.value.includes("@") ? emailAvailable : null
+                        }
                         checking={checkingEmail}
                       />
                     ),
@@ -652,7 +696,10 @@ export default function LoginContent() {
                 <motion.div
                   initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.45, delay: reducedMotion ? 0 : 0.22 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: reducedMotion ? 0 : 0.22,
+                  }}
                 >
                   <PasswordStrengthBar password={password.value} />
                 </motion.div>
@@ -668,7 +715,9 @@ export default function LoginContent() {
                   slotProps={hydrationSafeInputSlotProps}
                   suppressHydrationWarning
                   validColor={confirmPasswordStateColor}
-                  error={passwordsMatch && password.value !== confirmPassword.value}
+                  error={
+                    passwordsMatch && password.value !== confirmPassword.value
+                  }
                   InputProps={{
                     endAdornment: (
                       <RevealPasswordToggle
@@ -680,7 +729,8 @@ export default function LoginContent() {
                     ),
                   }}
                   helperText={
-                    confirmPassword.value && password.value !== confirmPassword.value
+                    confirmPassword.value &&
+                    password.value !== confirmPassword.value
                       ? "Passwords do not match"
                       : confirmPassword.value &&
                           password.value === confirmPassword.value

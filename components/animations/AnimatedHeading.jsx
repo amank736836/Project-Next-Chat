@@ -55,6 +55,7 @@ export default function AnimatedHeading({
   subtext,
   align = "center",
   color = "text.primary",
+  component = "div",
 }) {
   const reducedMotion = useReducedMotionSafe();
   const characters = Array.from(text);
@@ -63,7 +64,7 @@ export default function AnimatedHeading({
     <Box sx={{ width: "100%", mb: 0.5 }}>
       <Typography
         variant="h5"
-        component="div"
+        component={component}
         fontWeight={800}
         color={color}
         textAlign={align}
