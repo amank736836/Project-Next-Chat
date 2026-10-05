@@ -1,5 +1,5 @@
 export const gradientBg = "linear-gradient(to bottom, #4facfe, #00f2fe)";
-export const dialogBg = "linear-gradient(135deg, #eef2f3, #8e9eab)";
+export const dialogBg = "linear-gradient(145deg, #ffffff, #f4f7ff)";
 export const authBg = "linear-gradient(to right, #ff7e5f, #feb47b)";
 export const orange = "rgba(234, 112, 112, 1)";
 export const lightOrange = "rgba(234, 112, 112, 0.2)";

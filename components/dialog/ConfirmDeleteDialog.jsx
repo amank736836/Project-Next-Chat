@@ -40,20 +40,20 @@ export default function ConfirmDeleteDialog({ chatId }) {
   };
 
   return (
-    <Dialog open={isDeleteMenu} onClose={handleClose}>
-      <DialogTitle>Confirm Delete</DialogTitle>
-      <DialogContent>
+    <Dialog className="workspace-root" aria-labelledby="delete-group-title" open={isDeleteMenu} onClose={handleClose} maxWidth="xs" fullWidth>
+      <DialogTitle id="delete-group-title" sx={{ pt: 3, px: 3 }}>Delete this group?</DialogTitle>
+      <DialogContent sx={{ px: 3 }}>
         <DialogContentText>
-          Are you sure you want to delete this chat? This action cannot be
+          Are you sure you want to delete this group? This action cannot be
           undone.
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button color="success" onClick={handleClose}>
-          No
+      <DialogActions sx={{ p: 3, pt: 1 }}>
+        <Button color="inherit" onClick={handleClose}>
+          Keep group
         </Button>
-        <Button color="error" onClick={deleteHandler}>
-          Yes
+        <Button color="error" variant="contained" disabled={isLoadingDeleteChat} onClick={deleteHandler}>
+          Delete group
         </Button>
       </DialogActions>
     </Dialog>

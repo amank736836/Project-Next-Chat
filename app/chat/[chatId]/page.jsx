@@ -35,7 +35,6 @@ import FileMenu from "../../../components/dialog/FileMenu";
 import { FullPageLoader, TypingLoader } from "../../../components/layout/Loaders";
 import MessageComponent from "../../../components/shared/MessageComponent";    
 import { InputBox } from "../../../components/styles/StyledComponents";
-import { grayColor, orange, gradientBg } from "../../../constants/color";
 import {
   ALERT,
   CHAT_JOINED,
@@ -636,11 +635,10 @@ function ChatContent() {
         sx={{
           "& .MuiDrawer-paper": {
             width: "80vw",
-            background: gradientBg,
+            background: "#f5f7fb",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           },
         }}
-        onClick={handleMobileClose}
       >
         {isLoadingChats && !hasResolvedChats && !hasChatListData ? (
           <Stack spacing={"1rem"} sx={{ p: "1rem" }}>
@@ -654,7 +652,7 @@ function ChatContent() {
             newMessagesAlert={newMessagesAlert}
             onlineUsers={onlineUsers}
             handleDeleteChat={handleDeleteChat}
-            onSelectChat={handleSelectChat}
+            onSelectChat={(nextChatId) => { handleSelectChat(nextChatId); handleMobileClose(); }}
           />
         )}
       </Drawer>
@@ -670,7 +668,7 @@ function ChatContent() {
               sm: "75vw",
               md: "42vw",
             },
-            background: gradientBg,
+            background: "#f5f7fb",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           },
         }}
@@ -678,12 +676,12 @@ function ChatContent() {
         <Profile />
       </Drawer>
 
-      <Grid container height={"calc(100vh - 4rem)"}>
+      <Grid className="workspace-root" container height="calc(100dvh - 64px)">
         <Grid
           size={{ sm: 4, md: 5, lg: 3 }}
           sx={{
             display: { xs: "none", sm: "block" },
-            background: gradientBg,
+            background: "#f5f7fb",
           }}
           height={"100%"}
         >
@@ -703,7 +701,7 @@ function ChatContent() {
           )}
         </Grid>
 
-        <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height={"100%"}>
+        <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height="100%" sx={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
           <Fragment>
             <Box
               sx={{
@@ -711,8 +709,11 @@ function ChatContent() {
                 alignItems: "center",
                 justifyContent: "space-between",
                 px: "1rem",
-                py: 0.25,
-                bgcolor: "#e8eaf6",
+                py: 1.5,
+                minHeight: 64,
+                flexShrink: 0,
+                borderBottom: "1px solid #e7ecf4",
+                bgcolor: "white",
               }}
             >
               <Typography
@@ -741,8 +742,9 @@ function ChatContent() {
               boxSizing="border-box"
               padding={"1rem"}
               spacing={"1rem"}
-              bgcolor={grayColor}
-              height={"90%"}
+              bgcolor="#f5f7fb"
+              flex={1}
+              minHeight={0}
               sx={{
                 overflowX: "hidden",
                 overflowY: "auto",
@@ -773,10 +775,10 @@ function ChatContent() {
                   }}
                   spacing={"1rem"}
                 >
-                  <Typography variant="h3" color="black">
+                  <Typography variant="h5" color="text.primary">
                     No Messages Yet
                   </Typography>
-                  <Typography variant="h5" color="black">
+                  <Typography variant="body1" color="text.secondary">
                     Start the conversation
                   </Typography>
                 </Stack>
@@ -843,11 +845,7 @@ function ChatContent() {
               </Box>
             )}
 
-            <form
-              style={{
-                height: "10%",
-                background: "#00f2fe",
-              }}
+            <form className="workspace-composer"
               onSubmit={submitHandler}
             >
               <Stack
@@ -857,33 +855,38 @@ function ChatContent() {
                 alignItems={"center"}
               >
                 <IconButton
+                  aria-label="Attach a file"
                   onClick={handleFileOpen}
                   disabled={uploadingLoader}
                   sx={{
                     rotate: "30deg",
-                    backgroundColor: orange,
-                    marginRight: "1rem",
-                    color: "white",
+                    backgroundColor: "#edf1ff",
+                    marginRight: "0.5rem",
+                    color: "#4361d8",
                   }}
                 >
                   <AttachFileIcon />
                 </IconButton>
 
                 <InputBox
-                  placeholder="Type a message..."
+                  aria-label="Message"
+                  placeholder="Write a message…"
                   value={message}
                   onChange={messageChangeHandler}
                   ref={inputRef}
                   sx={{
                     padding: "1rem",
-                    borderRadius: "250px",
+                    borderRadius: "12px",
+                    minWidth: 0,
                     backgroundColor: "white",
-                    boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "none",
+                    border: "1px solid #e7ecf4",
                   }}
                 />
 
                 {aiEnabled && (
                   <IconButton
+                    aria-label="Ask AI privately"
                     onClick={askAiHandler}
                     disabled={aiLoading || !message.trim()}
                     title="Ask AI privately (share with chat afterwards if you want)"
@@ -905,15 +908,17 @@ function ChatContent() {
                 )}
 
                 <IconButton
+                  aria-label="Send message"
+                  disabled={!message.trim() || uploadingLoader}
                   type="submit"
                   sx={{
-                    rotate: "-30deg",
-                    backgroundColor: orange,
+                    borderRadius: "12px",
+                    backgroundColor: "#4361d8",
                     color: "white",
                     marginLeft: "1rem",
                     padding: "0.4rem",
                     "&:hover": {
-                      bgcolor: "error.dark",
+                      bgcolor: "#3049af",
                     },
                   }}
                 >

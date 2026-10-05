@@ -85,3 +85,20 @@ Co-located regression tests cover entrances, counters and cleanup, loading and
 retry states, table animation windows, charts, preference changes/hydration,
 and admin session restoration. Run them with `npm run test:unit`; they do not
 require a database or backend server.
+
+## Logged-in workspace
+
+The chat and group workspaces now share the scoped `WorkspaceTheme`, the
+`WorkspaceEmpty` illustration, and `.workspace-*` motion styles in
+`app/globals.css`. Entrances use short opacity/vertical translations; the empty
+state bubbles drift for two iterations rather than looping forever. Chat message
+entrances use `useReducedMotionSafe` and do not replay on every viewport entry.
+Conversation rows use background/focus transitions without transforming the
+scroll container or replaying the entire list. The admin portal retains its
+existing reduced-motion-aware page/card reveals, counters, and virtualized row
+entrances while using the same workspace palette.
+
+Public/auth routes keep their existing theme. CSS class names for workspace
+illustrations are namespaced to avoid the public welcome page's artwork styles.
+All workspace CSS animation and transitions respect `prefers-reduced-motion`;
+interactive controls retain visible keyboard focus states.

@@ -70,6 +70,18 @@ describe("virtualised table motion", () => {
     },
   );
 
+  it("searches records and can clear the query without remounting the grid", () => {
+    render(<Table headings="All Users" rows={rows} columns={[]} />);
+    const grid = screen.getByRole("grid");
+    fireEvent.change(screen.getByRole("textbox", { name: "Search records" }), { target: { value: "User 9" } });
+    expect(screen.getByRole("grid")).toBe(grid);
+    expect(screen.getByText("User 9")).toBeInTheDocument();
+    expect(screen.queryByText("User 1")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("1 matching records");
+    fireEvent.click(screen.getByRole("button", { name: "Clear search" }));
+    expect(screen.getByText("User 1")).toBeInTheDocument();
+  });
+
   it("never starts row animations when reduced motion is requested", () => {
     mockMotionPreference(true);
     render(<Table headings="All Users" rows={rows} columns={[]} />);
