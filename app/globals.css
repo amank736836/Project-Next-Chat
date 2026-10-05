@@ -272,3 +272,18 @@ body {
 }
 
 .chat-list-row:has(.chat-item-action:focus-visible) { outline: 2px solid #96a9ff; border-radius: 14px; }
+
+/* Board details stay tactile without moving the user's reading position. */
+.board-prompt .MuiButton-endIcon { transition: transform 180ms ease; }
+.board-prompt:hover .MuiButton-endIcon { transform: translateX(3px); }
+.board-workspace .board-prompt:hover { background: #edf1ff; border-color: #ced8fa; }
+.board-hero-orbit {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: -70px;
+  top: -100px;
+  border: 36px solid #4361d806;
+  border-radius: 50%;
+  pointer-events: none;
+}

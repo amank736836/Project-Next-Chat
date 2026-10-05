@@ -148,3 +148,22 @@ controls, empty states, and admin record search/clear behavior.
 For production compilation, `MONGODB_URI` must be defined because the existing
 server DB module validates it at import time. A build-only placeholder can check
 compilation but does not validate database connectivity.
+
+### Board coverage
+
+`tests/e2e/board.spec.js` exercises the actual `/u/[username]` page reached by
+`/board`, not just the redirect. It covers owner Overview/Questions/Showcase/Embed
+tabs, clipboard sharing, question create/delete, showcase visibility and
+pagination, website filters, widget preview/save, anonymous and signed-in visitor
+composers, empty/loading/error/retry states, and 320px/reduced-motion layouts.
+
+```bash
+npm run test:e2e -- tests/e2e/board.spec.js --workers=1
+# Both authenticated workspace and board suites:
+npm run test:e2e -- --workers=1
+```
+
+The board tests also intercept API responses in the browser only. The same-origin
+send fallback is covered with `NEXT_PUBLIC_SOCKET_SERVER_URL` unset; real socket
+message delivery, widget installation, and database writes still need backend
+integration testing. No production fixture data is introduced.

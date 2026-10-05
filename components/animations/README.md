@@ -98,7 +98,14 @@ scroll container or replaying the entire list. The admin portal retains its
 existing reduced-motion-aware page/card reveals, counters, and virtualized row
 entrances while using the same workspace palette.
 
-Public/auth routes keep their existing theme. CSS class names for workspace
+Landing/auth routes keep their existing theme. CSS class names for workspace
 illustrations are namespaced to avoid the public welcome page's artwork styles.
 All workspace CSS animation and transitions respect `prefers-reduced-motion`;
 interactive controls retain visible keyboard focus states.
+
+The `/u/[username]` board now shares the workspace theme as well: owner overview,
+questions, showcase, embed setup, and public visitor views. `BoardSection` and
+`BoardEmpty` keep surface/empty-state styling consistent. Tab panels use the same
+short entrance, prompt arrows have small hover translations, and all motion is
+covered by the workspace reduced-motion rules. Account ownership resolves behind
+a loading shell before showing owner controls or the visitor composer.

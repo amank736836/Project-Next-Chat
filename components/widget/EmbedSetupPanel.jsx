@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Alert,
   Box,
   Button,
   Chip,
@@ -9,11 +10,18 @@ import {
   MenuItem,
   Paper,
   Stack,
+  Skeleton,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import {
+  CodeRounded,
+  LanguageRounded,
+  PaletteOutlined,
+} from "@mui/icons-material";
+import { boardSurfaceSx } from "../board/BoardSurface";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -36,6 +44,8 @@ export default function EmbedSetupPanel({ username }) {
   const [settings, setSettings] = useState({ ...WIDGET_DEFAULTS });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [origin, setOrigin] = useState("");
   const [siteInput, setSiteInput] = useState("");
   const [primarySite, setPrimarySite] = useState("");
@@ -44,9 +54,14 @@ export default function EmbedSetupPanel({ username }) {
     const cleaned = siteInput.trim().toLowerCase();
     if (!cleaned) return;
     setSettings((prev) => {
-      const next = sanitizeWidgetSettings({ ...prev, sites: [...(prev.sites || []), cleaned] });
+      const next = sanitizeWidgetSettings({
+        ...prev,
+        sites: [...(prev.sites || []), cleaned],
+      });
       if (next.sites.length > (prev.sites || []).length) {
-        setPrimarySite((current) => current || next.sites[next.sites.length - 1]);
+        setPrimarySite(
+          (current) => current || next.sites[next.sites.length - 1],
+        );
       } else {
         toast.error("That doesn't look like a valid hostname");
       }
@@ -55,16 +70,15 @@ export default function EmbedSetupPanel({ username }) {
     setSiteInput("");
   }, [siteInput]);
 
-  const removeSite = useCallback(
-    (site) => {
-      setSettings((prev) => sanitizeWidgetSettings({
+  const removeSite = useCallback((site) => {
+    setSettings((prev) =>
+      sanitizeWidgetSettings({
         ...prev,
         sites: (prev.sites || []).filter((s) => s !== site),
-      }));
-      setPrimarySite((current) => (current === site ? "" : current));
-    },
-    []
-  );
+      }),
+    );
+    setPrimarySite((current) => (current === site ? "" : current));
+  }, []);
 
   useEffect(() => {
     if (!primarySite && settings.sites.length > 0) {
@@ -79,6 +93,8 @@ export default function EmbedSetupPanel({ username }) {
     setOrigin(window.location.origin);
     if (!username) return;
     let mounted = true;
+    setLoading(true);
+    setLoadError(false);
     (async () => {
       try {
         const { data } = await axios.get("/api/v1/widget/settings", {
@@ -86,9 +102,11 @@ export default function EmbedSetupPanel({ username }) {
         });
         if (mounted && data?.success) {
           setSettings(sanitizeWidgetSettings(data.settings));
+        } else if (mounted) {
+          setLoadError(true);
         }
       } catch {
-        // keep defaults
+        if (mounted) setLoadError(true);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -96,10 +114,11 @@ export default function EmbedSetupPanel({ username }) {
     return () => {
       mounted = false;
     };
-  }, [username]);
+  }, [username, reloadKey]);
 
   const set = (key) => (e) => {
-    const value = e?.target?.type === "checkbox" ? e.target.checked : e.target.value;
+    const value =
+      e?.target?.type === "checkbox" ? e.target.checked : e.target.value;
     setSettings((prev) => sanitizeWidgetSettings({ ...prev, [key]: value }));
   };
 
@@ -125,11 +144,11 @@ export default function EmbedSetupPanel({ username }) {
 
   const scriptSnippet = useMemo(
     () => buildScriptSnippet({ origin: origin || "", username, settings }),
-    [origin, username, settings]
+    [origin, username, settings],
   );
   const iframeSnippet = useMemo(
     () => buildIframeSnippet({ origin: origin || "", username, settings }),
-    [origin, username, settings]
+    [origin, username, settings],
   );
 
   const copyText = async (text, label) => {
@@ -158,22 +177,63 @@ export default function EmbedSetupPanel({ username }) {
 
   if (loading) {
     return (
-      <Paper elevation={3} sx={{ p: 2, borderRadius: "16px" }}>
-        <Typography color="text.secondary">Loading embed settings…</Typography>
-      </Paper>
+      <Stack spacing={2} role="status" aria-label="Loading embed settings">
+        <Skeleton variant="rounded" height={80} />
+        <Skeleton variant="rounded" height={300} />
+      </Stack>
     );
   }
 
+  if (loadError)
+    return (
+      <Alert
+        severity="error"
+        action={
+          <Button
+            color="inherit"
+            onClick={() => setReloadKey((key) => key + 1)}
+          >
+            Retry
+          </Button>
+        }
+      >
+        Couldn't load your widget settings. Try again before making changes.
+      </Alert>
+    );
+
   return (
-    <Paper elevation={4} sx={{ p: { xs: 2, sm: 3 }, borderRadius: "16px", mt: 3 }}>
-      <Typography variant="h6" fontWeight={700}>
-        Embed on your website
-      </Typography>
+    <Paper
+      elevation={0}
+      sx={{ ...boardSurfaceSx, p: { xs: 2.5, sm: 3 }, minWidth: 0 }}
+    >
+      <Stack direction="row" gap={1.5} alignItems="center" sx={{ mb: 1 }}>
+        <Box
+          sx={{
+            display: "grid",
+            placeItems: "center",
+            p: 1,
+            bgcolor: "#edf1ff",
+            color: "primary.main",
+            borderRadius: 2,
+          }}
+        >
+          <CodeRounded />
+        </Box>
+        <Typography component="h2" variant="h6" fontWeight={700}>
+          Take your board with you
+        </Typography>
+      </Stack>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        First tell us which website(s) you will paste the snippet on — responses get tagged per site.
-        One snippet works on all of them.
+        First tell us which website(s) you will paste the snippet on — responses
+        get tagged per site. One snippet works on all of them.
       </Typography>
 
+      <Stack direction="row" gap={1} alignItems="center" sx={{ mt: 3, mb: 2 }}>
+        <LanguageRounded fontSize="small" color="primary" />
+        <Typography component="h3" fontWeight={650} fontSize={14}>
+          01 · Connect your websites
+        </Typography>
+      </Stack>
       <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 1 }}>
         <TextField
           size="small"
@@ -188,7 +248,11 @@ export default function EmbedSetupPanel({ username }) {
           }}
           sx={{ flex: 1, minWidth: 220 }}
         />
-        <Button variant="contained" onClick={addSite} disabled={!siteInput.trim()}>
+        <Button
+          variant="contained"
+          onClick={addSite}
+          disabled={!siteInput.trim()}
+        >
           Add site
         </Button>
       </Box>
@@ -198,6 +262,7 @@ export default function EmbedSetupPanel({ username }) {
             <Chip
               key={site}
               label={site}
+              sx={{ maxWidth: "100%" }}
               color={primarySite === site ? "primary" : "default"}
               onClick={() => setPrimarySite(site)}
               onDelete={() => removeSite(site)}
@@ -210,6 +275,12 @@ export default function EmbedSetupPanel({ username }) {
         </Typography>
       )}
 
+      <Stack direction="row" gap={1} alignItems="center" sx={{ mt: 4, mb: 2 }}>
+        <PaletteOutlined fontSize="small" color="primary" />
+        <Typography component="h3" fontWeight={650} fontSize={14}>
+          02 · Make it feel like you
+        </Typography>
+      </Stack>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
           <Stack spacing={2}>
@@ -222,8 +293,12 @@ export default function EmbedSetupPanel({ username }) {
                   <Button
                     key={pos}
                     size="small"
-                    variant={settings.position === pos ? "contained" : "outlined"}
-                    onClick={() => setSettings((p) => ({ ...p, position: pos }))}
+                    variant={
+                      settings.position === pos ? "contained" : "outlined"
+                    }
+                    onClick={() =>
+                      setSettings((p) => ({ ...p, position: pos }))
+                    }
                   >
                     {POSITION_LABELS[pos]}
                   </Button>
@@ -237,12 +312,27 @@ export default function EmbedSetupPanel({ username }) {
                 { key: "backgroundColor", label: "Dialog bg" },
                 { key: "textColor", label: "Text color" },
               ].map(({ key, label }) => (
-                <Box key={key} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box
+                  key={key}
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
                   <input
                     type="color"
-                    value={/^#[0-9a-fA-F]{6}$/.test(settings[key]) ? settings[key] : "#4facfe"}
-                    onChange={(e) => setSettings((p) => ({ ...p, [key]: e.target.value }))}
-                    style={{ width: 36, height: 28, border: 0, padding: 0, background: "none" }}
+                    value={
+                      /^#[0-9a-fA-F]{6}$/.test(settings[key])
+                        ? settings[key]
+                        : "#4facfe"
+                    }
+                    onChange={(e) =>
+                      setSettings((p) => ({ ...p, [key]: e.target.value }))
+                    }
+                    style={{
+                      width: 36,
+                      height: 28,
+                      border: 0,
+                      padding: 0,
+                      background: "none",
+                    }}
                     aria-label={label}
                   />
                   <TextField
@@ -256,8 +346,20 @@ export default function EmbedSetupPanel({ username }) {
               ))}
             </Box>
 
-            <TextField size="small" fullWidth label="Dialog title" value={settings.title} onChange={set("title")} />
-            <TextField size="small" fullWidth label="Subtitle" value={settings.subtitle} onChange={set("subtitle")} />
+            <TextField
+              size="small"
+              fullWidth
+              label="Dialog title"
+              value={settings.title}
+              onChange={set("title")}
+            />
+            <TextField
+              size="small"
+              fullWidth
+              label="Subtitle"
+              value={settings.subtitle}
+              onChange={set("subtitle")}
+            />
             <TextField
               size="small"
               fullWidth
@@ -266,17 +368,43 @@ export default function EmbedSetupPanel({ username }) {
               onChange={set("placeholder")}
             />
             <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField size="small" fullWidth label="Send button text" value={settings.buttonText} onChange={set("buttonText")} />
-              <TextField size="small" label="Bubble icon" value={settings.bubbleLabel} onChange={set("bubbleLabel")} sx={{ width: 130 }} />
+              <TextField
+                size="small"
+                fullWidth
+                label="Send button text"
+                value={settings.buttonText}
+                onChange={set("buttonText")}
+              />
+              <TextField
+                size="small"
+                label="Bubble icon"
+                value={settings.bubbleLabel}
+                onChange={set("bubbleLabel")}
+                sx={{ width: 130 }}
+              />
             </Box>
 
             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-              <TextField size="small" select label="Bubble shape" value={settings.shape} onChange={set("shape")} sx={{ minWidth: 140 }}>
+              <TextField
+                size="small"
+                select
+                label="Bubble shape"
+                value={settings.shape}
+                onChange={set("shape")}
+                sx={{ minWidth: 140 }}
+              >
                 <MenuItem value="round">Round</MenuItem>
                 <MenuItem value="square">Square</MenuItem>
                 <MenuItem value="pill">Pill</MenuItem>
               </TextField>
-              <TextField size="small" select label="Size" value={settings.size} onChange={set("size")} sx={{ minWidth: 120 }}>
+              <TextField
+                size="small"
+                select
+                label="Size"
+                value={settings.size}
+                onChange={set("size")}
+                sx={{ minWidth: 120 }}
+              >
                 <MenuItem value="sm">Small</MenuItem>
                 <MenuItem value="md">Medium</MenuItem>
                 <MenuItem value="lg">Large</MenuItem>
@@ -294,11 +422,21 @@ export default function EmbedSetupPanel({ username }) {
 
             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
               <FormControlLabel
-                control={<Switch checked={settings.showSuggestions} onChange={set("showSuggestions")} />}
+                control={
+                  <Switch
+                    checked={settings.showSuggestions}
+                    onChange={set("showSuggestions")}
+                  />
+                }
                 label="Show suggestions"
               />
               <FormControlLabel
-                control={<Switch checked={settings.enabled} onChange={set("enabled")} />}
+                control={
+                  <Switch
+                    checked={settings.enabled}
+                    onChange={set("enabled")}
+                  />
+                }
                 label="Widget enabled"
               />
             </Box>
@@ -318,9 +456,9 @@ export default function EmbedSetupPanel({ username }) {
               position: "relative",
               height: 300,
               borderRadius: 3,
-              border: "1px dashed",
+              border: "1px solid",
               borderColor: "divider",
-              bgcolor: "#f6f6fb",
+              bgcolor: "#f5f7fb",
               overflow: "hidden",
             }}
           >
@@ -328,15 +466,46 @@ export default function EmbedSetupPanel({ username }) {
               <Typography variant="caption" color="text.secondary">
                 your-website.com
               </Typography>
-              <Box sx={{ mt: 1, height: 10, borderRadius: 5, bgcolor: "grey.200", width: "70%" }} />
-              <Box sx={{ mt: 1, height: 10, borderRadius: 5, bgcolor: "grey.200", width: "50%" }} />
+              <Box
+                sx={{
+                  mt: 1,
+                  height: 10,
+                  borderRadius: 5,
+                  bgcolor: "grey.200",
+                  width: "70%",
+                }}
+              />
+              <Box
+                sx={{
+                  mt: 1,
+                  height: 10,
+                  borderRadius: 5,
+                  bgcolor: "grey.200",
+                  width: "50%",
+                }}
+              />
             </Box>
             <Box
               sx={{
                 position: "absolute",
-                width: settings.size === "lg" ? 64 : settings.size === "sm" ? 48 : 56,
-                height: settings.size === "lg" ? 64 : settings.size === "sm" ? 48 : 56,
-                borderRadius: settings.shape === "pill" ? 999 : settings.shape === "square" ? 3 : "50%",
+                width:
+                  settings.size === "lg"
+                    ? 64
+                    : settings.size === "sm"
+                      ? 48
+                      : 56,
+                height:
+                  settings.size === "lg"
+                    ? 64
+                    : settings.size === "sm"
+                      ? 48
+                      : 56,
+                borderRadius:
+                  settings.shape === "pill"
+                    ? 999
+                    : settings.shape === "square"
+                      ? 3
+                      : "50%",
                 bgcolor: settings.themeColor,
                 color: "#fff",
                 display: "flex",
@@ -367,7 +536,10 @@ export default function EmbedSetupPanel({ username }) {
               <Typography variant="subtitle2" fontWeight={700}>
                 {settings.title}
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.65, display: "block", mb: 1 }}>
+              <Typography
+                variant="caption"
+                sx={{ opacity: 0.65, display: "block", mb: 1 }}
+              >
                 {settings.subtitle}
               </Typography>
               <Box
@@ -400,61 +572,109 @@ export default function EmbedSetupPanel({ username }) {
           </Box>
 
           {settings.sites.length === 0 ? (
-            <Paper variant="outlined" sx={{ p: 2, mt: 2, borderRadius: 2, bgcolor: "#fafafa" }}>
+            <Paper
+              variant="outlined"
+              sx={{ p: 2, mt: 2, borderRadius: 2, bgcolor: "#fafafa" }}
+            >
               <Typography variant="body2" color="text.secondary">
-                Your snippets will appear here once you add your first website above.
-                Save settings to keep the site list.
+                Your snippets will appear here once you add your first website
+                above. Save settings to keep the site list.
               </Typography>
             </Paper>
           ) : (
-          <>
-          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
-            Option 1 — Floating dialog (recommended)
-            {primarySite ? ` · for ${primarySite}` : ""}
-          </Typography>
-          <Paper variant="outlined" sx={{ p: 1.5, bgcolor: "#0f0f1a", color: "#d7ff8b" }}>
-            <Typography variant="caption" component="pre" sx={{ whiteSpace: "pre-wrap", wordBreak: "break-all", m: 0 }}>
-              {scriptSnippet}
-            </Typography>
-          </Paper>
-          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-            <Button size="small" variant="outlined" onClick={() => copyText(scriptSnippet, "Script snippet")}>
-              Copy script
-            </Button>
-            <Button size="small" variant="text" href={`/embed/${(username || "").toLowerCase()}`} target="_blank">
-              Open demo page
-            </Button>
-          </Box>
+            <>
+              <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+                03 · Install your widget — Floating dialog
+                {primarySite ? ` · for ${primarySite}` : ""}
+              </Typography>
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 1.5,
+                  bgcolor: "#202b45",
+                  color: "#c7e8df",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  component="pre"
+                  sx={{ whiteSpace: "pre-wrap", wordBreak: "break-all", m: 0 }}
+                >
+                  {scriptSnippet}
+                </Typography>
+              </Paper>
+              <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => copyText(scriptSnippet, "Script snippet")}
+                >
+                  Copy script
+                </Button>
+                <Button
+                  size="small"
+                  variant="text"
+                  href={`/embed/${(username || "").toLowerCase()}`}
+                  target="_blank"
+                >
+                  Open demo page
+                </Button>
+              </Box>
 
-          <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
-            Option 2 — Inline iframe
-          </Typography>
-          <Paper variant="outlined" sx={{ p: 1.5, bgcolor: "#0f0f1a", color: "#ffd88b" }}>
-            <Typography variant="caption" component="pre" sx={{ whiteSpace: "pre-wrap", wordBreak: "break-all", m: 0 }}>
-              {iframeSnippet}
-            </Typography>
-          </Paper>
-          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-            <Button size="small" variant="outlined" onClick={() => copyText(iframeSnippet, "Iframe snippet")}>
-              Copy iframe
-            </Button>
-          </Box>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
-            Responses appear on your board in Priority Questions + chat, same as direct /u/{username} messages.
-            {primarySite
-              ? ` This snippet auto-tags responses from ${primarySite} — the same snippet works on your other sites too.`
-              : ""}
-          </Typography>
-          <Button
-            size="small"
-            variant="text"
-            href={`/showcase/${(username || "").toLowerCase()}${primarySite ? `?host=${encodeURIComponent(primarySite)}` : ""}`}
-            target="_blank"
-            sx={{ mt: 1 }}
-          >
-            Open public showcase{primarySite ? ` for ${primarySite}` : " (filterable per website)"}
-          </Button>
-          </>
+              <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+                Option 2 — Inline iframe
+              </Typography>
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: 1.5,
+                  bgcolor: "#202b45",
+                  color: "#d5dfff",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  component="pre"
+                  sx={{ whiteSpace: "pre-wrap", wordBreak: "break-all", m: 0 }}
+                >
+                  {iframeSnippet}
+                </Typography>
+              </Paper>
+              <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => copyText(iframeSnippet, "Iframe snippet")}
+                >
+                  Copy iframe
+                </Button>
+              </Box>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "block", mt: 1 }}
+              >
+                Responses appear on your board in Priority Questions + chat,
+                same as direct /u/{username} messages.
+                {primarySite
+                  ? ` This snippet auto-tags responses from ${primarySite} — the same snippet works on your other sites too.`
+                  : ""}
+              </Typography>
+              <Button
+                size="small"
+                variant="text"
+                href={`/showcase/${(username || "").toLowerCase()}${primarySite ? `?host=${encodeURIComponent(primarySite)}` : ""}`}
+                target="_blank"
+                sx={{ mt: 1 }}
+              >
+                Open public showcase
+                {primarySite
+                  ? ` for ${primarySite}`
+                  : " (filterable per website)"}
+              </Button>
+            </>
           )}
         </Grid>
       </Grid>

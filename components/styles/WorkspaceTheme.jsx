@@ -65,12 +65,12 @@ const workspaceTheme = createTheme({
   },
 });
 
-/** Keep the existing public/auth designs intact; dialogs inherit this theme. */
+/** Keep the existing auth/landing designs intact; dialogs inherit this theme. */
 export default function WorkspaceTheme({ children }) {
   const pathname = usePathname() || "";
   const workspace =
     pathname === "/" ||
-    /^\/(chat|groups|board)(\/|$)/.test(pathname) ||
+    /^\/(chat|groups|board|u)(\/|$)/.test(pathname) ||
     /^\/admin\/(dashboard|users|chats|messages)(\/|$)/.test(pathname);
   return workspace ? (
     <ThemeProvider theme={workspaceTheme}>{children}</ThemeProvider>

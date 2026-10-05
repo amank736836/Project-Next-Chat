@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  Alert,
+  Avatar,
   Box,
   Button,
   Chip,
@@ -17,6 +19,27 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import Link from "next/link";
+import {
+  ArrowBackRounded,
+  ArrowForwardRounded,
+  AutoAwesomeOutlined,
+  ChatBubbleOutlineRounded,
+  CodeRounded,
+  ContentCopyRounded,
+  EditNoteRounded,
+  ForumOutlined,
+  PublicRounded,
+  RefreshRounded,
+  SendRounded,
+  VisibilityOutlined,
+  VisibilityOffOutlined,
+} from "@mui/icons-material";
+import {
+  BoardSection,
+  BoardEmpty,
+  boardSurfaceSx,
+} from "../../../components/board/BoardSurface";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +47,6 @@ import { useParams } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { nextBackend, socketBackend } from "../../../constants/config";
-import { gradientBg } from "../../../constants/color";
 import Header from "../../../components/layout/Header";
 import ChatList from "../../../components/shared/ChatList";
 import Profile from "../../../components/shared/Profile";
@@ -42,7 +64,7 @@ import {
 import { useSocket } from "../../../providers/SocketProvider";
 
 const NEXT_QUESTIONS_API_BASE = `${nextBackend}/chat/questions`;
-const ASK_AND_RECORD_API_BASE = `${socketBackend}/chat/ask-and-record`;
+const ASK_AND_RECORD_API_BASE = `${socketBackend || nextBackend}/chat/ask-and-record`;
 
 const specialChar = "||";
 
@@ -64,6 +86,9 @@ export default function Username() {
   const isMobileView = useMediaQuery(theme.breakpoints.down("sm"));
   const dispatch = useDispatch();
   const deleteOptionAnchor = useRef(null);
+  const messageInputRef = useRef(null);
+  const questionsRequestId = useRef(0);
+  const [viewerLoading, setViewerLoading] = useState(true);
 
   const { user } = useSelector((state) => state.auth);
   const { isMobile, isProfile } = useSelector((state) => state.misc);
@@ -73,11 +98,13 @@ export default function Username() {
   const normalizedUsername = (username || "").toLowerCase();
   const normalizedUserUsername = (user?.username || "").toLowerCase();
   const normalizedViewerUsername = (viewerUsername || "").toLowerCase();
-  const isLoggedInViewer = Boolean(normalizedUserUsername || normalizedViewerUsername);
+  const isLoggedInViewer = Boolean(
+    normalizedUserUsername || normalizedViewerUsername,
+  );
   const isOwner = Boolean(
     normalizedUsername &&
-      (normalizedUserUsername === normalizedUsername ||
-        normalizedViewerUsername === normalizedUsername)
+    (normalizedUserUsername === normalizedUsername ||
+      normalizedViewerUsername === normalizedUsername),
   );
 
   const [content, setContent] = useState("");
@@ -90,7 +117,8 @@ export default function Username() {
   const [customQuestions, setCustomQuestions] = useState([]);
   const [priorityQuestions, setPriorityQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
-  const [selectedSuggestionTemplate, setSelectedSuggestionTemplate] = useState("");
+  const [selectedSuggestionTemplate, setSelectedSuggestionTemplate] =
+    useState("");
   const [savingQuestionId, setSavingQuestionId] = useState(null);
   const [deletingQuestionId, setDeletingQuestionId] = useState(null);
   const [hidingShowcaseId, setHidingShowcaseId] = useState(null);
@@ -107,11 +135,14 @@ export default function Username() {
   const hasAnsweredShowcase = answeredShowcase.length > 0;
   const totalAnswerShowcasePages = Math.max(
     Math.ceil(answeredShowcase.length / ANSWER_SHOWCASE_PAGE_SIZE),
-    1
+    1,
   );
   const pagedAnsweredShowcase = useMemo(() => {
     const startIndex = (answerShowcasePage - 1) * ANSWER_SHOWCASE_PAGE_SIZE;
-    return answeredShowcase.slice(startIndex, startIndex + ANSWER_SHOWCASE_PAGE_SIZE);
+    return answeredShowcase.slice(
+      startIndex,
+      startIndex + ANSWER_SHOWCASE_PAGE_SIZE,
+    );
   }, [answerShowcasePage, answeredShowcase]);
   const isSelectedSuggestionUnedited =
     Boolean(selectedSuggestionTemplate.trim()) &&
@@ -121,14 +152,17 @@ export default function Username() {
     savingQuestionId !== "new" &&
     !isSelectedSuggestionUnedited;
 
-  const {
-    data: chatsData,
-    isLoading: isLoadingChats,
-  } = useGetMyChatsQuery("", {
-    skip: !isLoggedInViewer,
-  });
+  const { data: chatsData, isLoading: isLoadingChats } = useGetMyChatsQuery(
+    "",
+    {
+      skip: !isLoggedInViewer,
+    },
+  );
 
-  const chatListData = useMemo(() => chatsData?.chats || [], [chatsData?.chats]);
+  const chatListData = useMemo(
+    () => chatsData?.chats || [],
+    [chatsData?.chats],
+  );
 
   const handleMobileClose = useCallback(() => {
     dispatch(setIsMobile(false));
@@ -145,7 +179,7 @@ export default function Username() {
       dispatch(setIsDeleteMenu(true));
       dispatch(setSelectedDeleteChat({ chatId, groupChat }));
     },
-    [dispatch]
+    [dispatch],
   );
 
   useEffect(() => {
@@ -170,6 +204,8 @@ export default function Username() {
           setViewerUser(null);
           setViewerUsername("");
         }
+      } finally {
+        if (isMounted) setViewerLoading(false);
       }
     };
 
@@ -178,69 +214,60 @@ export default function Username() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [dispatch]);
 
-  const fetchSuggestedMessages = useCallback(async ({ refresh = false, exclude = "" } = {}) => {
-    setIsCompletionLoading(true);
-    try {
-      const response = await axios.get(NEXT_QUESTIONS_API_BASE, {
-        params: {
-          username,
-          exclude,
-          refresh,
-          ...(hostFilter ? { host: hostFilter } : {}),
-        },
-      });
+  const fetchSuggestedMessages = useCallback(
+    async ({ refresh = false, exclude = "" } = {}) => {
+      const requestId = ++questionsRequestId.current;
+      setIsCompletionLoading(true);
+      try {
+        const response = await axios.get(NEXT_QUESTIONS_API_BASE, {
+          params: {
+            username,
+            exclude,
+            refresh,
+            ...(hostFilter ? { host: hostFilter } : {}),
+          },
+        });
 
-      if (response.data.success) {
-        const nextSuggestions = (response.data.suggestions || []).join(specialChar);
-        setMessageString(nextSuggestions);
-        setAnsweredShowcase(response.data.answered || []);
-        setCustomQuestions(response.data.customQuestions || []);
-        setPriorityQuestions(response.data.priorityQuestions || []);
-        mergeAvailableHosts(response.data.availableHosts);
+        if (requestId !== questionsRequestId.current) return;
+        if (response.data.success) {
+          const nextSuggestions = (response.data.suggestions || []).join(
+            specialChar,
+          );
+          setMessageString(nextSuggestions);
+          setAnsweredShowcase(response.data.answered || []);
+          setCustomQuestions(response.data.customQuestions || []);
+          setPriorityQuestions(response.data.priorityQuestions || []);
+          mergeAvailableHosts(response.data.availableHosts);
 
-        setCompletionError(null);
-      } else {
-        setMessageString(initialMessageString);
+          setCompletionError(null);
+        } else {
+          setMessageString(initialMessageString);
+          setCompletionError(new Error("Unable to load board questions."));
+          toast.error("Failed to fetch suggested messages. Please try again.");
+        }
+      } catch (error) {
+        if (requestId !== questionsRequestId.current) return;
+        console.error(error);
         toast.error("Failed to fetch suggested messages. Please try again.");
+        setCompletionError(error);
+      } finally {
+        if (requestId === questionsRequestId.current)
+          setIsCompletionLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to fetch suggested messages. Please try again.");
-      setCompletionError(error);
-    } finally {
-      setIsCompletionLoading(false);
-    }
-  }, [username, hostFilter, mergeAvailableHosts]);
-
-  const fetchAnswerShowcase = useCallback(async () => {
-    if (!username) return;
-
-    try {
-      const response = await axios.get(NEXT_QUESTIONS_API_BASE, {
-        params: {
-          username,
-          ...(hostFilter ? { host: hostFilter } : {}),
-        },
-      });
-
-      if (response.data.success) {
-        setAnsweredShowcase(response.data.answered || []);
-        mergeAvailableHosts(response.data.availableHosts);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [username, hostFilter, mergeAvailableHosts]);
+    },
+    [username, hostFilter, mergeAvailableHosts],
+  );
 
   const saveQuestion = async ({ questionId = null, question }) => {
+    if (!isOwner || !question.trim() || savingQuestionId) return;
     setSavingQuestionId(questionId || "new");
     try {
       const response = await axios.put(NEXT_QUESTIONS_API_BASE, {
         username,
         questionId,
-        question,
+        question: question.trim(),
       });
 
       if (response.data.success) {
@@ -248,6 +275,8 @@ export default function Username() {
         setNewQuestion("");
         setSelectedSuggestionTemplate("");
         fetchSuggestedMessages({ exclude: messageString });
+      } else {
+        toast.error("Failed to save question");
       }
     } catch (error) {
       toast.error("Failed to save question");
@@ -270,7 +299,9 @@ export default function Username() {
 
       if (response.data.success) {
         toast.success("Question deleted successfully");
-        setCustomQuestions((prev) => prev.filter((item) => item.id !== questionId));
+        setCustomQuestions((prev) =>
+          prev.filter((item) => item.id !== questionId),
+        );
         await fetchSuggestedMessages({ refresh: false, exclude: "" });
       } else {
         toast.error("Failed to delete question");
@@ -284,7 +315,7 @@ export default function Username() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!content) return;
+    if (!content.trim()) return;
 
     if (isOwner) {
       toast.error("Owner cannot ask questions on own board.");
@@ -308,27 +339,42 @@ export default function Username() {
             }
           : null;
 
-      const response = await axios.post(ASK_AND_RECORD_API_BASE, {
-        username,
-        question: askedQuestion,
-        content: askedQuestion,
-        sender: senderPayload,
-      }, {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        ASK_AND_RECORD_API_BASE,
+        {
+          username,
+          question: askedQuestion,
+          content: askedQuestion,
+          sender: senderPayload,
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
-      if (response.data.success && response.data.alreadyAsked && !response.data.alreadyAnswered) {
+      if (
+        response.data.success &&
+        response.data.alreadyAsked &&
+        !response.data.alreadyAnswered
+      ) {
         toast("This question was already asked. Please ask a different one.");
-        await fetchSuggestedMessages({ refresh: false, exclude: askedQuestion });
+        await fetchSuggestedMessages({
+          refresh: false,
+          exclude: askedQuestion,
+        });
         setContent("");
         return;
       }
 
       if (response.data.success && response.data.alreadyAnswered) {
-        toast.success("This question is already answered. Showing existing answer.");
+        toast.success(
+          "This question is already answered. Showing existing answer.",
+        );
         setAnsweredShowcase((prev) => {
           const exists = prev.some(
-            (item) => item.question.toLowerCase() === response.data.answeredQuestion.toLowerCase()
+            (item) =>
+              item.question.toLowerCase() ===
+              response.data.answeredQuestion.toLowerCase(),
           );
           if (exists) return prev;
           return [
@@ -351,12 +397,18 @@ export default function Username() {
           toast.success("Message saved. They'll see it when they come online.");
         }
         setContent("");
-        await fetchSuggestedMessages({ refresh: true, exclude: `${messageString}${specialChar}${askedQuestion}` });
+        await fetchSuggestedMessages({
+          refresh: true,
+          exclude: `${messageString}${specialChar}${askedQuestion}`,
+        });
       } else if (response.data.success && !response.data.alreadyAnswered) {
         // Message was saved to DB even if socket delivery had issues
         toast.success("Message saved successfully.");
         setContent("");
-        await fetchSuggestedMessages({ refresh: true, exclude: `${messageString}${specialChar}${askedQuestion}` });
+        await fetchSuggestedMessages({
+          refresh: true,
+          exclude: `${messageString}${specialChar}${askedQuestion}`,
+        });
       } else {
         toast.error("Failed to send message. Please try again.");
       }
@@ -375,8 +427,10 @@ export default function Username() {
   useEffect(() => {
     if (!username) return;
     fetchSuggestedMessages({ refresh: false, exclude: "" });
-    fetchAnswerShowcase();
-  }, [username, fetchSuggestedMessages, fetchAnswerShowcase]);
+    return () => {
+      questionsRequestId.current += 1;
+    };
+  }, [username, fetchSuggestedMessages]);
 
   useEffect(() => {
     if (!hasAnsweredShowcase && mobileTab === "showcase") {
@@ -385,7 +439,9 @@ export default function Username() {
   }, [hasAnsweredShowcase, mobileTab]);
 
   useEffect(() => {
-    setAnswerShowcasePage((currentPage) => Math.min(currentPage, totalAnswerShowcasePages));
+    setAnswerShowcasePage((currentPage) =>
+      Math.min(currentPage, totalAnswerShowcasePages),
+    );
   }, [totalAnswerShowcasePages]);
 
   const socket = useSocket();
@@ -408,7 +464,9 @@ export default function Username() {
             askedCount,
           };
           // Re-sort by askedCount descending
-          return updated.sort((a, b) => (b.askedCount || 0) - (a.askedCount || 0));
+          return updated.sort(
+            (a, b) => (b.askedCount || 0) - (a.askedCount || 0),
+          );
         } else {
           // Add new priority question
           return [
@@ -434,6 +492,7 @@ export default function Username() {
   const handleMessageClick = (msg) => {
     if (isOwner) return;
     setContent(msg);
+    messageInputRef.current?.focus();
   };
 
   const handleSuggestionTemplateClick = (msg) => {
@@ -484,12 +543,18 @@ export default function Username() {
           prev.map((entry) =>
             entry.id === item.id
               ? { ...entry, hiddenFromShowcase: !isHidden }
-              : entry
-          )
+              : entry,
+          ),
         );
-        toast.success(isHidden ? "Showcase item shown" : "Showcase item hidden");
+        toast.success(
+          isHidden ? "Showcase item shown" : "Showcase item hidden",
+        );
       } else {
-        toast.error(isHidden ? "Failed to show showcase item" : "Failed to hide showcase item");
+        toast.error(
+          isHidden
+            ? "Failed to show showcase item"
+            : "Failed to hide showcase item",
+        );
       }
     } catch (error) {
       console.error(error);
@@ -499,528 +564,926 @@ export default function Username() {
     }
   };
 
-  const questionsPanel = (
-    <Stack
-      spacing={1.5}
-      component={Paper}
-      elevation={4}
-      sx={{
-        width: "100%",
-        padding: { xs: "1.25rem", sm: "2rem" },
-        borderRadius: "16px",
-      }}
+  const copyBoardLink = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/u/${encodeURIComponent(username)}`,
+      );
+      toast.success("Board link copied");
+    } catch {
+      toast.error(
+        "Could not copy the link. You can copy it from your browser's address bar.",
+      );
+    }
+  };
+
+  const suggestionsBlock = (
+    <BoardSection
+      title={isOwner ? "Conversation starters" : "Need a little inspiration?"}
+      description={
+        isOwner
+          ? "Give visitors a starting point. Choose a suggestion to make it your own."
+          : "Choose a prompt below, or write something that's on your mind."
+      }
+      action={
+        <Button
+          aria-label="Refresh suggestions"
+          size="small"
+          onClick={() =>
+            fetchSuggestedMessages({ refresh: true, exclude: messageString })
+          }
+          disabled={isCompletionLoading}
+          sx={{ minWidth: 36, p: 1 }}
+        >
+          <RefreshRounded />
+        </Button>
+      }
     >
-      <Typography
-        variant={isMobileView ? "h6" : "h5"}
-        align="center"
-        fontWeight={600}
-        sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
+      {isCompletionLoading ? (
+        <Stack spacing={1} aria-label="Loading suggestions">
+          {[1, 2, 3].map((key) => (
+            <Skeleton key={key} variant="rounded" height={56} />
+          ))}
+        </Stack>
+      ) : messageArray.length ? (
+        <Stack spacing={1}>
+          {messageArray.slice(0, suggestionVisibleCount).map((msg) => (
+            <Button
+              key={msg}
+              className="board-prompt"
+              fullWidth
+              onClick={() =>
+                isOwner
+                  ? handleSuggestionTemplateClick(msg)
+                  : handleMessageClick(msg)
+              }
+              sx={{
+                justifyContent: "space-between",
+                textAlign: "left",
+                gap: 2,
+                p: 2,
+                border: "1px solid #e7ecf4",
+                bgcolor: "#f8faff",
+                color: "text.primary",
+                fontWeight: 500,
+                fontSize: 14,
+              }}
+              endIcon={
+                <ArrowForwardRounded
+                  sx={{ color: "primary.main", fontSize: "18px !important" }}
+                />
+              }
+            >
+              {msg}
+            </Button>
+          ))}
+        </Stack>
+      ) : (
+        <BoardEmpty
+          icon={AutoAwesomeOutlined}
+          title="A fresh start"
+          description="No suggestions available right now. Refresh to try again."
+        />
+      )}
+    </BoardSection>
+  );
+
+  const questionsPanel = (
+    <Stack spacing={3}>
+      <BoardSection
+        title="Make room for curiosity"
+        description="Create a question you'd like visitors to ask you."
       >
-        {`Custom Questions (@${username})`}
-      </Typography>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {hostFilterControl}
-      </Box>
-      <Stack spacing={1.5}>
-          <Typography variant={isMobileView ? "subtitle1" : "h6"} sx={{ fontSize: { xs: "0.95rem", sm: "1.25rem" } }}>
-            Create Custom Question
-          </Typography>
+        <Stack
+          component="form"
+          spacing={2}
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (canSaveCustomQuestion) saveQuestion({ question: newQuestion });
+          }}
+        >
           <TextField
             fullWidth
-            label="Question"
+            label="Your question"
+            placeholder="What's something you'd love to talk about?"
             value={newQuestion}
             onChange={(e) => setNewQuestion(e.target.value)}
           />
-          <Button
-            variant="contained"
-            disabled={!canSaveCustomQuestion}
-            onClick={() => saveQuestion({ question: newQuestion })}
-          >
-            {savingQuestionId === "new" ? <CircularProgress size={20} /> : "Save Custom Question"}
-          </Button>
           {isSelectedSuggestionUnedited && (
             <Typography variant="caption" color="text.secondary">
               Edit the selected suggestion before saving.
             </Typography>
           )}
-
-          <Box>
-            <Typography
-              variant={isMobileView ? "subtitle2" : "subtitle1"}
-              sx={{ mb: 1, fontSize: { xs: "0.8rem", sm: "1rem" } }}
-            >
-              Your Custom Questions
-            </Typography>
-
-            {customQuestions.length > 0 ? (
-              <Stack spacing={1}>
-                {customQuestions.map((item) => (
-                  <Paper key={item.id} variant="outlined" sx={{ p: 1 }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-                      <Typography variant="body2" sx={{ flex: 1 }}>
-                        {item.question}
-                      </Typography>
-                      <Button
-                        size="small"
-                        color="error"
-                        variant="outlined"
-                        onClick={() => deleteCustomQuestion(item.id)}
-                        disabled={deletingQuestionId === item.id}
-                        sx={{ flexShrink: 0 }}
-                      >
-                        {deletingQuestionId === item.id ? "Deleting..." : "Delete"}
-                      </Button>
-                    </Stack>
-                  </Paper>
-                ))}
-              </Stack>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                No custom questions yet.
-              </Typography>
-            )}
-          </Box>
-
-          <Box>
-            <Typography
-              variant={isMobileView ? "subtitle2" : "subtitle1"}
-              sx={{ mb: 1, fontSize: { xs: "0.8rem", sm: "1rem" } }}
-            >
-              Priority Questions (Most Asked)
-            </Typography>
-
-            {priorityQuestions.length > 0 ? (
-              <Stack spacing={1}>
-                {priorityQuestions.map((item) => (
-                  <Paper key={item.id} variant="outlined" sx={{ p: 1 }}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-                      <Typography variant="body2" sx={{ flex: 1 }}>
-                        {item.question}
-                      </Typography>
-                      <Chip
-                        color="error"
-                        size="small"
-                        label={`${item.askedCount} asks`}
-                        sx={{ flexShrink: 0 }}
-                      />
-                    </Stack>
-                  </Paper>
-                ))}
-              </Stack>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                No repeated asks yet.
-              </Typography>
-            )}
-          </Box>
-      </Stack>
-    </Stack>
-  );
-
-  const suggestionsBlock = (
-    <>
-      <Button
-        fullWidth
-        variant="outlined"
-        onClick={() => fetchSuggestedMessages({ refresh: true, exclude: messageString })}
-        disabled={isCompletionLoading}
-        sx={{ py: { xs: 1, sm: 1 }, minHeight: 42 }}
+          <Button
+            type="submit"
+            variant="contained"
+            startIcon={<EditNoteRounded />}
+            disabled={!canSaveCustomQuestion}
+            sx={{ alignSelf: "flex-start" }}
+          >
+            {savingQuestionId === "new"
+              ? "Saving question…"
+              : "Save custom question"}
+          </Button>
+        </Stack>
+      </BoardSection>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
+          gap: 3,
+          alignItems: "start",
+        }}
       >
-        {isCompletionLoading ? <CircularProgress size={20} /> : "Suggest Messages"}
-      </Button>
-
-      {completionError && (
-        <Typography color="error" textAlign="center">
-          {completionError.message}
-        </Typography>
-      )}
-
-      <Box>
-        <Typography variant={isMobileView ? "subtitle1" : "h6"} gutterBottom sx={{ fontSize: { xs: "0.95rem", sm: "1.25rem" } }}>
-          {isOwner ? "Unanswered Suggestions (for visitors)" : "Suggested Messages"}
-        </Typography>
-        {isOwner ? (
-          messageArray.length > 0 ? (
-            <>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
-                Click a suggestion to load it into the Questions tab.
-              </Typography>
-              <Stack spacing={1}>
-                {messageArray.slice(0, suggestionVisibleCount).map((msg, i) => (
-                  <Button
-                    key={i}
-                    onClick={() => handleSuggestionTemplateClick(msg)}
-                    variant={newQuestion === msg ? "contained" : "outlined"}
-                    fullWidth
-                    sx={{
-                    justifyContent: "flex-start",
-                    fontSize: { xs: "0.72rem", sm: "0.875rem" },
-                    py: { xs: 1, sm: 1 },
-                    px: { xs: 1.25, sm: 1.5 },
-                    minHeight: 40,
-                    }}
+        <BoardSection
+          title="Your custom questions"
+          description={`${customQuestions.length} conversation ${customQuestions.length === 1 ? "starter" : "starters"} created by you`}
+        >
+          {customQuestions.length ? (
+            <Stack spacing={1.5}>
+              {customQuestions.map((item) => (
+                <Stack
+                  key={item.id}
+                  direction="row"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ p: 2, border: "1px solid #e7ecf4", borderRadius: 2 }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ flex: 1, overflowWrap: "anywhere" }}
                   >
-                    {msg}
+                    {item.question}
+                  </Typography>
+                  <Button
+                    size="small"
+                    color="error"
+                    aria-label={`Delete question: ${item.question}`}
+                    onClick={() => deleteCustomQuestion(item.id)}
+                    disabled={deletingQuestionId === item.id}
+                  >
+                    {deletingQuestionId === item.id ? "Deleting…" : "Delete"}
                   </Button>
-                ))}
-              </Stack>
-            </>
+                </Stack>
+              ))}
+            </Stack>
           ) : (
-            <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
-              No suggestions available right now.
-            </Typography>
-          )
-        ) : messageArray.length > 0 ? (
-          <Stack spacing={1}>
-            {messageArray.slice(0, suggestionVisibleCount).map((msg, i) => (
-              <Button
-                key={i}
-                onClick={() => handleMessageClick(msg)}
-                variant="outlined"
-                fullWidth
-                sx={{
-                  justifyContent: "flex-start",
-                  fontSize: { xs: "0.72rem", sm: "0.875rem" },
-                  py: { xs: 0.7, sm: 1 },
-                  px: { xs: 1, sm: 1.5 },
-                }}
-              >
-                {msg}
-              </Button>
-            ))}
-          </Stack>
-        ) : (
-          <Typography sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>No messages to suggest</Typography>
-        )}
+            <BoardEmpty
+              icon={EditNoteRounded}
+              title="Your first question starts here"
+              description="Add a question above to give your board a personal touch."
+            />
+          )}
+        </BoardSection>
+        <BoardSection
+          title="Most asked"
+          description="See what's sparking your visitors' curiosity."
+        >
+          {priorityQuestions.length ? (
+            <Stack spacing={1.5}>
+              {priorityQuestions.map((item, index) => (
+                <Stack
+                  key={item.id}
+                  direction="row"
+                  alignItems="center"
+                  gap={1.5}
+                  sx={{ p: 2, bgcolor: "#f8faff", borderRadius: 2 }}
+                >
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    fontWeight={700}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ flex: 1, overflowWrap: "anywhere" }}
+                  >
+                    {item.question}
+                  </Typography>
+                  <Chip
+                    size="small"
+                    label={`${item.askedCount} asks`}
+                    sx={{
+                      bgcolor: "#edf1ff",
+                      color: "primary.main",
+                      fontSize: 11,
+                    }}
+                  />
+                </Stack>
+              ))}
+            </Stack>
+          ) : (
+            <BoardEmpty
+              icon={ForumOutlined}
+              title="Curiosity is on its way"
+              description="Questions your visitors ask will appear here."
+            />
+          )}
+        </BoardSection>
       </Box>
-    </>
+    </Stack>
   );
 
   const ownerBoardPanel = (
-    <Stack
-      spacing={3}
-      component={Paper}
-      elevation={4}
+    <Box
       sx={{
-        width: "100%",
-        padding: { xs: "1.25rem", sm: "2rem" },
-        borderRadius: "16px",
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "1fr",
+          md: "minmax(0, 1.6fr) minmax(0, 1fr)",
+        },
+        gap: 3,
+        alignItems: "start",
       }}
     >
-      <Typography
-        variant={isMobileView ? "h6" : "h5"}
-        align="center"
-        fontWeight={600}
-        sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
-      >
-        {`Manage Your Message Board (@${username})`}
-      </Typography>
       {suggestionsBlock}
-    </Stack>
+      <Stack spacing={3}>
+        <BoardSection
+          title="Your board, out in the world"
+          description="Share your link and invite a little curiosity."
+        >
+          <Box
+            sx={{
+              p: 1.5,
+              bgcolor: "#f5f7fb",
+              border: "1px dashed #d9e1f1",
+              borderRadius: 2,
+              mb: 2,
+            }}
+          >
+            <Typography variant="body2" sx={{ overflowWrap: "anywhere" }}>
+              /u/{username}
+            </Typography>
+          </Box>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<ContentCopyRounded />}
+            onClick={copyBoardLink}
+          >
+            Copy board link
+          </Button>
+        </BoardSection>
+        <Box sx={{ ...boardSurfaceSx, p: 3, bgcolor: "#edf5f3" }}>
+          <PublicRounded sx={{ color: "#168575", mb: 1 }} />
+          <Typography component="h2" fontWeight={700} sx={{ mb: 1 }}>
+            Make it part of your website
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ lineHeight: 1.8, mb: 2 }}
+          >
+            Add a message widget to your site. Bring every conversation back to
+            one place.
+          </Typography>
+          <Button
+            onClick={() => setOwnerTab("embed")}
+            endIcon={<ArrowForwardRounded />}
+            sx={{ p: 0, color: "#137464" }}
+          >
+            Set up your widget
+          </Button>
+        </Box>
+      </Stack>
+    </Box>
   );
 
   const boardPanel = (
-    <Stack
-      spacing={3}
-      component={Paper}
-      elevation={4}
-      sx={{
-        width: "100%",
-        padding: { xs: "1.25rem", sm: "2rem" },
-        borderRadius: "16px",
-      }}
-    >
-      <Typography
-        variant={isMobileView ? "h6" : "h5"}
-        align="center"
-        fontWeight={600}
-        sx={{ fontSize: { xs: "1rem", sm: "1.5rem" } }}
+    <Stack spacing={3}>
+      <BoardSection
+        title="What's on your mind?"
+        description={`Leave a question or a thoughtful note for @${username}.`}
       >
-        {`Send Anonymous Message to @${username}`}
-      </Typography>
-
-      {!isOwner && (
-        <form onSubmit={handleSubmit}>
+        <Stack component="form" onSubmit={handleSubmit} spacing={2}>
           <TextField
             fullWidth
             multiline
-            rows={4}
-            placeholder="Write your anonymous message here"
+            minRows={5}
+            label="Your message"
+            inputRef={messageInputRef}
+            placeholder="A question, a kind thought, a little curiosity…"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            variant="outlined"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isLoading || !content}
-            sx={{ mt: 2, py: { xs: 1, sm: 1 }, minHeight: 42 }}
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            gap={2}
           >
-            {isLoading ? <CircularProgress size={24} /> : "Send Message"}
-          </Button>
-        </form>
-      )}
-
+            <Typography variant="caption" color="text.secondary">
+              A little kindness goes a long way.
+            </Typography>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={
+                isLoading ? (
+                  <CircularProgress size={16} color="inherit" />
+                ) : (
+                  <SendRounded />
+                )
+              }
+              disabled={isLoading || !content.trim()}
+              sx={{ flexShrink: 0 }}
+            >
+              {isLoading ? "Sending…" : "Send message"}
+            </Button>
+          </Stack>
+        </Stack>
+      </BoardSection>
       {suggestionsBlock}
-
-      {!isOwner && !isLoggedInViewer && (
-        <Box textAlign="center" mt={2}>
-          <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.72rem", sm: "0.875rem" } }}>
-            Get Your Own Message Board
+      {!isLoggedInViewer && (
+        <Stack alignItems="center" spacing={1}>
+          <Typography variant="body2" color="text.secondary">
+            A space like this could be yours, too.
           </Typography>
           <Button
+            component={Link}
             href="/login"
-            variant="contained"
-            sx={{ mt: 1, px: 3, borderRadius: "999px", fontSize: { xs: "0.72rem", sm: "0.875rem" }, py: { xs: 0.75, sm: 1 } }}
+            endIcon={<ArrowForwardRounded />}
           >
-            Create Your Account
+            Create your own board
           </Button>
-        </Box>
+        </Stack>
       )}
     </Stack>
   );
 
   const answerShowcasePanel = (
-    <Paper
-      elevation={3}
-      sx={{
-        p: 2,
-        borderRadius: "16px",
-        position: { md: "sticky" },
-        top: { md: 24 },
-        maxHeight: { md: "calc(100vh - 48px)" },
-        overflowY: { md: "auto" },
-      }}
+    <BoardSection
+      title="Answer showcase"
+      description={
+        isOwner
+          ? "The conversations you choose to share with the world."
+          : `A little more about @${username}, in their own words.`
+      }
     >
-      <Typography variant="h6" gutterBottom>
-        Answer Showcase
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Previously answered public board questions for @{username}
-      </Typography>
-      {hostFilterControl && (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-          {hostFilterControl}
-        </Box>
-      )}
-
-      {pagedAnsweredShowcase.length > 0 ? (
-        <Stack spacing={1.5}>
+      {isCompletionLoading ? (
+        <Skeleton variant="rounded" height={180} />
+      ) : pagedAnsweredShowcase.length ? (
+        <Stack spacing={2}>
           {pagedAnsweredShowcase.map((item) => (
-            <Paper key={item.id} variant="outlined" sx={{ p: 1.5 }}>
-              {isOwner && item.itemType && (
-                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box
+              key={item.id}
+              sx={{
+                border: "1px solid #e7ecf4",
+                borderRadius: 3,
+                p: 2.5,
+                bgcolor: item.hiddenFromShowcase ? "#f8f9fc" : "white",
+              }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                gap={1}
+                sx={{ mb: 1.5 }}
+              >
+                <Typography
+                  variant="overline"
+                  color="primary"
+                  sx={{ letterSpacing: ".1em", fontSize: 10 }}
+                >
+                  A LITTLE CURIOSITY
+                </Typography>
+                {isOwner && item.itemType && (
                   <Button
                     size="small"
-                    color={item.hiddenFromShowcase ? "primary" : "error"}
+                    startIcon={
+                      item.hiddenFromShowcase ? (
+                        <VisibilityOutlined />
+                      ) : (
+                        <VisibilityOffOutlined />
+                      )
+                    }
                     onClick={() => toggleShowcaseVisibility(item)}
                     disabled={hidingShowcaseId === item.id}
+                    aria-label={`${item.hiddenFromShowcase ? "Show" : "Hide"} answer: ${item.question}`}
+                    sx={{ p: 0.5, flexShrink: 0 }}
                   >
                     {hidingShowcaseId === item.id
-                      ? item.hiddenFromShowcase
-                        ? "Showing..."
-                        : "Hiding..."
+                      ? "Updating…"
                       : item.hiddenFromShowcase
                         ? "Show"
                         : "Hide"}
                   </Button>
-                </Box>
-              )}
-              <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>
-                Question
+                )}
+              </Stack>
+              <Typography fontWeight={650} sx={{ overflowWrap: "anywhere" }}>
+                {item.question}
               </Typography>
-              <Typography fontWeight={600}>{item.question}</Typography>
-              <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
-                Answer
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  mt: 2,
+                  pl: 2,
+                  borderLeft: "3px solid #dbe4ff",
+                  lineHeight: 1.8,
+                  whiteSpace: "pre-wrap",
+                  overflowWrap: "anywhere",
+                }}
+              >
                 {item.answer}
               </Typography>
               {isOwner && item.hiddenFromShowcase && (
-                <Typography variant="caption" color="warning.main" sx={{ mt: 1, display: "block" }}>
-                  Hidden from public showcase
-                </Typography>
+                <Chip
+                  size="small"
+                  label="Hidden from public showcase"
+                  sx={{
+                    mt: 2,
+                    bgcolor: "#eef0f6",
+                    color: "text.secondary",
+                    fontSize: 11,
+                  }}
+                />
               )}
-            </Paper>
+            </Box>
           ))}
         </Stack>
       ) : (
-        <Typography variant="body2" color="text.secondary">
-          No answered questions yet
-        </Typography>
+        <BoardEmpty
+          icon={ChatBubbleOutlineRounded}
+          title="Every answer starts with a question"
+          description={
+            isOwner
+              ? "Your answered public questions will find a home here."
+              : "No answers shared yet. Start a conversation with a question."
+          }
+        />
       )}
-
       {answeredShowcase.length > ANSWER_SHOWCASE_PAGE_SIZE && (
-        <Stack sx={{ mt: 2 }} alignItems="center">
+        <Stack alignItems="center" sx={{ mt: 3 }}>
           <Pagination
             count={totalAnswerShowcasePages}
             page={answerShowcasePage}
-            onChange={(_, nextPage) => setAnswerShowcasePage(nextPage)}
+            onChange={(_, page) => setAnswerShowcasePage(page)}
             color="primary"
             shape="rounded"
+            size={isMobileView ? "small" : "medium"}
           />
         </Stack>
       )}
-    </Paper>
+    </BoardSection>
   );
 
-  return (
-    <>
-      {isLoggedInViewer && <Header />}
-      {isLoggedInViewer && <DeleteChatMenu deleteOptionAnchor={deleteOptionAnchor} />}
-      {isLoggedInViewer && (
-        <Drawer
-          open={isMobile}
-          onClose={handleMobileClose}
-          anchor="right"
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: "80vw",
-              background: gradientBg,
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            },
-          }}
-          onClick={handleMobileClose}
+  const ownerTabs = [
+    { value: "board", label: "Overview", icon: <PublicRounded /> },
+    { value: "questions", label: "Questions", icon: <EditNoteRounded /> },
+    {
+      value: "showcase",
+      label: "Showcase",
+      icon: <ChatBubbleOutlineRounded />,
+    },
+    { value: "embed", label: "Embed", icon: <CodeRounded /> },
+  ];
+
+  if (viewerLoading)
+    return (
+      <Box
+        className="workspace-root"
+        sx={{ minHeight: "100dvh", p: { xs: 3, md: 6 } }}
+      >
+        <Stack
+          spacing={3}
+          sx={{ maxWidth: 1120, mx: "auto" }}
+          role="status"
+          aria-label="Loading board"
         >
-          {isLoadingChats ? (
-            <Stack spacing={"1rem"}>
-              {Array.from({ length: 8 }, (_, index) => (
-                <Skeleton key={index} variant="rounded" height={95} />
-              ))}
-            </Stack>
-          ) : (
-            <ChatList
-              w="80vw"
-              chats={chatListData}
-              chatId={null}
-              newMessagesAlert={[]}
-              onlineUsers={[]}
-              handleDeleteChat={handleDeleteChat}
-              onSelectChat={() => dispatch(setIsMobile(false))}
-            />
-          )}
-        </Drawer>
+          <Skeleton variant="rounded" height={210} />
+          <Skeleton variant="rounded" height={56} />
+          <Skeleton variant="rounded" height={300} />
+        </Stack>
+      </Box>
+    );
+
+  return (
+    <Box
+      className="workspace-root board-workspace"
+      sx={{ minHeight: "100dvh" }}
+    >
+      {isLoggedInViewer ? (
+        <Header alwaysShowProfile />
+      ) : (
+        <Stack
+          component="header"
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            bgcolor: "white",
+            px: { xs: 2, sm: 4 },
+            py: 2,
+            borderBottom: "1px solid #e7ecf4",
+          }}
+        >
+          <Button
+            component={Link}
+            href="/login"
+            startIcon={<ChatBubbleOutlineRounded />}
+            sx={{ color: "text.primary", p: 0, fontSize: 18, fontWeight: 750 }}
+          >
+            Chat Champ
+          </Button>
+          <Button
+            component={Link}
+            href="/login"
+            size="small"
+            variant="outlined"
+          >
+            Get your own board
+          </Button>
+        </Stack>
       )}
       {isLoggedInViewer && (
-        <Drawer
-          open={isProfile}
-          onClose={handleProfileClose}
-          anchor="left"
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: {
-                xs: "85vw",
-                sm: "75vw",
-                md: "42vw",
-              },
-              background: gradientBg,
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            },
-          }}
-        >
-          <Profile />
-        </Drawer>
+        <>
+          <DeleteChatMenu deleteOptionAnchor={deleteOptionAnchor} />
+          <Drawer
+            open={isMobile}
+            onClose={handleMobileClose}
+            anchor="right"
+            slotProps={{ paper: { sx: { width: "min(85vw, 360px)" } } }}
+          >
+            {isLoadingChats ? (
+              <Stack sx={{ p: 2 }} spacing={2}>
+                {[1, 2, 3].map((key) => (
+                  <Skeleton key={key} variant="rounded" height={80} />
+                ))}
+              </Stack>
+            ) : (
+              <ChatList
+                chats={chatListData}
+                handleDeleteChat={handleDeleteChat}
+                onSelectChat={handleMobileClose}
+              />
+            )}
+          </Drawer>
+          <Drawer
+            open={isProfile}
+            onClose={handleProfileClose}
+            anchor="right"
+            slotProps={{ paper: { sx: { width: "min(85vw, 360px)" } } }}
+          >
+            <Profile />
+          </Drawer>
+        </>
       )}
       <Box
-        sx={{
-          minHeight: "100vh",
-          background: gradientBg,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          padding: { xs: "0.75rem", sm: "2rem" },
-        }}
+        component="main"
+        sx={{ maxWidth: 1200, mx: "auto", p: { xs: 2, sm: 3, md: 5 } }}
       >
-        <Box
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mb: 3 }}
+        >
+          {isLoggedInViewer ? (
+            <Button
+              component={Link}
+              href="/"
+              color="inherit"
+              startIcon={<ArrowBackRounded />}
+              sx={{ p: 0 }}
+            >
+              Messages
+            </Button>
+          ) : (
+            <Typography
+              variant="overline"
+              color="text.secondary"
+              sx={{ letterSpacing: ".12em" }}
+            >
+              A SPACE FOR CONNECTION
+            </Typography>
+          )}
+          <Chip
+            icon={<PublicRounded />}
+            label={isOwner ? "Your message board" : "Message board"}
+            size="small"
+            sx={{ bgcolor: "#edf1ff", color: "primary.main", fontSize: 11 }}
+          />
+        </Stack>
+        <Paper
+          component="section"
+          elevation={0}
+          className="workspace-reveal"
           sx={{
-            width: "100%",
-            maxWidth: 1150,
-            display: "grid",
-            gap: { xs: 1.5, sm: 3 },
-            gridTemplateColumns: {
-              xs: "1fr",
-              md: hasAnsweredShowcase ? "minmax(0, 2fr) minmax(280px, 1fr)" : "1fr",
-            },
-            justifyItems: { md: hasAnsweredShowcase ? "stretch" : "center" },
+            ...boardSurfaceSx,
+            p: { xs: 3, sm: 4 },
+            mb: 3,
+            position: "relative",
+            overflow: "hidden",
+            background: "linear-gradient(115deg, #fff 35%, #edf1ff)",
           }}
         >
+          <Box className="board-hero-orbit" aria-hidden="true" />
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            alignItems={{ xs: "flex-start", sm: "center" }}
+            gap={3}
+            sx={{ position: "relative" }}
+          >
+            <Avatar
+              src={
+                isOwner
+                  ? viewerUser?.avatar?.url || user?.avatar?.url
+                  : undefined
+              }
+              sx={{
+                width: 68,
+                height: 68,
+                borderRadius: "20px",
+                bgcolor: "#4361d8",
+                color: "white",
+                boxShadow: "0 8px 24px #4361d825",
+              }}
+            >
+              {isOwner ? (
+                <PublicRounded fontSize="large" />
+              ) : (
+                <ChatBubbleOutlineRounded fontSize="large" />
+              )}
+            </Avatar>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography
+                variant="overline"
+                color="primary"
+                sx={{ letterSpacing: ".16em", fontSize: 10 }}
+              >
+                {isOwner
+                  ? "YOUR LITTLE CORNER OF THE INTERNET"
+                  : "SAY SOMETHING THAT MATTERS"}
+              </Typography>
+              <Typography
+                component="h1"
+                variant="h4"
+                sx={{
+                  mt: 0.5,
+                  fontSize: { xs: 28, sm: 36 },
+                  overflowWrap: "anywhere",
+                }}
+              >
+                {isOwner
+                  ? "Let the conversation find you."
+                  : `A note for @${username}`}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 1, lineHeight: 1.8 }}
+              >
+                {isOwner
+                  ? `@${username} · Share your link, spark a question, and connect on your terms.`
+                  : "A question you've been meaning to ask. A thought worth sharing. Start here."}
+              </Typography>
+            </Box>
+            {isOwner && (
+              <Button
+                variant="contained"
+                startIcon={<ContentCopyRounded />}
+                onClick={copyBoardLink}
+                sx={{ flexShrink: 0 }}
+              >
+                Copy board link
+              </Button>
+            )}
+          </Stack>
+        </Paper>
+        {completionError && (
+          <Alert
+            severity="error"
+            sx={{ mb: 3 }}
+            action={
+              <Button
+                color="inherit"
+                onClick={() => fetchSuggestedMessages()}
+                disabled={isCompletionLoading}
+              >
+                Retry
+              </Button>
+            }
+          >
+            Couldn't load this board's questions. Please try again.
+          </Alert>
+        )}
         {isOwner ? (
-          <Box sx={{ gridColumn: "1 / -1", width: "100%", maxWidth: 760, mx: "auto" }}>
-            <Paper elevation={2} sx={{ mb: 2, borderRadius: "14px", overflow: "hidden" }}>
+          <>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: { xs: 1, sm: 2 },
+                mb: 3,
+              }}
+            >
+              {[
+                {
+                  label: "Custom questions",
+                  count: customQuestions.length,
+                  tab: "questions",
+                  color: "#4361d8",
+                },
+                {
+                  label: "Questions asked",
+                  count: priorityQuestions.length,
+                  tab: "questions",
+                  color: "#168575",
+                },
+                {
+                  label: "Shared answers",
+                  count: answeredShowcase.filter(
+                    (item) => !item.hiddenFromShowcase,
+                  ).length,
+                  tab: "showcase",
+                  color: "#926341",
+                },
+              ].map((stat) => (
+                <Button
+                  key={stat.label}
+                  onClick={() => setOwnerTab(stat.tab)}
+                  sx={{
+                    ...boardSurfaceSx,
+                    bgcolor: "white",
+                    p: { xs: 1.5, sm: 2.5 },
+                    justifyContent: "flex-start",
+                    textAlign: "left",
+                    color: "text.primary",
+                  }}
+                >
+                  <Box>
+                    <Typography
+                      component="span"
+                      sx={{
+                        display: "block",
+                        color: stat.color,
+                        fontWeight: 750,
+                        fontSize: { xs: 24, sm: 30 },
+                        fontVariantNumeric: "tabular-nums",
+                      }}
+                    >
+                      {isCompletionLoading || completionError
+                        ? "—"
+                        : stat.count}
+                    </Typography>
+                    <Typography
+                      component="span"
+                      sx={{
+                        fontSize: { xs: 11, sm: 13 },
+                        color: "text.secondary",
+                      }}
+                    >
+                      {stat.label}
+                    </Typography>
+                  </Box>
+                </Button>
+              ))}
+            </Box>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              justifyContent="space-between"
+              gap={2}
+              sx={{ mb: 3 }}
+            >
               <Tabs
                 value={ownerTab}
-                onChange={(_, nextTab) => setOwnerTab(nextTab)}
-                variant={isMobileView ? "fullWidth" : "scrollable"}
-                scrollButtons="auto"
-                allowScrollButtonsMobile={false}
-                indicatorColor="primary"
-                textColor="primary"
+                onChange={(_, tab) => setOwnerTab(tab)}
+                aria-label="Board management"
+                variant="fullWidth"
                 sx={{
-                  minHeight: { xs: 44, sm: 48 },
+                  bgcolor: "#eaf0fa",
+                  borderRadius: 2,
+                  p: 0.5,
+                  width: { xs: "100%", sm: 480 },
+                  minHeight: 48,
+                  "& .MuiTabs-indicator": { display: "none" },
                   "& .MuiTab-root": {
                     minWidth: 0,
-                    px: { xs: 0.5, sm: 2 },
-                    py: { xs: 1, sm: 1.5 },
-                    fontSize: { xs: "0.7rem", sm: "0.875rem" },
-                    minHeight: { xs: 44, sm: 48 },
+                    minHeight: 44,
+                    borderRadius: 1.5,
+                    px: 1,
+                    fontSize: { xs: 11, sm: 13 },
+                    textTransform: "none",
+                  },
+                  "& .Mui-selected": {
+                    bgcolor: "white",
+                    boxShadow: "0 2px 6px #202b4508",
                   },
                 }}
               >
-                <Tab value="board" label="Board" />
-                <Tab
-                  value="questions"
-                  label={`Questions${priorityQuestions.length > 0 ? ` (${priorityQuestions.length})` : ""}`}
-                />
-                <Tab
-                  value="showcase"
-                  label={`Showcase${answeredShowcase.length > 0 ? ` (${answeredShowcase.length})` : ""}`}
-                />
-                <Tab value="embed" label="Embed" />
+                {ownerTabs.map((tab) => (
+                  <Tab
+                    key={tab.value}
+                    value={tab.value}
+                    label={tab.label}
+                    icon={isMobileView ? undefined : tab.icon}
+                    iconPosition="start"
+                    id={`board-tab-${tab.value}`}
+                    aria-controls={`board-panel-${tab.value}`}
+                  />
+                ))}
               </Tabs>
-            </Paper>
-            {ownerTab === "board" && ownerBoardPanel}
-            {ownerTab === "questions" && questionsPanel}
-            {ownerTab === "showcase" && answerShowcasePanel}
-            {ownerTab === "embed" && <EmbedSetupPanel username={username} />}
-          </Box>
+              {ownerTab !== "embed" && hostFilterControl}
+            </Stack>
+            <Box
+              key={ownerTab}
+              className="workspace-reveal"
+              role="tabpanel"
+              id={`board-panel-${ownerTab}`}
+              aria-labelledby={`board-tab-${ownerTab}`}
+            >
+              {ownerTab === "board" && ownerBoardPanel}
+              {ownerTab === "questions" && questionsPanel}
+              {ownerTab === "showcase" && answerShowcasePanel}
+              {ownerTab === "embed" && <EmbedSetupPanel username={username} />}
+            </Box>
+          </>
         ) : (
-        <>
-        {!isOwner && hasAnsweredShowcase && (
-          <Box sx={{ display: { xs: "block", md: "none" }, gridColumn: "1 / -1" }}>
-            <Paper elevation={2} sx={{ mb: 1, borderRadius: "14px" }}>
-              <Tabs
-                value={mobileTab}
-                onChange={(_, nextTab) => setMobileTab(nextTab)}
-                variant="fullWidth"
-                indicatorColor="primary"
-                textColor="primary"
+          <>
+            {hasAnsweredShowcase && (
+              <Box sx={{ display: { xs: "block", md: "none" }, mb: 3 }}>
+                <Tabs
+                  aria-label="Public board sections"
+                  value={mobileTab}
+                  onChange={(_, tab) => setMobileTab(tab)}
+                  variant="fullWidth"
+                >
+                  <Tab
+                    value="board"
+                    label="Leave a note"
+                    id="public-tab-board"
+                    aria-controls="public-panel-board"
+                  />
+                  <Tab
+                    value="showcase"
+                    label="Shared answers"
+                    id="public-tab-showcase"
+                    aria-controls="public-panel-showcase"
+                  />
+                </Tabs>
+              </Box>
+            )}
+            {hostFilterControl && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
+                {hostFilterControl}
+              </Box>
+            )}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  md: hasAnsweredShowcase
+                    ? "minmax(0, 1.4fr) minmax(0, 1fr)"
+                    : "minmax(0, 760px)",
+                },
+                justifyContent: "center",
+                gap: 3,
+                alignItems: "start",
+              }}
+            >
+              <Box
+                id="public-panel-board"
+                sx={{
+                  display: {
+                    xs: mobileTab === "board" ? "block" : "none",
+                    md: "block",
+                  },
+                  minWidth: 0,
+                }}
               >
-                <Tab value="board" label="Board" />
-                <Tab value="showcase" label="Answer Showcase" />
-              </Tabs>
-            </Paper>
-          </Box>
+                {boardPanel}
+              </Box>
+              {hasAnsweredShowcase && (
+                <Box
+                  id="public-panel-showcase"
+                  sx={{
+                    display: {
+                      xs: mobileTab === "showcase" ? "block" : "none",
+                      md: "block",
+                    },
+                    minWidth: 0,
+                  }}
+                >
+                  {answerShowcasePanel}
+                </Box>
+              )}
+            </Box>
+          </>
         )}
-
-        <Box
-          sx={{
-            display: { xs: mobileTab === "board" ? "block" : "none", md: "block" },
-            width: { md: hasAnsweredShowcase ? "100%" : "min(100%, 620px)" },
-          }}
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          align="center"
+          sx={{ display: "block", mt: 5 }}
         >
-          {boardPanel}
-        </Box>
-
-        {hasAnsweredShowcase && (
-          <Box sx={{ display: { xs: mobileTab === "showcase" ? "block" : "none", md: "block" } }}>
-            {answerShowcasePanel}
-          </Box>
-        )}
-        </>
-        )}
-        </Box>
+          A little more connection. A little less noise.
+        </Typography>
       </Box>
-    </>
+    </Box>
   );
 }

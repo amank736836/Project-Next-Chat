@@ -48,7 +48,7 @@ const SearchDialog = lazy(() => import("../../specific/Search"));
 const NotificationsDialog = lazy(() => import("../../specific/Notifications"));
 const NewGroupDialog = lazy(() => import("../../specific/NewGroup"));
 
-export default function Header() {
+export default function Header({ alwaysShowProfile = false }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = usePathname();
@@ -186,7 +186,7 @@ export default function Header() {
             />
             <IconBtn
               title="My Board"
-              active={pathname === "/board"}
+              active={pathname === "/board" || pathname === `/u/${user?.username}`}
               onClick={() => router.push("/board")}
               icon={<ForumIcon />}
             />
@@ -197,7 +197,7 @@ export default function Header() {
             />
           </Box>
 
-          <Box sx={{ display: { xs: "block", lg: "none" } }}>
+          <Box sx={{ display: { xs: "block", lg: alwaysShowProfile ? "block" : "none" } }}>
             <IconBtn
               title="Profile"
               onClick={openProfile}

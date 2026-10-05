@@ -149,3 +149,4 @@ tests/*
 !tests/e2e/
 tests/e2e/*
 !tests/e2e/workspace.spec.js
+!tests/e2e/board.spec.js
