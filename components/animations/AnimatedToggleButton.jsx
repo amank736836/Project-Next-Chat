@@ -32,7 +32,7 @@ export default function AnimatedToggleButton({
         position: "relative",
         overflow: "hidden",
         minHeight: 44,
-        borderRadius: "14px",
+        borderRadius: "var(--champ-control-radius)",
         textTransform: "none",
         fontWeight: 600,
         transition: "border-color 0.25s ease, color 0.25s ease",
@@ -41,7 +41,7 @@ export default function AnimatedToggleButton({
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(110deg, rgba(79,172,254,0.16), rgba(0,242,254,0.14) 45%, rgba(255,126,95,0.18))",
+            "linear-gradient(110deg, rgba(var(--champ-primary-rgb),0.16), rgba(var(--champ-primary-rgb),0.14) 45%, rgba(var(--champ-primary-rgb),0.18))",
           transform: "scaleX(0)",
           transformOrigin: "left center",
           transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",

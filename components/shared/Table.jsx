@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Box, Container, Paper, Stack, Typography } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { Box, Container, Paper, Stack, Typography, TextField, InputAdornment, IconButton } from "@mui/material";
+import { SearchRounded, CloseRounded } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
 import { motion } from "framer-motion";
 import { AdminReveal, AnimatedCounter } from "../animations/AdminMotion";
@@ -17,6 +18,11 @@ const rowDelays = Object.fromEntries(
 
 export default function Table({ rows, columns, headings, rowHeight = 52 }) {
   const reducedMotion = useReducedMotionSafe();
+  const [search, setSearch] = useState("");
+  const visibleRows = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return query ? rows.filter((row) => JSON.stringify(row).toLowerCase().includes(query)) : rows;
+  }, [rows, search]);
   const [rowEntranceKey, setRowEntranceKey] = useState(0);
   const [rowsEntering, setRowsEntering] = useState(true);
   const replayRowEntrance = () => setRowEntranceKey((key) => key + 1);
@@ -29,7 +35,7 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
     // the virtualised grid scrolls. Opacity leaves DataGrid transforms intact.
     const timeout = setTimeout(() => setRowsEntering(false), 650);
     return () => clearTimeout(timeout);
-  }, [reducedMotion, rowEntranceKey, rows]);
+  }, [reducedMotion, rowEntranceKey, visibleRows]);
 
   return (
     <Container
@@ -61,10 +67,11 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
           sx={{ mb: 3, gap: 2 }}
         >
           <Box>
+            <Typography variant="overline" color="primary" sx={{ letterSpacing: ".14em", fontSize: 10 }}>COMMUNITY DIRECTORY</Typography>
             <Typography
               component="h1"
               variant="h4"
-              fontWeight={800}
+              fontWeight={600}
               sx={{
                 letterSpacing: "-0.03em",
                 fontSize: { xs: "1.65rem", sm: "2rem" },
@@ -87,7 +94,7 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
                 marginTop: 10,
                 borderRadius: 4,
                 transformOrigin: "left",
-                background: "linear-gradient(90deg, #4facfe, #00c6ff, #ff7e5f)",
+                background: "linear-gradient(90deg, var(--champ-primary), var(--champ-mint-strong))",
               }}
             />
           </Box>
@@ -99,7 +106,7 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
               px: 1.5,
               py: 0.75,
               borderRadius: 2,
-              bgcolor: "#f7f7f7",
+              bgcolor: "var(--champ-soft)",
               whiteSpace: "nowrap",
             }}
           >
@@ -108,10 +115,19 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
           </Typography>
         </Stack>
 
+        <Stack direction={{ xs: "column", sm: "row" }} gap={1.5} alignItems={{ xs: "stretch", sm: "center" }} justifyContent="space-between" sx={{ mb: 2.5 }}>
+          <TextField size="small" placeholder="Search records…" value={search} onChange={(event) => setSearch(event.target.value)} sx={{ width: { xs: "100%", sm: 320 } }}
+            slotProps={{ htmlInput: { "aria-label": "Search records" }, input: {
+              startAdornment: <InputAdornment position="start"><SearchRounded fontSize="small" /></InputAdornment>,
+              endAdornment: search ? <InputAdornment position="end"><IconButton size="small" aria-label="Clear search" onClick={() => setSearch("")}><CloseRounded fontSize="small" /></IconButton></InputAdornment> : null,
+            } }} />
+          <Typography variant="caption" color="text.secondary" role="status">{search ? `${visibleRows.length} matching records` : "Explore, sort, and filter your community data."}</Typography>
+        </Stack>
         <DataGrid
           className={rowsEntering ? "admin-table-entering" : undefined}
           aria-label={headings}
-          rows={rows}
+          slotProps={{ main: { "aria-label": headings } }}
+          rows={visibleRows}
           columns={columns}
           rowHeight={rowHeight}
           getRowClassName={(params) =>
@@ -124,7 +140,9 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
             flex: 1,
             minHeight: 0,
             border: "none",
-            ".table-header": { bgcolor: "#f7f7f7", color: "black" },
+            ".table-header": { bgcolor: "var(--champ-soft)", color: "var(--champ-muted)", fontSize: 12 },
+            "& .MuiDataGrid-cell": { borderColor: "var(--champ-border)", fontSize: 13 },
+            "& .MuiDataGrid-row:hover": { bgcolor: "var(--champ-soft)" },
             "& .MuiDataGrid-row": { transition: "background-color 0.18s ease" },
             "& .MuiAvatar-root": { transition: "transform 0.2s ease" },
             "& .MuiDataGrid-row:hover .MuiAvatar-root": {

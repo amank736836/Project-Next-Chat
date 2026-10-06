@@ -66,13 +66,13 @@ export default function NewGroupDialog() {
   }, [dispatch]);
 
   const submitHandler = useCallback(() => {
-    if (!groupName.value) return toast.error("Group name is required");
+    if (!groupName.value.trim()) return toast.error("Group name is required");
     if (selectedMembers.length < 1) {
       return toast.error("Select at least one member");
     }
 
     newGroup("Creating new group...", {
-      name: groupName.value,
+      name: groupName.value.trim(),
       otherMembers: selectedMembers,
     });
 
@@ -115,21 +115,16 @@ export default function NewGroupDialog() {
   );
 
   return (
-    <Dialog open={isNewGroup} onClose={closeGroupHandler}>
+    <Dialog className="workspace-root" aria-labelledby="new-group-title" open={isNewGroup} onClose={closeGroupHandler} maxWidth="sm" fullWidth>
       <Box
         sx={{
           p: { xs: "1.5rem", sm: "3rem" },
-          width: {
-            xs: "80vw",
-            sm: "70vw",
-            md: "50vw",
-            lg: "30vw",
-          },
+          width: "100%",
           borderRadius: "12px",
           background: dialogBg,
         }}
       >
-        <DialogTitle textAlign="center" variant="h4" fontWeight={600}>
+        <DialogTitle id="new-group-title" sx={{ px: 0, pt: 0, pb: 3 }} variant="h5" fontWeight={700}>
           Create a New Group
         </DialogTitle>
 
@@ -147,11 +142,13 @@ export default function NewGroupDialog() {
         />
 
         <Typography variant="body1" fontWeight={500} mt={2}>
-          Select members to add to the group:
+          Choose your people · {selectedMembers.length} selected
         </Typography>
 
         <Stack
+          component="ul"
           sx={{
+            listStyle: "none",
             maxHeight: "200px",
             overflowY: "auto",
             borderRadius: "8px",
@@ -167,7 +164,7 @@ export default function NewGroupDialog() {
             <Skeleton variant="rounded" height={40} />
           ) : errorAvailableFriends ? (
             <Typography variant="body2" color="error" textAlign="center">
-              {errorAvailableFriendsMessage}
+              {errorAvailableFriendsMessage?.data?.message || "Unable to load friends. Please try again."}
             </Typography>
           ) : availableFriends?.friends?.length === 0 ? (
             <Typography variant="body2" textAlign="center">
@@ -180,8 +177,8 @@ export default function NewGroupDialog() {
 
         <Stack direction="row" justifyContent="space-between" mt={3}>
           <Button
-            variant="contained"
-            color="error"
+            variant="text"
+            color="inherit"
             size="large"
             onClick={closeGroupHandler}
             sx={{ borderRadius: "8px", fontWeight: 600 }}
@@ -193,14 +190,14 @@ export default function NewGroupDialog() {
             color="primary"
             size="large"
             sx={{
-              bgcolor: "#28a745",
-              "&:hover": { bgcolor: "#218838" },
+              bgcolor: "primary.main",
+              "&:hover": { bgcolor: "primary.dark" },
               "&:disabled": { bgcolor: "#d3d3d3", color: "#777" },
               borderRadius: "8px",
               fontWeight: 600,
             }}
             onClick={submitHandler}
-            disabled={groupName.value.length < 1 || selectedMembers.length < 1}
+            disabled={groupName.value.trim().length < 1 || selectedMembers.length < 1}
           >
             Create Group
           </Button>

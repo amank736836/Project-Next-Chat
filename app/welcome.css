@@ -28,14 +28,14 @@
 }
 /* The public account entry: a quiet, responsive stage for conversation. */
 .welcome-stage {
-  --ink: #253d35;
+  --ink: var(--champ-ink);
   --muted: #7b857f;
-  --green: #427c62;
-  --mint: #edf4ed;
+  --green: var(--champ-primary);
+  --mint: var(--champ-soft);
   color: var(--ink);
-  background: #fafbf7;
+  background: var(--champ-canvas);
   min-height: 100dvh;
-  font-family: "DM Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--champ-font);
   padding: 0 5.1%;
   position: relative;
   overflow: clip;
@@ -64,7 +64,7 @@
 }
 .welcome-stage button:focus-visible,
 .welcome-stage a:focus-visible {
-  outline: 3px solid #559d79;
+  outline: 3px solid var(--champ-focus);
   outline-offset: 5px;
 }
 .welcome-header {
@@ -88,7 +88,7 @@
   white-space: nowrap;
 }
 .champ-brand > svg {
-  color: #447d60;
+  color: var(--champ-primary);
   width: 32px;
   height: 35px;
 }
@@ -608,10 +608,10 @@
 .welcome-stage .welcome-form-card .MuiInputBase-root {
   border-radius: 7px;
   font-size: 13px;
-  background: #fcfdfb;
+  background: var(--champ-field);
 }
 .welcome-stage .welcome-form-card .MuiInputBase-root fieldset {
-  border-color: #e1e6da;
+  border-color: var(--champ-border);
 }
 .welcome-stage .welcome-form-card .MuiInputBase-root:hover fieldset {
   border-color: #9db29a;
@@ -681,7 +681,7 @@
   font-weight: 600;
 }
 .welcome-form-card .auth-cta {
-  background: #44775b;
+  background: var(--champ-primary);
   animation: none;
   border-radius: 7px;
   min-height: 46px;
@@ -690,7 +690,7 @@
   font-weight: 500;
 }
 .welcome-form-card .auth-cta:hover {
-  background: #356448;
+  background: var(--champ-primary-hover);
   box-shadow: 0 5px 14px #37543c20;
 }
 .welcome-form-card .auth-cta.Mui-disabled {
@@ -906,7 +906,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background: #44775b;
+  background: var(--champ-primary);
   color: white;
   border: none;
   border-radius: 8px;

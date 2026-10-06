@@ -1,5 +1,6 @@
 "use client";
 
+import WorkspaceTheme from "./styles/WorkspaceTheme";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 import { Toaster } from "react-hot-toast";
@@ -9,7 +10,7 @@ export function Providers({ children }) {
   return (
     <Provider store={store}>
       <SocketProvider>
-        {children}
+        <WorkspaceTheme>{children}</WorkspaceTheme>
         <Toaster position="bottom-center" />
       </SocketProvider>
     </Provider>

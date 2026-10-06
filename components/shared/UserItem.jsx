@@ -21,9 +21,9 @@ export default function UserItem({
         alignItems={"center"}
         spacing={"1rem"}
         width={"100%"}
-        {...styling}
+        sx={{ transition: "background-color 180ms", ...styling }}
       >
-        <Avatar src={transformImageUrl(avatar)} />
+        <Avatar alt={name} src={transformImageUrl(avatar?.url || avatar)} />
         <Typography
           variant="body1"
           sx={{
@@ -39,6 +39,7 @@ export default function UserItem({
         </Typography>
 
         <IconButton
+          aria-label={`${isAdded ? "Remove" : "Add"} ${name}`}
           onClick={() => handler(userId)}
           disabled={handlerIsLoading}
           size="small"
@@ -49,8 +50,8 @@ export default function UserItem({
               bgcolor: isAdded ? "error.dark" : "primary.dark",
             },
             "&:disabled": {
-              bgcolor: "darkorchid",
-              color: "white",
+              bgcolor: "var(--champ-border)",
+              color: "var(--champ-disabled)",
             },
           }}
         >

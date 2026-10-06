@@ -89,17 +89,17 @@ export default function TiltCard({ children, controls, maxTilt = 7 }) {
               overflow: "hidden",
               isolation: "isolate",
               padding: { xs: "1.75rem 1.25rem", sm: "2.25rem 2rem" },
-              borderRadius: "24px",
+              borderRadius: "var(--champ-card-radius)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               background:
-                "linear-gradient(155deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.86) 55%, rgba(255,247,242,0.9) 100%)",
+                "var(--champ-surface)",
               backdropFilter: "blur(22px) saturate(160%)",
               WebkitBackdropFilter: "blur(22px) saturate(160%)",
-              border: "1px solid rgba(255,255,255,0.65)",
+              border: "1px solid var(--champ-border)",
               boxShadow:
-                "0 32px 70px -22px rgba(63, 20, 8, 0.55), 0 10px 26px -14px rgba(63, 20, 8, 0.35), inset 0 1px 0 rgba(255,255,255,0.9)",
+                "0 16px 45px -22px #30433024, 0 3px 9px #30433003",
             }}
           >
             {/* shimmering top edge */}

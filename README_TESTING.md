@@ -119,3 +119,62 @@ Backend requirements for a browser to log in cross-origin:
 (username + password), reports the HTTP status and message, re-checks
 `GET /user/me` to prove the cookie landed, and only then opens the socket — the
 quickest way to separate a CORS/cookie problem from a socket problem.
+
+## Logged-in workspace UI regression suite
+
+`tests/e2e/workspace.spec.js` covers chat search/type filters, group creation and
+management dialogs, the reply composer, mobile drawers, reduced motion, and the
+admin overview/users/chats/messages screens. It stubs API responses **inside the
+test browser only**; no fixture data or authentication bypass is added to the app.
+
+```bash
+# Terminal 1: local Next dev server (no database needed for this fixture suite)
+npm run dev
+# Terminal 2
+npx playwright install chromium
+npm run test:e2e -- tests/e2e/workspace.spec.js --workers=1
+```
+
+Run against localhost only. If the dev server uses custom `JWT_SECRET`,
+`ADMIN_SECRET_KEY`, or `STEALTHY_NOTE_ADMIN_TOKEN_NAME`, pass the same test values
+to Playwright so its local admin test cookie is valid. The suite verifies UI
+behavior, not real message delivery or database mutations; those still require
+a configured MongoDB and socket backend.
+
+The new unit tests in `components/shared/__tests__` cover conversation filtering
+(including records beyond the initial render window), accessible deletion
+controls, empty states, and admin record search/clear behavior.
+
+For production compilation, `MONGODB_URI` must be defined because the existing
+server DB module validates it at import time. A build-only placeholder can check
+compilation but does not validate database connectivity.
+
+### Board coverage
+
+`tests/e2e/board.spec.js` exercises the actual `/u/[username]` page reached by
+`/board`, not just the redirect. It covers owner Overview/Questions/Showcase/Embed
+tabs, clipboard sharing, question create/delete, showcase visibility and
+pagination, website filters, widget preview/save, anonymous and signed-in visitor
+composers, empty/loading/error/retry states, and 320px/reduced-motion layouts.
+
+```bash
+npm run test:e2e -- tests/e2e/board.spec.js --workers=1
+# Both authenticated workspace and board suites:
+npm run test:e2e -- --workers=1
+```
+
+The board tests also intercept API responses in the browser only. The same-origin
+send fallback is covered with `NEXT_PUBLIC_SOCKET_SERVER_URL` unset; real socket
+message delivery, widget installation, and database writes still need backend
+integration testing. No production fixture data is introduced.
+
+
+### Theme consistency checks
+
+The workspace and board browser suites compare **computed** primary-button,
+canvas, message-bubble, logo, and font styles against the login reference. They
+also cover recovery/admin-login shells and default embed colors. Unit tests in
+`components/styles/__tests__/brand.test.jsx` keep CSS/MUI/chart/widget tokens in
+sync, check text/button contrast, and ensure saved widget colors are not replaced
+by a brand refresh. Existing user-selected widget colors are intentionally not
+expected to match the application theme.

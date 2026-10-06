@@ -11,23 +11,32 @@ import {
   Backdrop,
   Box,
   Button,
-  CircularProgress,
   Drawer,
   Grid,
+  Chip,
+  Paper,
+  Skeleton,
   IconButton,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { memo, useEffect, useState, lazy, Suspense, useCallback, useMemo } from "react";
+import {
+  memo,
+  useEffect,
+  useState,
+  lazy,
+  Suspense,
+  useCallback,
+  useMemo,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AvatarCard from "../../components/shared/AvatarCard";
 import UserItem from "../../components/shared/UserItem";
 import { FullPageLoader } from "../../components/layout/Loaders";
-import { gradientBg } from "../../constants/color";
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 import {
   useGetChatDetailsQuery,
@@ -37,24 +46,28 @@ import {
 } from "../../redux/api/api";
 import {
   setIsAddMember,
+  setIsNewGroup,
+  setIsProfile,
   setIsDeleteMenu,
   setIsMobile,
 } from "../../redux/reducers/misc.reducer";
 
-const ConfirmDeleteDialog = lazy(() =>
-  import("../../components/dialog/ConfirmDeleteDialog")
+const ConfirmDeleteDialog = lazy(
+  () => import("../../components/dialog/ConfirmDeleteDialog"),
 );
 
-const AddMemberDialog = lazy(() =>
-  import("../../components/dialog/AddMemberDialog")
+const AddMemberDialog = lazy(
+  () => import("../../components/dialog/AddMemberDialog"),
 );
 
 import ProtectedRoute from "../../components/auth/ProtectedRoute";
 import Header from "../../components/layout/Header";
+import Profile from "../../components/shared/Profile";
+import WorkspaceEmpty from "../../components/shared/WorkspaceEmpty";
 
 function GroupsContent() {
-  const { isMobile, isDeleteMenu, isAddMember } = useSelector(
-    (state) => state.misc
+  const { isMobile, isDeleteMenu, isAddMember, isProfile } = useSelector(
+    (state) => state.misc,
   );
 
   const router = useRouter();
@@ -64,7 +77,8 @@ function GroupsContent() {
   const chatId = searchParams.get("group");
 
   const [groupName, setGroupName] = useState("Group Details Page");
-  const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("Group Details Page");
+  const [groupNameUpdatedValue, setGroupNameUpdatedValue] =
+    useState("Group Details Page");
   const [isEdit, setIsEdit] = useState(false);
   const [members, setMembers] = useState([]);
 
@@ -76,7 +90,7 @@ function GroupsContent() {
   } = useGetMyGroupsQuery("");
 
   const {
-    data: groupDetails,
+    currentData: groupDetails,
     isLoading: isLoadingGroupDetails,
     isError: isErrorGroupDetails,
     error: errorGroupDetails,
@@ -108,28 +122,43 @@ function GroupsContent() {
   ]);
 
   const navigateBack = useCallback(() => router.push("/"), [router]);
-  const handleMobileOpen = useCallback(() => dispatch(setIsMobile(true)), [dispatch]);
-  const handleMobileClose = useCallback(() => dispatch(setIsMobile(false)), [dispatch]);
-  const openAddMemberHandler = useCallback(() => dispatch(setIsAddMember(true)), [dispatch]);
-  const openConfirmDeleteHandler = useCallback(() => dispatch(setIsDeleteMenu(true)), [dispatch]);
+  const handleMobileOpen = useCallback(
+    () => dispatch(setIsMobile(true)),
+    [dispatch],
+  );
+  const handleMobileClose = useCallback(
+    () => dispatch(setIsMobile(false)),
+    [dispatch],
+  );
+  const openAddMemberHandler = useCallback(
+    () => dispatch(setIsAddMember(true)),
+    [dispatch],
+  );
+  const openConfirmDeleteHandler = useCallback(
+    () => dispatch(setIsDeleteMenu(true)),
+    [dispatch],
+  );
 
   const updateGroupName = useCallback(() => {
     setIsEdit(false);
     if (groupName === groupNameUpdatedValue) return;
-    setGroupName(groupNameUpdatedValue);
+    setGroupName(groupNameUpdatedValue.trim());
     updateGroupNameMutation("Updating group name...", {
       chatId,
-      name: groupNameUpdatedValue,
+      name: groupNameUpdatedValue.trim(),
     });
   }, [chatId, groupName, groupNameUpdatedValue, updateGroupNameMutation]);
 
-  const removeMemberHandler = useCallback(async (memberId) => {
-    if (memberId === groupDetails.chat.creator) return;
-    removeMemberMutation("Removing member...", {
-      chatId,
-      memberId,
-    });
-  }, [chatId, groupDetails?.chat?.creator, removeMemberMutation]);
+  const removeMemberHandler = useCallback(
+    async (memberId) => {
+      if (memberId === groupDetails.chat.creator) return;
+      removeMemberMutation("Removing member...", {
+        chatId,
+        memberId,
+      });
+    },
+    [chatId, groupDetails?.chat?.creator, removeMemberMutation],
+  );
 
   useEffect(() => {
     if (groupDetails) {
@@ -139,7 +168,7 @@ function GroupsContent() {
         groupDetails.chat.members.map((member) => ({
           ...member,
           isAdded: true,
-        }))
+        })),
       );
       setIsEdit(false);
     }
@@ -158,358 +187,401 @@ function GroupsContent() {
   }, [chatId]);
 
   const groupsList = useMemo(() => myGroups?.groups || [], [myGroups?.groups]);
-  const shouldShowIntro = !chatId || !groupDetails?.chat || isLoadingGroupDetails;
+  const shouldShowIntro =
+    !chatId || !groupDetails?.chat || isLoadingGroupDetails;
 
-  const BackButtonToolbar = (
-    <Box
-      sx={{
-          position: "absolute",
-          top: "2rem",
-          right: "2rem",
-      }}
-    >
-      <Tooltip title="Back">
-        <IconButton
-          onClick={navigateBack}
-          sx={{
-            color: "white",
-            transition: "all 0.3s ease-in-out",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              transform: "scale(1.1)",
-            },
-          }}
-        >
-          <KeyboardBackspaceIcon />
-        </IconButton>
-      </Tooltip>
-    </Box>
-  );
-
-  const GroupName = (
-    <Stack
-      width={"100%"}
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"center"}
-      spacing={"1rem"}
-      padding={"3rem"}
-    >
-      {isEdit ? (
-        <>
-          <TextField
-            variant="outlined"
-            value={groupNameUpdatedValue}
-            onChange={(e) => setGroupNameUpdatedValue(e.target.value)}
-          />
-          <IconButton
-            onClick={updateGroupName}
-            disabled={isLoadingUpdateGroupName}
-          >
-            <DoneIcon />
-          </IconButton>
-        </>
-      ) : (
-        <>
-          <Typography variant="h4">{groupName}</Typography>
-          {chatId && (
-            <IconButton
-              onClick={() => setIsEdit(true)}
-              disabled={isLoadingUpdateGroupName}
-            >
-              <EditIcon />
-            </IconButton>
-          )}
-        </>
-      )}
-    </Stack>
-  );
-
-  const ButtonGroup = (
-    <Stack
-      direction={{
-        xs: "column-reverse",
-        sm: "row",
-      }}
-      spacing={"1rem"}
-      p={{
-        xs: "0",
-        sm: "1rem",
-        md: "1rem 4rem",
-      }}
-    >
-      <Button
-        size="large"
-        color="error"
-        variant="contained"
-        startIcon={<DeleteIcon />}
-        onClick={openConfirmDeleteHandler}
-      >
-        Delete Group
-      </Button>
-      <Button
-        size="large"
-        variant="contained"
-        startIcon={<AddIcon />}
-        onClick={openAddMemberHandler}
-      >
-        Add Member
-      </Button>
-    </Stack>
-  );
-
-  return isLoadingMyGroups ? (
+  return (
     <Grid
+      className="workspace-root"
       container
-      height={{ xs: "calc(100vh - 56px)", sm: "calc(100vh - 64px)" }}
-    >
-      <Grid size={12}>
-        <FullPageLoader minHeight="100%" />
-      </Grid>
-    </Grid>
-  ) : (
-    <Grid
-      container
-      height={{ xs: "calc(100vh - 56px)", sm: "calc(100vh - 64px)" }}
+      sx={{ minHeight: "calc(100dvh - 64px)" }}
     >
       <Grid
-        size={{ sm: 4 }}
+        size={{ sm: 4, md: 3 }}
         sx={{
           display: { xs: "none", sm: "block" },
-          background: gradientBg,
-          boxShadow: "2px 0 10px rgba(0,0,0,0.1)",
-          padding: "0.5rem",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
+          bgcolor: "white",
+          borderRight: "1px solid var(--champ-border)",
+          height: "calc(100dvh - 64px)",
+          overflowY: "auto",
         }}
-        width={"100%"}
-        height={"100%"}
-        position={"relative"}
-        overflow={"auto"}
       >
-        <GroupsList myGroups={groupsList} chatId={chatId} />
+        <GroupsList
+          myGroups={groupsList}
+          chatId={chatId}
+          loading={isLoadingMyGroups}
+        />
       </Grid>
-
       <Grid
-        size={{ xs: 12, sm: 8 }}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          position: "relative",
-          padding: "0 0 1.5rem 0",
-          background: gradientBg,
-          color: "white",
-        }}
+        size={{ xs: 12, sm: 8, md: 9 }}
+        sx={{ p: { xs: 2, md: 4 }, minWidth: 0 }}
       >
-        {BackButtonToolbar}
-
-        {groupName && (
-          <>
-            {GroupName}
-
-            <Typography
-              margin={"2rem"}
-              alignSelf={"flex-start"}
-              variant="body1"
-            >
-              Members
-            </Typography>
-            <Stack
-              maxWidth={"45rem"}
-              width={"100%"}
-              boxSizing={"border-box"}
-              padding={{
-                xs: "0",
-                sm: "1rem",
-                md: "1rem 4rem",
-              }}
-              spacing={"2rem"}
-              bgcolor={gradientBg}
-              height={"50vh"}
-              overflow={"auto"}
-              sx={{
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-              }}
-            >
-              {shouldShowIntro && (
-                <Typography
-                  variant="body2"
-                  color="white"
-                  fontSize={"3rem"}
-                  marginLeft={"1rem"}
-                  fontWeight={600}
-                  sx={{
-                    display: "inline-block",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    padding: "0.5rem",
-                    borderRadius: "1rem",
-                  }}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ mb: 3 }}
+        >
+          <Button
+            startIcon={<KeyboardBackspaceIcon />}
+            onClick={navigateBack}
+            color="inherit"
+          >
+            Back to messages
+          </Button>
+          <Button
+            onClick={handleMobileOpen}
+            variant="outlined"
+            sx={{ display: { xs: "inline-flex", sm: "none" } }}
+          >
+            Your groups
+          </Button>
+          <Chip
+            label="GROUP WORKSPACE"
+            size="small"
+            sx={{
+              display: { xs: "none", sm: "flex" },
+              fontSize: 10,
+              letterSpacing: ".1em",
+              bgcolor: "#e9eefb",
+              color: "primary.main",
+            }}
+          />
+        </Stack>
+        {shouldShowIntro ? (
+          isLoadingGroupDetails || isLoadingMyGroups ? (
+            <Stack spacing={2} aria-label="Loading groups">
+              <Skeleton height={120} variant="rounded" />
+              <Skeleton height={260} variant="rounded" />
+            </Stack>
+          ) : (
+            <Box sx={{ display: "flex", minHeight: "65vh" }}>
+              <WorkspaceEmpty
+                eyebrow="BETTER, TOGETHER"
+                title="A place for your people."
+                description="Bring your favorite people into one conversation. Select a group to manage its members, or make room for a new one."
+              >
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={() => dispatch(setIsNewGroup(true))}
                 >
-                  Here members can be added or removed from the group. Select a
-                  group to view its details.
-                </Typography>
-              )}
-              {groupDetails && members.length === 0 ? (
-                <Typography textAlign="center" color="white">
-                  No members found in this group.
-                </Typography>
+                  Create a group
+                </Button>
+              </WorkspaceEmpty>
+            </Box>
+          )
+        ) : (
+          <Stack
+            key={chatId}
+            className="workspace-reveal"
+            spacing={3}
+            sx={{ maxWidth: 920, mx: "auto" }}
+          >
+            <Paper
+              elevation={0}
+              sx={{
+                p: { xs: 2.5, md: 4 },
+                border: "1px solid var(--champ-border)",
+                borderRadius: 4,
+                background: "linear-gradient(120deg, #fff 55%, var(--champ-soft))",
+              }}
+            >
+              <Typography
+                variant="overline"
+                color="primary"
+                sx={{ letterSpacing: ".12em" }}
+              >
+                Your group
+              </Typography>
+              {isEdit ? (
+                <Stack
+                  component="form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (groupNameUpdatedValue.trim()) updateGroupName();
+                  }}
+                  direction="row"
+                  useFlexGap
+                  flexWrap="wrap"
+                  gap={1}
+                  sx={{ mt: 1 }}
+                >
+                  <TextField
+                    autoFocus
+                    label="Group name"
+                    size="small"
+                    value={groupNameUpdatedValue}
+                    onChange={(e) => setGroupNameUpdatedValue(e.target.value)}
+                    sx={{ flex: 1, minWidth: 160 }}
+                  />
+                  <IconButton
+                    aria-label="Save group name"
+                    type="submit"
+                    color="primary"
+                    disabled={
+                      isLoadingUpdateGroupName || !groupNameUpdatedValue.trim()
+                    }
+                  >
+                    <DoneIcon />
+                  </IconButton>
+                  <Button
+                    onClick={() => {
+                      setIsEdit(false);
+                      setGroupNameUpdatedValue(groupName);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Stack>
               ) : (
                 <Stack
-                  spacing={0.5}
-                  sx={{
-                    "&::-webkit-scrollbar": {
-                      display: "none",
-                    },
-                  }}
+                  direction="row"
+                  gap={1}
+                  alignItems="center"
+                  sx={{ mt: 0.5 }}
                 >
-                  <>
-                    {isLoadingRemoveMember ? (
-                      <>
-                        <CircularProgress
-                          size={20}
-                          sx={{
-                            color: "white",
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                          }}
-                        />
-                      </>
-                    ) : (
-                      members.map((user) => (
-                        <UserItem
-                          key={user._id}
-                          user={user}
-                          isAdded={user.isAdded}
-                          handler={removeMemberHandler}
-                          styling={{
-                            boxShadow: "0 0 0.5rem rgba(0, 0, 0, 0.2)",
-                            padding: "1rem 2rem",
-                            borderRadius: "1rem",
-                            bgcolor: "rgba(25, 25, 25, 0.5)",
-                          }}
-                        />
-                      ))
-                    )}
-                  </>
+                  <Typography
+                    component="h1"
+                    variant="h4"
+                    sx={{ overflowWrap: "anywhere", minWidth: 0 }}
+                  >
+                    {groupName}
+                  </Typography>
+                  <Tooltip title="Rename group">
+                    <IconButton
+                      aria-label="Rename group"
+                      onClick={() => setIsEdit(true)}
+                      disabled={isLoadingUpdateGroupName}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </Stack>
               )}
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                {members.length} {members.length === 1 ? "member" : "members"} ·
+                A shared space to stay connected
+              </Typography>
+              <Button
+                component={Link}
+                href={`/chat/${chatId}`}
+                variant="outlined"
+                sx={{ mt: 2.5, bgcolor: "white" }}
+              >
+                Open conversation
+              </Button>
+            </Paper>
+            <Paper
+              elevation={0}
+              sx={{
+                border: "1px solid var(--champ-border)",
+                borderRadius: 4,
+                overflow: "hidden",
+              }}
+            >
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                gap={1}
+                sx={{ p: { xs: 2, md: 3 }, borderBottom: "1px solid var(--champ-border)" }}
+              >
+                <Box>
+                  <Typography component="h2" variant="h6">
+                    Members{" "}
+                    <Box
+                      component="span"
+                      sx={{ color: "text.secondary", fontSize: 14, ml: 1 }}
+                    >
+                      {members.length}
+                    </Box>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    The people in this conversation.
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={openAddMemberHandler}
+                  sx={{ flexShrink: 0 }}
+                >
+                  Add member
+                </Button>
+              </Stack>
+              <Stack
+                component="ul"
+                sx={{
+                  p: { xs: 1, md: 2 },
+                  maxHeight: "45vh",
+                  overflowY: "auto",
+                  listStyle: "none",
+                }}
+                aria-busy={isLoadingRemoveMember}
+              >
+                {members.length === 0 ? (
+                  <Typography
+                    sx={{ p: 3, textAlign: "center" }}
+                    color="text.secondary"
+                  >
+                    No members found in this group.
+                  </Typography>
+                ) : (
+                  members.map((member) => (
+                    <UserItem
+                      key={member._id}
+                      user={member}
+                      isAdded={member.isAdded}
+                      handler={removeMemberHandler}
+                      handlerIsLoading={
+                        isLoadingRemoveMember ||
+                        member._id === groupDetails.chat.creator
+                      }
+                      styling={{ p: 1.5, borderRadius: 2, bgcolor: "var(--champ-field)" }}
+                    />
+                  ))
+                )}
+              </Stack>
+            </Paper>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              alignItems={{ xs: "flex-start", sm: "center" }}
+              justifyContent="space-between"
+              gap={2}
+              sx={{ p: 2.5, border: "1px solid #ecdde1", borderRadius: 3 }}
+            >
+              <Box>
+                <Typography fontWeight={650} fontSize={14}>
+                  Delete this group
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  This permanently removes the group and its conversations.
+                </Typography>
+              </Box>
+              <Button
+                color="error"
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                onClick={openConfirmDeleteHandler}
+                sx={{ flexShrink: 0 }}
+              >
+                Delete group
+              </Button>
             </Stack>
-
-            {chatId && ButtonGroup}
-          </>
+          </Stack>
         )}
       </Grid>
-
       {isAddMember && (
-        <Suspense fallback={<Backdrop open={true} />}>
+        <Suspense fallback={<Backdrop open />}>
           <AddMemberDialog chatId={chatId} />
         </Suspense>
       )}
-
       {isDeleteMenu && (
-        <Suspense fallback={<Backdrop open={true} />}>
+        <Suspense fallback={<Backdrop open />}>
           <ConfirmDeleteDialog chatId={chatId} />
         </Suspense>
       )}
-
+      <Drawer
+        anchor="right"
+        open={isProfile}
+        onClose={() => dispatch(setIsProfile(false))}
+        slotProps={{ paper: { sx: { width: "min(85vw, 360px)" } } }}
+      >
+        <Profile />
+      </Drawer>
       <Drawer
         anchor="left"
         open={isMobile}
         onClose={handleMobileClose}
-        sx={{
-          display: { xs: "block", sm: "none" },
-        }}
-        slotProps={{
-          paper: {
-            sx: { width: "75vw", background: gradientBg, padding: "0.5rem" },
-          },
-        }}
+        slotProps={{ paper: { sx: { width: "min(85vw, 360px)" } } }}
       >
-        <GroupsList w={"70vw"} myGroups={groupsList} chatId={chatId} />
+        <GroupsList
+          myGroups={groupsList}
+          chatId={chatId}
+          loading={isLoadingMyGroups}
+        />
       </Drawer>
     </Grid>
   );
 }
 
-const GroupsList = memo(({ w = "100%", myGroups = [], chatId }) => {
-  const renderedGroups = useMemo(
-    () =>
-      myGroups.map((group) => (
-        <GroupListItem group={group} key={group._id} chatId={chatId} />
-      )),
-    [myGroups, chatId]
-  );
-
-  return (
-    <Stack sx={{ padding: "0.25rem" }} width={w} height={"100%"}>
-      {myGroups.length > 0 ? (
-        renderedGroups
-      ) : (
-        <Typography textAlign="center" padding="1rem" color="white">
-          No Groups Found
-        </Typography>
-      )}
-    </Stack>
-  );
-});
-
-const GroupListItem = memo(({ group, chatId }) => {
-  const { name, avatar, _id } = group;
-
+const GroupsList = memo(({ myGroups = [], chatId, loading }) => {
   const dispatch = useDispatch();
-  const handleMobileClose = useCallback(
-    () => dispatch(setIsMobile(false)),
-    [dispatch]
-  );
-
   return (
-    <Link
-      href={`?group=${_id}`}
-      onClick={(e) => {
-        if (chatId === _id) e.preventDefault();
-        handleMobileClose();
-      }}
-      style={{
-        textDecoration: "none",
-        color: "#333",
-        padding: "0.5rem",
-        fontWeight: "bold",
-        borderRadius: "8px",
-        transition: "all 0.3s ease-in-out",
-        display: "inline-block",
-        width: "100%",
-      }}
+    <Stack
+      className="workspace-root"
+      sx={{ p: 2.5, bgcolor: "white", minHeight: "100%" }}
+      spacing={1}
     >
       <Stack
         direction="row"
-        spacing={3}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1rem",
-          padding: "0.5rem",
-          paddingLeft: "1rem",
-          borderRadius: "0.75rem",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-          transition: "background-color 0.3s ease, transform 0.2s ease",
-          "&:hover": {
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-            transform: "scale(1.05)",
-          },
-        }}
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ mb: 1 }}
       >
-        <AvatarCard avatar={avatar} />
-        <Typography fontSize="1rem" fontWeight="500" color="white">
-          {name}
+        <Typography component="h2" variant="h6">
+          Your groups
         </Typography>
+        <Chip
+          size="small"
+          label={myGroups.length}
+          sx={{ bgcolor: "var(--champ-soft)", color: "primary.main" }}
+        />
       </Stack>
-    </Link>
+      <Typography variant="body2" color="text.secondary" sx={{ pb: 2 }}>
+        Good company, all in one place.
+      </Typography>
+      <Button
+        variant="outlined"
+        startIcon={<AddIcon />}
+        onClick={() => {
+          dispatch(setIsMobile(false));
+          dispatch(setIsNewGroup(true));
+        }}
+        sx={{ mb: "20px !important" }}
+      >
+        Create a group
+      </Button>
+      {loading ? (
+        <Skeleton variant="rounded" height={160} />
+      ) : myGroups.length ? (
+        myGroups.map((group) => (
+          <Link
+            key={group._id}
+            href={`?group=${group._id}`}
+            className="chat-list-link"
+            aria-current={chatId === group._id ? "page" : undefined}
+            onClick={() => dispatch(setIsMobile(false))}
+          >
+            <Stack
+              direction="row"
+              gap={1.5}
+              alignItems="center"
+              sx={{ p: 1.5 }}
+            >
+              <AvatarCard avatar={group.avatar} />
+              <Box sx={{ minWidth: 0 }}>
+                <Typography fontWeight={650} fontSize={14} noWrap>
+                  {group.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Manage group
+                </Typography>
+              </Box>
+            </Stack>
+          </Link>
+        ))
+      ) : (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ p: 2, textAlign: "center" }}
+        >
+          No groups yet. Start one with your friends.
+        </Typography>
+      )}
+    </Stack>
   );
 });
 

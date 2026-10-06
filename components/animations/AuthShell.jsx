@@ -10,7 +10,8 @@ import {
 } from "react";
 import { Box, CircularProgress, Container } from "@mui/material";
 import { motion, MotionConfig, useAnimationControls } from "framer-motion";
-import AuthBackdrop from "./AuthBackdrop";
+import Link from "next/link";
+import Brand from "../shared/Brand";
 import WelcomeStage from "./WelcomeStage";
 import TiltCard from "./TiltCard";
 import { CARD_ENTRANCE, SHAKE_KEYFRAMES } from "./motionConfig";
@@ -29,8 +30,8 @@ const AuthShakeContext = createContext(() => {});
 export const useAuthShake = () => useContext(AuthShakeContext);
 
 /**
- * Shared stage for the auth screens: living gradient backdrop, the tilting
- * glass card, entrance choreography and the error shake — all in one place so
+ * Shared stage for the auth screens: login-derived cream canvas, a soft
+ * white card, entrance choreography and the error shake — all in one place so
  * login / sign up / forgot / verify stay visually consistent.
  */
 export default function AuthShell({
@@ -93,6 +94,7 @@ export default function AuthShell({
           className={`auth-motion-root ${className}`.trim()}
           sx={{
             position: "relative",
+            bgcolor: "var(--champ-canvas)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -103,7 +105,7 @@ export default function AuthShell({
             "@supports (min-height: 100dvh)": { minHeight: "100dvh" },
           }}
         >
-          <AuthBackdrop />
+          <Box aria-hidden="true" sx={{ position: "absolute", inset: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 25% 15%, var(--champ-soft), transparent 65%)" }} />
 
           <Container
             component="main"
@@ -112,6 +114,8 @@ export default function AuthShell({
               position: "relative",
               zIndex: 1,
               display: "flex",
+              flexDirection: "column",
+              gap: 4,
               justifyContent: "center",
               alignItems: "center",
               // auto margins (instead of relying on align-items) keep a tall
@@ -119,6 +123,7 @@ export default function AuthShell({
               my: "auto",
             }}
           >
+            <Link href="/login" aria-label="Chat Champ home" style={{ color: "inherit", textDecoration: "none" }}><Brand /></Link>
             <TiltCard controls={controls} maxTilt={maxTilt}>
               <Suspense
                 fallback={

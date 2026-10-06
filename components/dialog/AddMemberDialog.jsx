@@ -1,7 +1,10 @@
 "use client";
 
+import { CloseRounded } from "@mui/icons-material";
+
 import {
   Box,
+  IconButton,
   Button,
   Dialog,
   DialogTitle,
@@ -72,21 +75,18 @@ export default function AddMemberDialog({ chatId }) {
   };
 
   return (
-    <Dialog open={isAddMember} onClose={closeHandler}>
+    <Dialog className="workspace-root" aria-labelledby="add-member-title" open={isAddMember} onClose={closeHandler} maxWidth="sm" fullWidth>
       <Box
         sx={{
-          p: "1rem",
-          width: {
-            xs: "80vw",
-            sm: "70vw",
-            md: "50vw",
-            lg: "30vw",
-          },
+          p: { xs: 2.5, sm: 4 },
+          width: "100%",
+          position: "relative",
           height: "auto",
           background: dialogBg,
         }}
       >
-        <DialogTitle textAlign={"center"}>Add Member</DialogTitle>
+        <IconButton aria-label="Close dialog" onClick={closeHandler} sx={{ position: "absolute", right: 10, top: 10 }}><CloseRounded /></IconButton>
+        <DialogTitle id="add-member-title" textAlign={"center"}>Add Member</DialogTitle>
         <Stack spacing={"1rem"}>
           <List
             key={"AddMemberList"}
@@ -96,7 +96,7 @@ export default function AddMemberDialog({ chatId }) {
               borderRadius: "8px",
               backgroundColor: "white",
               p: "0.5rem",
-              boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+              border: "1px solid var(--champ-border)",
               "&::-webkit-scrollbar": {
                 display: "none",
               },
@@ -141,13 +141,13 @@ export default function AddMemberDialog({ chatId }) {
           paddingTop={2}
           marginTop={2}
         >
-          <Button color="error" variant="contained" onClick={closeHandler}>
+          <Button color="inherit" variant="text" onClick={closeHandler}>
             Cancel
           </Button>
           <Button
-            color="success"
+            color="primary"
             variant="contained"
-            disabled={isLoadingAddMember}
+            disabled={isLoadingAddMember || selectedMembers.length === 0}
             onClick={addMembersSubmitHandler}
           >
             Submit Changes

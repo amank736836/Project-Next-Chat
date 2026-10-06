@@ -23,7 +23,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
+import Brand from "../shared/Brand";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import axios from "axios";
 import { useState, lazy, Suspense } from "react";
 import toast from "react-hot-toast";
@@ -46,9 +48,10 @@ const SearchDialog = lazy(() => import("../../specific/Search"));
 const NotificationsDialog = lazy(() => import("../../specific/Notifications"));
 const NewGroupDialog = lazy(() => import("../../specific/NewGroup"));
 
-export default function Header() {
+export default function Header({ alwaysShowProfile = false }) {
   const dispatch = useDispatch();
   const router = useRouter();
+  const pathname = usePathname();
 
   const { isMobile, isSearch, isNotification, isNewGroup, isProfile } =
     useSelector((state) => state.misc);
@@ -108,50 +111,41 @@ export default function Header() {
         sx={{
           top: 0,
           zIndex: (theme) => theme.zIndex.appBar,
-          bgcolor: "#4facfe",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+          bgcolor: "#ffffff",
+          color: "var(--champ-ink)",
+          borderBottom: "1px solid var(--champ-border)",
+          boxShadow: "none",
         }}
       >
-        <Toolbar>
+        <Toolbar className="workspace-root" sx={{ minHeight: "64px !important", bgcolor: "white", px: { xs: 1, sm: 3 }, gap: { xs: 0, sm: 1 } }}>
           <Box
-            onClick={() => router.push("/")}
+            component={Link}
+            href="/"
+            aria-label="Chat Champ home"
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 1,
               cursor: "pointer",
+              color: "inherit",
+              textDecoration: "none",
               transition: "opacity 0.3s",
               "&:hover": { opacity: 0.9 },
             }}
           >
-            <Image
-              src="/logo.svg"
-              alt="Chat Champ logo"
-              width={32}
-              height={32}
-              priority
-            />
-            <Typography
-              variant="h6"
-              sx={{
-                display: { xs: "none", sm: "block" },
-                fontWeight: 700,
-                letterSpacing: "0.3px",
-              }}
-            >
-              Chat Champ
-            </Typography>
+            <Brand className="brand-responsive" />
+
           </Box>
 
           <Box sx={{ display: { xs: "block", sm: "none" } }}>
-            <IconButton color="inherit" onClick={openMobile}>
+            <IconButton aria-label="Open conversations" color="inherit" onClick={openMobile}>
               {isMobile ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Box display="flex" gap={1}>
+          <Box display="flex" gap={{ xs: 0, sm: 0.5 }}>
             <IconBtn
               title="Search"
               onClick={openSearch}
@@ -167,16 +161,17 @@ export default function Header() {
               onClick={openNotification}
               icon={<NotificationsIcon />}
               value={notificationCount}
-              showZero
               badgeColor={notificationCount > 0 ? "error" : "info"}
             />
             <IconBtn
               title="Manage Groups"
+              active={pathname === "/groups"}
               onClick={() => router.push("/groups")}
               icon={<GroupIcon />}
             />
             <IconBtn
               title="My Board"
+              active={pathname === "/board" || pathname === `/u/${user?.username}`}
               onClick={() => router.push("/board")}
               icon={<ForumIcon />}
             />
@@ -187,7 +182,7 @@ export default function Header() {
             />
           </Box>
 
-          <Box sx={{ display: { xs: "block", lg: "none" } }}>
+          <Box sx={{ display: { xs: "block", lg: alwaysShowProfile ? "block" : "none" } }}>
             <IconBtn
               title="Profile"
               onClick={openProfile}
@@ -218,20 +213,27 @@ export default function Header() {
   );
 }
 
-const IconBtn = ({ title, onClick, icon, value, showZero = false, badgeColor = "error" }) => {
+const IconBtn = ({ title, onClick, icon, value, showZero = false, badgeColor = "error", active = false }) => {
   const shouldShowBadge = showZero || Boolean(value);
 
   return (
     <Tooltip title={title} arrow>
       <IconButton
+        aria-label={title}
+        aria-current={active ? "page" : undefined}
         color="inherit"
         onClick={onClick}
         size="large"
         sx={{
+          width: { xs: 32, sm: 42 },
+          height: { xs: 40, sm: 42 },
+          borderRadius: "12px",
+          color: active ? "var(--champ-primary)" : "var(--champ-muted)",
+          bgcolor: active ? "var(--champ-soft)" : "transparent",
           transition: "transform 0.2s, background-color 0.3s",
           "&:hover": {
-            transform: "scale(1.1)",
-            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            transform: "translateY(-2px)",
+            backgroundColor: "var(--champ-soft)",
           },
         }}
       >

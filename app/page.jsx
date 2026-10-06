@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, Stack, Typography, Drawer, Grid, Skeleton } from "@mui/material";
+import { Box, Button, Stack, Typography, Drawer, Grid, Skeleton } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { gradientBg } from "../constants/color";
+import WorkspaceEmpty from "../components/shared/WorkspaceEmpty";
+import { ForumOutlined, GroupAddOutlined } from "@mui/icons-material";
 import {
   NEW_MESSAGE_ALERT,
   NEW_REQUEST,
@@ -22,6 +23,8 @@ import {
 import {
   setIsDeleteMenu,
   setIsMobile,
+  setIsSearch,
+  setIsNewGroup,
   setIsProfile,
   setSelectedDeleteChat,
 } from "../redux/reducers/misc.reducer";
@@ -158,13 +161,13 @@ function HomeContent() {
           sx={{
             "& .MuiDrawer-paper": {
               width: "80vw",
-              background: gradientBg,
+              background: "var(--champ-canvas)",
               boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
             },
           }}
-          onClick={handleMobileClose}
         >
           <ChatList
+            onSelectChat={handleMobileClose}
             w="80vw"
             chats={chatListData}
             chatId={null}
@@ -189,7 +192,7 @@ function HomeContent() {
                 sm: "75vw",
                 md: "42vw",
               },
-              background: gradientBg,
+              background: "var(--champ-canvas)",
               boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
             },
           }}
@@ -198,12 +201,12 @@ function HomeContent() {
         </Drawer>
       )}
 
-      <Grid container height={"calc(100vh - 4rem)"}>
+      <Grid className="workspace-root" container height="calc(100dvh - 64px)">
         <Grid
           size={{ sm: 4, md: 5, lg: 3 }}
           sx={{
             display: { xs: "none", sm: "block" },
-            background: gradientBg,
+            background: "var(--champ-canvas)",
           }}
           height={"100%"}
         >
@@ -225,45 +228,19 @@ function HomeContent() {
         <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height={"100%"}>
           <Box
             sx={{
-              minHeight: "calc(100vh - 4rem)",
+              height: "100%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: gradientBg,
+              background: "var(--champ-canvas)",
               padding: "1rem",
             }}
           >
-            <Stack
-              spacing={3}
-              sx={{
-                maxWidth: "600px",
-                padding: "2rem",
-                borderRadius: "12px",
-                backgroundColor: "rgba(255, 255, 255, 0.9)",
-                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h4" fontWeight={600} color="primary">
-                Welcome to Chat App!
-              </Typography>
-              <Typography variant="h6" color="textSecondary">
-                A modern chat application with authentication, group chat, and
-                anonymous messaging.
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                ✨ Create and manage groups effortlessly.
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                🔒 Chat anonymously with random users.
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                🎉 Enjoy a seamless and user-friendly experience.
-              </Typography>
-              <Typography variant="h6" fontWeight={500} color="secondary">
-                Select a chat to start messaging!
-              </Typography>
-            </Stack>
+            <WorkspaceEmpty title="Good conversations start here." description="A quick hello. A shared idea. Your next great conversation is just a message away.">
+              <Button variant="contained" startIcon={<ForumOutlined />} onClick={() => dispatch(setIsSearch(true))}>Find a friend</Button>
+              <Button variant="outlined" startIcon={<GroupAddOutlined />} onClick={() => dispatch(setIsNewGroup(true))}>Create a group</Button>
+              <Button sx={{ display: { xs: "inline-flex", sm: "none" }, width: "100%" }} onClick={() => dispatch(setIsMobile(true))}>Browse your conversations</Button>
+            </WorkspaceEmpty>
           </Box>
         </Grid>
 

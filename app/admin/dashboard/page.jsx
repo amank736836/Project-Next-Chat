@@ -1,31 +1,25 @@
 "use client";
 
 import {
-  AdminPanelSettings as AdminPanelSettingsIcon,
   Group as GroupIcon,
   Message as MessageIcon,
-  Notifications as NotificationsIcon,
   Person as PersonIcon,
 } from "@mui/icons-material";
-import { Box, Container, Paper, Stack, Typography } from "@mui/material";
-import { motion } from "framer-motion";
+import { Box, Button, Container, Paper, Stack, Typography } from "@mui/material";
+import Link from "next/link";
+import { ArrowForwardRounded, RefreshRounded } from "@mui/icons-material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import {
   AdminReveal,
   AnimatedCounter,
 } from "../../../components/animations/AdminMotion";
-import useReducedMotionSafe from "../../../components/animations/useReducedMotionSafe";
+
 import AdminAsyncContent from "../../../components/layout/AdminAsyncContent";
-import {
-  CurveButton,
-  SearchField,
-} from "../../../components/styles/StyledComponents";
 import { useErrors } from "../../../hooks/useHooks";
 import { useGetDashboardStatsQuery } from "../../../redux/api/api";
 import { DoughnutChart, LineChart } from "../../../specific/Charts";
 
-const MotionCurveButton = motion.create(CurveButton);
 const surfaceSx = {
   borderRadius: "1.25rem",
   border: "1px solid rgba(15, 23, 42, 0.06)",
@@ -47,7 +41,7 @@ function Clock() {
     : "Updating clock…";
 }
 
-function Widget({ title, value, Icon, delay, accent }) {
+function Widget({ title, value, Icon, delay, accent, href }) {
   return (
     <AdminReveal
       component={Paper}
@@ -65,7 +59,7 @@ function Widget({ title, value, Icon, delay, accent }) {
             borderRadius: "1rem",
             display: "grid",
             placeItems: "center",
-            background: `${accent}14`,
+            background: `color-mix(in srgb, ${accent} 9%, transparent)`,
             color: accent,
           }}
         >
@@ -78,19 +72,19 @@ function Widget({ title, value, Icon, delay, accent }) {
           <Typography
             component="div"
             fontSize={{ xs: "1.6rem", lg: "1.9rem" }}
-            fontWeight={800}
+            fontWeight={600}
           >
             <AnimatedCounter value={value} />
           </Typography>
         </Box>
       </Stack>
+      <Button component={Link} href={href} endIcon={<ArrowForwardRounded fontSize="small" />} size="small" sx={{ mt: 2, px: 0, color: accent }}>View details</Button>
     </AdminReveal>
   );
 }
 
 export default function Dashboard() {
-  const reducedMotion = useReducedMotionSafe();
-  const { data, isLoading, isError, error, refetch } =
+  const { data, isLoading, isFetching, isError, error, refetch } =
     useGetDashboardStatsQuery();
   const stats = data?.stats;
 
@@ -109,7 +103,7 @@ export default function Dashboard() {
           <Typography
             variant="h4"
             component="h1"
-            fontWeight={800}
+            fontWeight={600}
             letterSpacing="-0.03em"
           >
             Dashboard
@@ -119,62 +113,14 @@ export default function Dashboard() {
           </Typography>
         </AdminReveal>
 
-        <AdminReveal
-          component={Paper}
-          elevation={0}
-          delay={0.05}
-          sx={{ ...surfaceSx, p: { xs: 2, md: 3 }, mb: 3 }}
-        >
-          <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center">
-            <AdminPanelSettingsIcon
-              sx={{ fontSize: { xs: "2rem", sm: "2.5rem" } }}
-              aria-hidden="true"
-            />
-            <SearchField
-              placeholder="Search…"
-              aria-label="Search admin portal"
-              sx={{
-                width: "100%",
-                minWidth: 0,
-                px: { xs: 2, sm: 3 },
-                transition: "box-shadow 0.2s ease",
-                "&:focus-visible": {
-                  boxShadow: "0 0 0 3px rgba(79, 172, 254, 0.4)",
-                },
-              }}
-            />
-            <MotionCurveButton
-              whileHover={reducedMotion ? undefined : { scale: 1.03 }}
-              whileTap={reducedMotion ? undefined : { scale: 0.96 }}
-              sx={{
-                px: { xs: 2, sm: 3 },
-                "&:focus-visible": {
-                  outline: "3px solid #4facfe",
-                  outlineOffset: 3,
-                },
-              }}
-            >
-              Search
-            </MotionCurveButton>
-            <motion.span
-              whileHover={
-                reducedMotion ? undefined : { rotate: [0, -12, 12, -6, 0] }
-              }
-              transition={{ duration: 0.4 }}
-              style={{ display: "inline-flex" }}
-              aria-hidden="true"
-            >
-              <NotificationsIcon />
-            </motion.span>
+        <AdminReveal component={Paper} elevation={0} delay={0.05}
+          sx={{ ...surfaceSx, p: { xs: 3, md: 4 }, mb: 3, background: "linear-gradient(110deg, var(--champ-surface), var(--champ-soft))", color: "var(--champ-ink)", overflow: "hidden", position: "relative" }}>
+          <Box aria-hidden="true" sx={{ position: "absolute", right: -35, top: -65, width: 240, height: 240, borderRadius: "50%", border: "35px solid var(--champ-mint)" }} />
+          <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems={{ xs: "flex-start", sm: "center" }} gap={3} sx={{ position: "relative" }}>
+            <Box><Typography variant="overline" sx={{ letterSpacing: ".15em", color: "var(--champ-muted)" }}>COMMUNITY OVERVIEW</Typography><Typography variant="h5" sx={{ mt: .5 }}>Small conversations. Big connections.</Typography><Typography variant="body2" sx={{ mt: 1, color: "var(--champ-muted)" }}>Keep a pulse on your community, all from one place.</Typography></Box>
+            <Button variant="outlined" onClick={refetch} disabled={isFetching} startIcon={<RefreshRounded />} sx={{ color: "var(--champ-ink)", borderColor: "var(--champ-border)", flexShrink: 0, "&.Mui-disabled": { color: "var(--champ-muted)" } }}>{isFetching ? "Refreshing…" : "Refresh overview"}</Button>
           </Stack>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            textAlign="center"
-            sx={{ mt: 2, fontVariantNumeric: "tabular-nums" }}
-          >
-            <Clock />
-          </Typography>
+          <Typography variant="caption" sx={{ display: "block", mt: 3, color: "var(--champ-muted)", fontVariantNumeric: "tabular-nums" }}><Clock /></Typography>
         </AdminReveal>
 
         <Box
@@ -186,24 +132,27 @@ export default function Dashboard() {
           }}
         >
           <Widget
+            href="/admin/users"
             title="Total Users"
             value={stats?.totalUsers || 0}
             Icon={PersonIcon}
-            accent="#2694ab"
+            accent="var(--champ-primary)"
             delay={0.1}
           />
           <Widget
+            href="/admin/chats"
             title="Total Chats"
             value={stats?.totalChats || 0}
             Icon={GroupIcon}
-            accent="#4b0cc0"
+            accent="var(--champ-sage)"
             delay={0.16}
           />
           <Widget
+            href="/admin/messages"
             title="Total Messages"
             value={stats?.totalMessages || 0}
             Icon={MessageIcon}
-            accent="#df755b"
+            accent="var(--champ-warm)"
             delay={0.22}
           />
         </Box>
@@ -232,8 +181,9 @@ export default function Dashboard() {
               fontWeight={700}
               sx={{ mb: 3 }}
             >
-              Last Messages
+              Message activity
             </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: -2, mb: 3 }}>Conversations over the last 7 days</Typography>
             <LineChart value={stats?.last7DaysMessages || []} />
           </AdminReveal>
           <AdminReveal

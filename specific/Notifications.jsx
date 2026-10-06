@@ -1,8 +1,11 @@
 "use client";
 
+import { CloseRounded } from "@mui/icons-material";
+
 import {
   Avatar,
   Box,
+  IconButton,
   Button,
   Dialog,
   DialogTitle,
@@ -105,16 +108,12 @@ export default function Notifications() {
   );
 
   return (
-    <Dialog open={isNotification} onClose={closeNotification}>
+    <Dialog className="workspace-root" aria-labelledby="notifications-title" open={isNotification} onClose={closeNotification} maxWidth="sm" fullWidth>
       <Box
         sx={{
-          p: "1rem",
-          width: {
-            xs: "80vw",
-            sm: "70vw",
-            md: "50vw",
-            lg: "30vw",
-          },
+          p: { xs: 2.5, sm: 4 },
+          width: "100%",
+          position: "relative",
           background: dialogBg,
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           "&::-webkit-scrollbar": {
@@ -123,7 +122,8 @@ export default function Notifications() {
           overflow: "auto",
         }}
       >
-        <DialogTitle
+        <IconButton aria-label="Close dialog" onClick={closeNotification} sx={{ position: "absolute", right: 10, top: 10 }}><CloseRounded /></IconButton>
+        <DialogTitle id="notifications-title"
           textAlign="center"
           fontWeight={600}
           color="#333"
@@ -139,7 +139,7 @@ export default function Notifications() {
             borderRadius: "8px",
             backgroundColor: "white",
             p: "0.5rem",
-            boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+            border: "1px solid var(--champ-border)",
             "&::-webkit-scrollbar": {
               display: "none",
             },

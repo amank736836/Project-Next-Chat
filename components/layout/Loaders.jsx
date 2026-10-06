@@ -78,7 +78,7 @@ export function TypingLoader({ username }) {
         height={10}
         style={{
           animationDelay: "0.1s",
-          background: "linear-gradient(45deg, #f3ec78, #af4261)",
+          background: "linear-gradient(45deg, var(--champ-primary), var(--champ-mint-strong))",
         }}
       />
       <BouncingSkeleton
@@ -87,7 +87,7 @@ export function TypingLoader({ username }) {
         height={10}
         style={{
           animationDelay: "0.2s",
-          background: "linear-gradient(45deg, #f3ec78, #af4261)",
+          background: "linear-gradient(45deg, var(--champ-primary), var(--champ-mint-strong))",
         }}
       />
       <BouncingSkeleton
@@ -96,7 +96,7 @@ export function TypingLoader({ username }) {
         height={10}
         style={{
           animationDelay: "0.4s",
-          background: "linear-gradient(45deg, #f3ec78, #af4261)",
+          background: "linear-gradient(45deg, var(--champ-primary), var(--champ-mint-strong))",
         }}
       />
       <BouncingSkeleton
@@ -105,7 +105,7 @@ export function TypingLoader({ username }) {
         height={10}
         style={{
           animationDelay: "0.6s",
-          background: "linear-gradient(45deg, #f3ec78, #af4261)",
+          background: "linear-gradient(45deg, var(--champ-primary), var(--champ-mint-strong))",
         }}
       />
     </Stack>

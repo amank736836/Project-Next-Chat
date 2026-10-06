@@ -1,9 +1,12 @@
 "use client";
 
+import { CloseRounded } from "@mui/icons-material";
+
 import { useInputValidation } from "6pp";
 import { Search as SearchIcon } from "@mui/icons-material";
 import {
   Box,
+  IconButton,
   Dialog,
   DialogTitle,
   InputAdornment,
@@ -111,20 +114,17 @@ export default function Search() {
   );
 
   return (
-    <Dialog open={isSearch} onClose={closeSearch}>
+    <Dialog className="workspace-root" aria-labelledby="find-friend-title" open={isSearch} onClose={closeSearch} maxWidth="sm" fullWidth>
       <Box
         sx={{
-          p: "1rem",
-          width: {
-            xs: "80vw",
-            sm: "70vw",
-            md: "50vw",
-            lg: "30vw",
-          },
+          p: { xs: 2.5, sm: 4 },
+          width: "100%",
+          position: "relative",
           background: dialogBg,
         }}
       >
-        <DialogTitle
+        <IconButton aria-label="Close dialog" onClick={closeSearch} sx={{ position: "absolute", right: 10, top: 10 }}><CloseRounded /></IconButton>
+        <DialogTitle id="find-friend-title"
           textAlign="center"
           fontWeight={600}
           color="#333"
@@ -137,7 +137,7 @@ export default function Search() {
           onChange={search.changeHandler}
           variant="outlined"
           size="medium"
-          placeholder="Search for friends or groups..."
+          placeholder="Search for a friend…"
           sx={{
             width: "100%",
             bgcolor: "white",
@@ -145,6 +145,7 @@ export default function Search() {
             mb: 2,
           }}
           slotProps={{
+            htmlInput: { "aria-label": "Search for a friend" },
             input: {
               startAdornment: (
                 <InputAdornment position="start">
@@ -163,7 +164,7 @@ export default function Search() {
             borderRadius: "8px",
             backgroundColor: "white",
             p: "0.5rem",
-            boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+            border: "1px solid var(--champ-border)",
             "&::-webkit-scrollbar": {
               display: "none",
             },

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  AdminPanelSettingsOutlined as AdminPanelSettingsIcon,
   Close as CloseIcon,
   ExitToApp as ExitToAppIcon,
   Menu as MenuIcon,
@@ -20,8 +19,8 @@ import { useId, useState } from "react";
 import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Brand from "../shared/Brand";
 import { adminTabs } from "../../constants/adminTabs";
-import { grayColor, matBlack } from "../../constants/color";
 import { adminLogout } from "../../redux/thunks/admin.thunk.js";
 import {
   EASE_OUT_EXPO,
@@ -36,10 +35,10 @@ const LinkComponent = styled(Link)({
   textDecoration: "none",
   borderRadius: "1rem",
   padding: "1rem 1.25rem",
-  color: matBlack,
+  color: "var(--champ-muted)",
   transition: "color 0.2s ease, background-color 0.2s ease",
-  "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
-  "&:focus-visible": { outline: "3px solid #4facfe", outlineOffset: "3px" },
+  "&:hover": { backgroundColor: "var(--champ-soft)" },
+  "&:focus-visible": { outline: "3px solid var(--champ-primary)", outlineOffset: "3px" },
 });
 
 const navItemVariants = {
@@ -74,56 +73,20 @@ function Sidebar({ onNavigate }) {
   };
 
   return (
-    <Stack sx={{ p: 3, minHeight: "100dvh", position: "sticky", top: 0 }}>
+    <Stack sx={{ p: 3, minHeight: "100dvh", position: "sticky", top: 0, bgcolor: "var(--champ-canvas)", color: "var(--champ-ink)" }}>
       <Stack
         direction="row"
         spacing={1.5}
         alignItems="center"
         sx={{ mb: 5, mt: 1 }}
       >
-        <motion.div
-          data-admin-reveal=""
-          initial={
-            reducedMotion ? false : { opacity: 0, scale: 0.8, rotate: -12 }
-          }
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{
-            duration: reducedMotion ? 0 : 0.5,
-            ease: EASE_OUT_EXPO,
-          }}
-        >
-          <Box
-            sx={{
-              width: 44,
-              height: 44,
-              display: "grid",
-              placeItems: "center",
-              borderRadius: "14px",
-              background: "linear-gradient(135deg, #4facfe22, #00f2fe18)",
-              color: "#2694ab",
-            }}
-          >
-            <AdminPanelSettingsIcon aria-hidden="true" />
-          </Box>
-        </motion.div>
-        <Box sx={{ flex: 1 }}>
-          <Typography
-            fontSize="1rem"
-            fontWeight={800}
-            textTransform="uppercase"
-          >
-            Stealthy Note
-          </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            letterSpacing="0.08em"
-          >
-            ADMIN PORTAL
-          </Typography>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Brand />
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1, letterSpacing: ".12em" }}>ADMIN PORTAL</Typography>
         </Box>
         {onNavigate && (
           <IconButton
+            sx={{ color: "var(--champ-muted)" }}
             aria-label="Close admin navigation"
             onClick={onNavigate}
             size="small"
@@ -178,7 +141,7 @@ function Sidebar({ onNavigate }) {
                           position: "absolute",
                           inset: 0,
                           borderRadius: "1rem",
-                          background: matBlack,
+                          background: "var(--champ-primary)",
                           boxShadow: "0 8px 20px -10px rgba(28, 28, 28, 0.55)",
                         }}
                       />
@@ -203,6 +166,10 @@ function Sidebar({ onNavigate }) {
       </LayoutGroup>
 
       <Box sx={{ flex: 1, minHeight: 48 }} />
+      <Box sx={{ border: "1px solid var(--champ-border)", borderRadius: 3, p: 2, mb: 2 }}>
+        <Typography fontSize={13} fontWeight={650}>A connected community.</Typography>
+        <Typography variant="caption" sx={{ display: "block", mt: .5, color: "var(--champ-muted)", lineHeight: 1.7 }}>A clear view of the people and conversations that bring it to life.</Typography>
+      </Box>
       <Button
         onClick={logoutHandler}
         disabled={isLoggingOut}
@@ -213,10 +180,10 @@ function Sidebar({ onNavigate }) {
           px: 2.5,
           py: 1.5,
           borderRadius: "1rem",
-          color: matBlack,
+          color: "var(--champ-muted)",
           textTransform: "none",
           fontWeight: 600,
-          "&:focus-visible": { outline: "3px solid #4facfe", outlineOffset: 3 },
+          "&:focus-visible": { outline: "3px solid var(--champ-primary)", outlineOffset: 3 },
         }}
       >
         {isLoggingOut ? "Logging out…" : "Logout"}
@@ -235,7 +202,7 @@ export default function AdminLayout({ children }) {
   return (
     <Box
       className="admin-motion-root"
-      sx={{ display: "flex", minHeight: "100dvh", bgcolor: grayColor }}
+      sx={{ display: "flex", minHeight: "100dvh", bgcolor: "var(--champ-canvas)" }}
     >
       <a className="admin-skip-link" href="#admin-content">
         Skip to content
@@ -246,7 +213,7 @@ export default function AdminLayout({ children }) {
           display: { xs: "none", md: "block" },
           width: 260,
           flexShrink: 0,
-          bgcolor: "white",
+          bgcolor: "var(--champ-canvas)",
           borderRight: "1px solid rgba(15, 23, 42, 0.06)",
           zIndex: 1,
         }}

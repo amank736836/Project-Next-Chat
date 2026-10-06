@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Providers } from "../components/Providers";
 import NoContextMenu from "../components/NoContextMenu";
 import UserInitializer from "../components/UserInitializer";
+import { brandCssVariables } from "../constants/brand";
 import "./globals.css";
 import "./welcome.css";
 
@@ -14,7 +15,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" style={brandCssVariables}>
       <body>
         <Providers>
           <CssBaseline />

@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import { lightOrange, lightPurple, orange, purple } from "../constants/color";
+import { brand } from "../constants/brand";
 import { getLast7Days } from "../lib/features";
 import useReducedMotionSafe from "../components/animations/useReducedMotionSafe";
 
@@ -27,6 +28,9 @@ ChartJS.register(
   ArcElement,
   Legend,
 );
+
+ChartJS.defaults.font.family = brand.font;
+ChartJS.defaults.color = brand.muted;
 
 const LineChartOptions = {
   responsive: true,

@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Button, Typography } from "@mui/material";
+import useReducedMotionSafe from "../animations/useReducedMotionSafe";
 import { motion } from "framer-motion";
 import moment from "moment";
 import { memo, useCallback, useMemo } from "react";
@@ -15,6 +16,7 @@ import {
 import { useAsyncMutation, useErrors } from "../../hooks/useHooks";
 
 function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
+  const reducedMotion = useReducedMotionSafe();
   const { user } = useSelector((state) => state.auth);
   const { sender, content, attachments = [], createdAt } = message;
   const isAnonymousMessage = useMemo(
@@ -90,15 +92,18 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: isRightAligned ? 100 : -100 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="workspace-message"
+      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeInOut" }}
       style={{
         alignSelf: isRightAligned ? "flex-end" : "flex-start",
-        color: isRightAligned ? "white" : "black",
-        backgroundColor: isAi ? "#ede7f6" : isRightAligned ? "blue" : "lightgray",
-        borderRadius: "5px",
-        padding: "0.5rem",
+        color: isRightAligned ? "white" : "var(--champ-ink)",
+        backgroundColor: isAi ? "var(--champ-soft)" : isRightAligned ? "var(--champ-primary)" : "white",
+        border: isRightAligned ? "none" : "1px solid var(--champ-border)",
+        boxShadow: "0 2px 5px color-mix(in srgb, var(--champ-ink) 1.96%, transparent)",
+        borderRadius: isRightAligned ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
+        padding: "0.75rem 1rem",
         width: "fit-content",
       }}
     >
@@ -156,7 +161,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
                 target="_blank"
                 download
                 style={{
-                  color: isRightAligned ? "white" : "black",
+                  color: isRightAligned ? "white" : "var(--champ-ink)",
                 }}
               >
                 {RenderAttachment(fileType, url)}
@@ -165,7 +170,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
           );
         })}
 
-      {content && <Typography>{content}</Typography>}
+      {content && <Typography sx={{ whiteSpace: "pre-wrap", fontSize: 14, lineHeight: 1.65 }}>{content}</Typography>}
 
       {isPrivateAi && (
         <Typography variant="caption" sx={{ opacity: 0.6, display: "block" }}>
@@ -206,7 +211,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
           gap: 0.8,
         }}
       >
-        <Typography variant="caption" color={isRightAligned ? "white" : "black"}>
+        <Typography variant="caption" color={isRightAligned ? "var(--champ-on-dark)" : "text.secondary"}>
           {timeAgo}
         </Typography>
         {!isAi && (
@@ -219,7 +224,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
               p: 0,
               lineHeight: 1,
               textTransform: "none",
-              color: isRightAligned ? "white" : "#1976d2",
+              color: isRightAligned ? "white" : "var(--champ-primary)",
             }}
           >
             Reply

@@ -143,3 +143,10 @@ tests/
 playwright-report/
 test-results/
 blob-report/
+# Checked-in workspace UI regression suite
+!tests/
+tests/*
+!tests/e2e/
+tests/e2e/*
+!tests/e2e/workspace.spec.js
+!tests/e2e/board.spec.js

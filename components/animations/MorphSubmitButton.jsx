@@ -14,10 +14,10 @@ import { EASE_OUT_EXPO, seededRandom } from "./motionConfig";
 
 const MotionButton = motion.create(Button);
 
-const BURST_COLORS = ["#4facfe", "#00f2fe", "#ff7e5f", "#feb47b", "#ffffff"];
+const BURST_COLORS = ["var(--champ-primary)", "var(--champ-mint-strong)", "var(--champ-sage)", "var(--champ-mint-strong)", "#ffffff"];
 const BURST_COUNT = 16;
 
-const ACTIVE_GRADIENT = "linear-gradient(110deg, #4facfe 0%, #00c6ff 100%)";
+const ACTIVE_GRADIENT = "var(--champ-primary)";
 const ERROR_GRADIENT = "linear-gradient(110deg, #ff5f6d 0%, #ff8a5b 100%)";
 const LOCKED_GRADIENT =
   "linear-gradient(110deg, rgba(126, 148, 173, 0.55) 0%, rgba(154, 172, 194, 0.45) 100%)";
@@ -193,23 +193,23 @@ export default function MorphSubmitButton({
           position: "relative",
           overflow: "hidden",
           minHeight: 46,
-          borderRadius: "14px",
+          borderRadius: "var(--champ-control-radius)",
           textTransform: "none",
-          fontWeight: 700,
+          fontWeight: 500,
           letterSpacing: "0.01em",
           color: "#fff",
           boxShadow: locked
             ? "none"
             : isError
               ? "0 10px 26px -12px rgba(211, 47, 47, 0.8)"
-              : "0 12px 28px -12px rgba(0, 122, 255, 0.75)",
+              : "0 12px 28px -12px rgba(var(--champ-primary-rgb), 0.75)",
           transition: "box-shadow 0.25s ease, background 0.3s ease",
           "&:hover": {
             boxShadow: locked
               ? "none"
               : isError
                 ? "0 14px 30px -12px rgba(211, 47, 47, 0.9)"
-                : "0 18px 34px -12px rgba(0, 122, 255, 0.85)",
+                : "0 18px 34px -12px rgba(var(--champ-primary-rgb), 0.85)",
           },
           ...(locked
             ? {

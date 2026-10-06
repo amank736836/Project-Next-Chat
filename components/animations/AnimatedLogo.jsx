@@ -65,9 +65,9 @@ export default function AnimatedLogo({ redrawKey = "login", size = 64 }) {
         >
           <defs>
             <linearGradient id="authLogoGradient" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#4facfe" />
-              <stop offset="55%" stopColor="#00c6ff" />
-              <stop offset="100%" stopColor="#ff7e5f" />
+              <stop offset="0%" stopColor="var(--champ-primary)" />
+              <stop offset="55%" stopColor="var(--champ-sage)" />
+              <stop offset="100%" stopColor="var(--champ-sage)" />
             </linearGradient>
           </defs>
 
