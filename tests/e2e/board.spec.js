@@ -444,3 +444,16 @@ test("new boards have useful empty questions and showcase states", async ({
     page.getByText("Every answer starts with a question", { exact: true }),
   ).toBeVisible();
 });
+
+test("board and default embed preview inherit the login palette", async ({ page }) => {
+  await fixture(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/u/alex');
+  await expect(page.getByRole('heading', { name: 'Let the conversation find you.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Copy board link', exact: true }).first()).toHaveCSS('background-color', 'rgb(68, 119, 91)');
+  await expect(page.locator('.board-workspace')).toHaveCSS('background-color', 'rgb(250, 251, 247)');
+  await capture(page, 'board-brand');
+  await page.getByRole('tab', { name: 'Embed', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'Button color', exact: true })).toHaveValue('#44775b');
+  await capture(page, 'embed-brand');
+});

@@ -120,7 +120,7 @@ export default function AnimatedHeading({
               borderRadius: 999,
               transformOrigin: "left center",
               backgroundImage:
-                "linear-gradient(90deg, #4facfe 0%, #00f2fe 45%, #ff7e5f 100%)",
+                "linear-gradient(90deg, var(--champ-primary) 0%, var(--champ-mint-strong) 45%, var(--champ-sage) 100%)",
             }}
           />
         </AnimatePresence>

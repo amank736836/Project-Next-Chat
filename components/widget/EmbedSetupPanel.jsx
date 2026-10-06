@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import { brand } from "../../constants/brand";
 import {
   CodeRounded,
   LanguageRounded,
@@ -212,7 +213,7 @@ export default function EmbedSetupPanel({ username }) {
             display: "grid",
             placeItems: "center",
             p: 1,
-            bgcolor: "#edf1ff",
+            bgcolor: "var(--champ-soft)",
             color: "primary.main",
             borderRadius: 2,
           }}
@@ -321,7 +322,7 @@ export default function EmbedSetupPanel({ username }) {
                     value={
                       /^#[0-9a-fA-F]{6}$/.test(settings[key])
                         ? settings[key]
-                        : "#4facfe"
+                        : brand.primary
                     }
                     onChange={(e) =>
                       setSettings((p) => ({ ...p, [key]: e.target.value }))
@@ -333,7 +334,7 @@ export default function EmbedSetupPanel({ username }) {
                       padding: 0,
                       background: "none",
                     }}
-                    aria-label={label}
+                    aria-label={`${label} picker`}
                   />
                   <TextField
                     size="small"
@@ -458,7 +459,7 @@ export default function EmbedSetupPanel({ username }) {
               borderRadius: 3,
               border: "1px solid",
               borderColor: "divider",
-              bgcolor: "#f5f7fb",
+              bgcolor: "var(--champ-canvas)",
               overflow: "hidden",
             }}
           >
@@ -591,8 +592,8 @@ export default function EmbedSetupPanel({ username }) {
                 variant="outlined"
                 sx={{
                   p: 1.5,
-                  bgcolor: "#202b45",
-                  color: "#c7e8df",
+                  bgcolor: "var(--champ-ink)",
+                  color: "var(--champ-mint)",
                   borderRadius: 2,
                 }}
               >
@@ -629,8 +630,8 @@ export default function EmbedSetupPanel({ username }) {
                 variant="outlined"
                 sx={{
                   p: 1.5,
-                  bgcolor: "#202b45",
-                  color: "#d5dfff",
+                  bgcolor: "var(--champ-ink)",
+                  color: "var(--champ-mint)",
                   borderRadius: 2,
                 }}
               >

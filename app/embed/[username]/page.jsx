@@ -65,7 +65,7 @@ export default async function EmbedPage({ params, searchParams }) {
   }
 
   return (
-    <div style={{ margin: 0, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f4f4f8', padding: 12, boxSizing: 'border-box' }}>
+    <div style={{ margin: 0, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--champ-canvas)', padding: 12, boxSizing: 'border-box' }}>
       <div
         id="sn-embed"
           data-username={username}

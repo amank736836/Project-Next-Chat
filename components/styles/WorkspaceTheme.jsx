@@ -1,80 +1,94 @@
 "use client";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { usePathname } from "next/navigation";
+import { brand } from "../../constants/brand";
 
-const workspaceTheme = createTheme({
+// One theme on every route, including login, recovery, board, and admin.
+export const workspaceTheme = createTheme({
   palette: {
-    primary: { main: "#4361d8", dark: "#3049af", light: "#edf1ff" },
-    secondary: { main: "#168575" },
-    background: { default: "#f5f7fb", paper: "#ffffff" },
-    text: { primary: "#202b45", secondary: "#66738a" },
-    divider: "#e7ecf4",
+    primary: {
+      main: brand.primary,
+      dark: brand.primaryHover,
+      light: brand.soft,
+      contrastText: brand.surface,
+    },
+    secondary: { main: brand.sage, contrastText: brand.ink },
+    background: { default: brand.canvas, paper: brand.surface },
+    text: { primary: brand.ink, secondary: brand.muted },
+    divider: brand.border,
+    success: { main: brand.primary },
+    info: { main: brand.primary },
   },
   shape: { borderRadius: 6 },
   typography: {
-    fontFamily:
-      "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    h4: { fontWeight: 750, letterSpacing: "-0.035em" },
-    h5: { fontWeight: 700, letterSpacing: "-0.025em" },
-    h6: { fontWeight: 700, letterSpacing: "-0.02em" },
-    button: { textTransform: "none", fontWeight: 650 },
+    fontFamily: brand.font,
+    h4: { fontWeight: 500, letterSpacing: "-0.035em" },
+    h5: { fontWeight: 500, letterSpacing: "-0.03em" },
+    h6: { fontWeight: 600, letterSpacing: "-0.02em" },
+    button: { textTransform: "none", fontWeight: 500 },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: { backgroundColor: brand.canvas, color: brand.ink },
+      },
+    },
     MuiButton: {
       defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: brand.controlRadius,
           padding: "9px 18px",
           transition: "background-color 180ms, box-shadow 180ms",
-          "&:focus-visible": { outline: "3px solid #96a9ff", outlineOffset: 3 },
+          "&:focus-visible": {
+            outline: `3px solid ${brand.focus}`,
+            outlineOffset: 3,
+          },
+        },
+        outlined: {
+          borderColor: brand.border,
+          "&:hover": { backgroundColor: brand.soft, borderColor: brand.sage },
         },
       },
     },
     MuiIconButton: {
       styleOverrides: {
         root: {
-          "&:focus-visible": { outline: "3px solid #96a9ff", outlineOffset: 2 },
+          "&:focus-visible": {
+            outline: `3px solid ${brand.focus}`,
+            outlineOffset: 2,
+          },
         },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
-          backgroundColor: "#f8faff",
-          "& fieldset": { borderColor: "#dfe5ef" },
+          borderRadius: brand.controlRadius,
+          backgroundColor: brand.field,
+          "& fieldset": { borderColor: brand.border },
+          "&.Mui-focused fieldset": { borderWidth: 1 },
         },
       },
     },
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 24,
-          boxShadow: "0 24px 100px #182b4930",
+          borderRadius: brand.cardRadius,
+          border: `1px solid ${brand.border}`,
+          boxShadow: "0 24px 70px #253d3520",
           backgroundImage: "none",
         },
       },
     },
     MuiTooltip: {
       styleOverrides: {
-        tooltip: { backgroundColor: "#202b45", borderRadius: 8 },
+        tooltip: { backgroundColor: brand.ink, borderRadius: 7 },
       },
     },
   },
 });
 
-/** Keep the existing auth/landing designs intact; dialogs inherit this theme. */
 export default function WorkspaceTheme({ children }) {
-  const pathname = usePathname() || "";
-  const workspace =
-    pathname === "/" ||
-    /^\/(chat|groups|board|u)(\/|$)/.test(pathname) ||
-    /^\/admin\/(dashboard|users|chats|messages)(\/|$)/.test(pathname);
-  return workspace ? (
-    <ThemeProvider theme={workspaceTheme}>{children}</ThemeProvider>
-  ) : (
-    children
-  );
+  return <ThemeProvider theme={workspaceTheme}>{children}</ThemeProvider>;
 }

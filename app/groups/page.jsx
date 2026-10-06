@@ -201,7 +201,7 @@ function GroupsContent() {
         sx={{
           display: { xs: "none", sm: "block" },
           bgcolor: "white",
-          borderRight: "1px solid #e7ecf4",
+          borderRight: "1px solid var(--champ-border)",
           height: "calc(100dvh - 64px)",
           overflowY: "auto",
         }}
@@ -282,9 +282,9 @@ function GroupsContent() {
               elevation={0}
               sx={{
                 p: { xs: 2.5, md: 4 },
-                border: "1px solid #e7ecf4",
+                border: "1px solid var(--champ-border)",
                 borderRadius: 4,
-                background: "linear-gradient(120deg, #fff 55%, #edf1ff)",
+                background: "linear-gradient(120deg, #fff 55%, var(--champ-soft))",
               }}
             >
               <Typography
@@ -375,7 +375,7 @@ function GroupsContent() {
             <Paper
               elevation={0}
               sx={{
-                border: "1px solid #e7ecf4",
+                border: "1px solid var(--champ-border)",
                 borderRadius: 4,
                 overflow: "hidden",
               }}
@@ -385,7 +385,7 @@ function GroupsContent() {
                 justifyContent="space-between"
                 alignItems="center"
                 gap={1}
-                sx={{ p: { xs: 2, md: 3 }, borderBottom: "1px solid #e7ecf4" }}
+                sx={{ p: { xs: 2, md: 3 }, borderBottom: "1px solid var(--champ-border)" }}
               >
                 <Box>
                   <Typography component="h2" variant="h6">
@@ -438,7 +438,7 @@ function GroupsContent() {
                         isLoadingRemoveMember ||
                         member._id === groupDetails.chat.creator
                       }
-                      styling={{ p: 1.5, borderRadius: 2, bgcolor: "#f7f9fd" }}
+                      styling={{ p: 1.5, borderRadius: 2, bgcolor: "var(--champ-field)" }}
                     />
                   ))
                 )}
@@ -526,7 +526,7 @@ const GroupsList = memo(({ myGroups = [], chatId, loading }) => {
         <Chip
           size="small"
           label={myGroups.length}
-          sx={{ bgcolor: "#edf1ff", color: "primary.main" }}
+          sx={{ bgcolor: "var(--champ-soft)", color: "primary.main" }}
         />
       </Stack>
       <Typography variant="body2" color="text.secondary" sx={{ pb: 2 }}>

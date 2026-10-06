@@ -23,7 +23,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
+import Brand from "../shared/Brand";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import axios from "axios";
@@ -112,8 +112,8 @@ export default function Header({ alwaysShowProfile = false }) {
           top: 0,
           zIndex: (theme) => theme.zIndex.appBar,
           bgcolor: "#ffffff",
-          color: "#202b45",
-          borderBottom: "1px solid #e7ecf4",
+          color: "var(--champ-ink)",
+          borderBottom: "1px solid var(--champ-border)",
           boxShadow: "none",
         }}
       >
@@ -133,23 +133,8 @@ export default function Header({ alwaysShowProfile = false }) {
               "&:hover": { opacity: 0.9 },
             }}
           >
-            <Image
-              src="/logo.svg"
-              alt="Chat Champ logo"
-              width={32}
-              height={32}
-              priority
-            />
-            <Typography
-              variant="h6"
-              sx={{
-                display: { xs: "none", sm: "block" },
-                fontWeight: 700,
-                letterSpacing: "0.3px",
-              }}
-            >
-              Chat Champ
-            </Typography>
+            <Brand className="brand-responsive" />
+
           </Box>
 
           <Box sx={{ display: { xs: "block", sm: "none" } }}>
@@ -243,12 +228,12 @@ const IconBtn = ({ title, onClick, icon, value, showZero = false, badgeColor = "
           width: { xs: 32, sm: 42 },
           height: { xs: 40, sm: 42 },
           borderRadius: "12px",
-          color: active ? "#4361d8" : "#66738a",
-          bgcolor: active ? "#edf1ff" : "transparent",
+          color: active ? "var(--champ-primary)" : "var(--champ-muted)",
+          bgcolor: active ? "var(--champ-soft)" : "transparent",
           transition: "transform 0.2s, background-color 0.3s",
           "&:hover": {
             transform: "translateY(-2px)",
-            backgroundColor: "#edf1ff",
+            backgroundColor: "var(--champ-soft)",
           },
         }}
       >

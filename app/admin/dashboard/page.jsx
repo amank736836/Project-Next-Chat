@@ -59,7 +59,7 @@ function Widget({ title, value, Icon, delay, accent, href }) {
             borderRadius: "1rem",
             display: "grid",
             placeItems: "center",
-            background: `${accent}14`,
+            background: `color-mix(in srgb, ${accent} 9%, transparent)`,
             color: accent,
           }}
         >
@@ -72,7 +72,7 @@ function Widget({ title, value, Icon, delay, accent, href }) {
           <Typography
             component="div"
             fontSize={{ xs: "1.6rem", lg: "1.9rem" }}
-            fontWeight={800}
+            fontWeight={600}
           >
             <AnimatedCounter value={value} />
           </Typography>
@@ -103,7 +103,7 @@ export default function Dashboard() {
           <Typography
             variant="h4"
             component="h1"
-            fontWeight={800}
+            fontWeight={600}
             letterSpacing="-0.03em"
           >
             Dashboard
@@ -114,13 +114,13 @@ export default function Dashboard() {
         </AdminReveal>
 
         <AdminReveal component={Paper} elevation={0} delay={0.05}
-          sx={{ ...surfaceSx, p: { xs: 3, md: 4 }, mb: 3, background: "linear-gradient(110deg, #243659, #344c79)", color: "white", overflow: "hidden", position: "relative" }}>
-          <Box aria-hidden="true" sx={{ position: "absolute", right: -35, top: -65, width: 240, height: 240, borderRadius: "50%", border: "35px solid #ffffff05" }} />
+          sx={{ ...surfaceSx, p: { xs: 3, md: 4 }, mb: 3, background: "linear-gradient(110deg, var(--champ-surface), var(--champ-soft))", color: "var(--champ-ink)", overflow: "hidden", position: "relative" }}>
+          <Box aria-hidden="true" sx={{ position: "absolute", right: -35, top: -65, width: 240, height: 240, borderRadius: "50%", border: "35px solid var(--champ-mint)" }} />
           <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems={{ xs: "flex-start", sm: "center" }} gap={3} sx={{ position: "relative" }}>
-            <Box><Typography variant="overline" sx={{ letterSpacing: ".15em", color: "#bbcbf2" }}>COMMUNITY OVERVIEW</Typography><Typography variant="h5" sx={{ mt: .5 }}>Small conversations. Big connections.</Typography><Typography variant="body2" sx={{ mt: 1, color: "#c3cee3" }}>Keep a pulse on your community, all from one place.</Typography></Box>
-            <Button variant="outlined" onClick={refetch} disabled={isFetching} startIcon={<RefreshRounded />} sx={{ color: "white", borderColor: "#ffffff55", flexShrink: 0, "&.Mui-disabled": { color: "#c3cee3" } }}>{isFetching ? "Refreshing…" : "Refresh overview"}</Button>
+            <Box><Typography variant="overline" sx={{ letterSpacing: ".15em", color: "var(--champ-muted)" }}>COMMUNITY OVERVIEW</Typography><Typography variant="h5" sx={{ mt: .5 }}>Small conversations. Big connections.</Typography><Typography variant="body2" sx={{ mt: 1, color: "var(--champ-muted)" }}>Keep a pulse on your community, all from one place.</Typography></Box>
+            <Button variant="outlined" onClick={refetch} disabled={isFetching} startIcon={<RefreshRounded />} sx={{ color: "var(--champ-ink)", borderColor: "var(--champ-border)", flexShrink: 0, "&.Mui-disabled": { color: "var(--champ-muted)" } }}>{isFetching ? "Refreshing…" : "Refresh overview"}</Button>
           </Stack>
-          <Typography variant="caption" sx={{ display: "block", mt: 3, color: "#bbcbf2", fontVariantNumeric: "tabular-nums" }}><Clock /></Typography>
+          <Typography variant="caption" sx={{ display: "block", mt: 3, color: "var(--champ-muted)", fontVariantNumeric: "tabular-nums" }}><Clock /></Typography>
         </AdminReveal>
 
         <Box
@@ -136,7 +136,7 @@ export default function Dashboard() {
             title="Total Users"
             value={stats?.totalUsers || 0}
             Icon={PersonIcon}
-            accent="#2694ab"
+            accent="var(--champ-primary)"
             delay={0.1}
           />
           <Widget
@@ -144,7 +144,7 @@ export default function Dashboard() {
             title="Total Chats"
             value={stats?.totalChats || 0}
             Icon={GroupIcon}
-            accent="#4b0cc0"
+            accent="var(--champ-sage)"
             delay={0.16}
           />
           <Widget
@@ -152,7 +152,7 @@ export default function Dashboard() {
             title="Total Messages"
             value={stats?.totalMessages || 0}
             Icon={MessageIcon}
-            accent="#df755b"
+            accent="var(--champ-warm)"
             delay={0.22}
           />
         </Box>

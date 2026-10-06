@@ -71,7 +71,7 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
             <Typography
               component="h1"
               variant="h4"
-              fontWeight={800}
+              fontWeight={600}
               sx={{
                 letterSpacing: "-0.03em",
                 fontSize: { xs: "1.65rem", sm: "2rem" },
@@ -94,7 +94,7 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
                 marginTop: 10,
                 borderRadius: 4,
                 transformOrigin: "left",
-                background: "linear-gradient(90deg, #4361d8, #90d6c5)",
+                background: "linear-gradient(90deg, var(--champ-primary), var(--champ-mint-strong))",
               }}
             />
           </Box>
@@ -106,7 +106,7 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
               px: 1.5,
               py: 0.75,
               borderRadius: 2,
-              bgcolor: "#f7f7f7",
+              bgcolor: "var(--champ-soft)",
               whiteSpace: "nowrap",
             }}
           >
@@ -140,9 +140,9 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
             flex: 1,
             minHeight: 0,
             border: "none",
-            ".table-header": { bgcolor: "#f3f6fb", color: "#66738a", fontSize: 12 },
-            "& .MuiDataGrid-cell": { borderColor: "#edf0f6", fontSize: 13 },
-            "& .MuiDataGrid-row:hover": { bgcolor: "#f4f7ff" },
+            ".table-header": { bgcolor: "var(--champ-soft)", color: "var(--champ-muted)", fontSize: 12 },
+            "& .MuiDataGrid-cell": { borderColor: "var(--champ-border)", fontSize: 13 },
+            "& .MuiDataGrid-row:hover": { bgcolor: "var(--champ-soft)" },
             "& .MuiDataGrid-row": { transition: "background-color 0.18s ease" },
             "& .MuiAvatar-root": { transition: "transform 0.2s ease" },
             "& .MuiDataGrid-row:hover .MuiAvatar-root": {

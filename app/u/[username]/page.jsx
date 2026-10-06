@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Link from "next/link";
+import Brand from "../../../components/shared/Brand";
 import {
   ArrowBackRounded,
   ArrowForwardRounded,
@@ -622,8 +623,8 @@ export default function Username() {
                 textAlign: "left",
                 gap: 2,
                 p: 2,
-                border: "1px solid #e7ecf4",
-                bgcolor: "#f8faff",
+                border: "1px solid var(--champ-border)",
+                bgcolor: "var(--champ-field)",
                 color: "text.primary",
                 fontWeight: 500,
                 fontSize: 14,
@@ -707,7 +708,7 @@ export default function Username() {
                   direction="row"
                   alignItems="center"
                   gap={1}
-                  sx={{ p: 2, border: "1px solid #e7ecf4", borderRadius: 2 }}
+                  sx={{ p: 2, border: "1px solid var(--champ-border)", borderRadius: 2 }}
                 >
                   <Typography
                     variant="body2"
@@ -747,7 +748,7 @@ export default function Username() {
                   direction="row"
                   alignItems="center"
                   gap={1.5}
-                  sx={{ p: 2, bgcolor: "#f8faff", borderRadius: 2 }}
+                  sx={{ p: 2, bgcolor: "var(--champ-field)", borderRadius: 2 }}
                 >
                   <Typography
                     variant="caption"
@@ -766,7 +767,7 @@ export default function Username() {
                     size="small"
                     label={`${item.askedCount} asks`}
                     sx={{
-                      bgcolor: "#edf1ff",
+                      bgcolor: "var(--champ-soft)",
                       color: "primary.main",
                       fontSize: 11,
                     }}
@@ -807,8 +808,8 @@ export default function Username() {
           <Box
             sx={{
               p: 1.5,
-              bgcolor: "#f5f7fb",
-              border: "1px dashed #d9e1f1",
+              bgcolor: "var(--champ-canvas)",
+              border: "1px dashed var(--champ-border)",
               borderRadius: 2,
               mb: 2,
             }}
@@ -826,8 +827,8 @@ export default function Username() {
             Copy board link
           </Button>
         </BoardSection>
-        <Box sx={{ ...boardSurfaceSx, p: 3, bgcolor: "#edf5f3" }}>
-          <PublicRounded sx={{ color: "#168575", mb: 1 }} />
+        <Box sx={{ ...boardSurfaceSx, p: 3, bgcolor: "var(--champ-soft)" }}>
+          <PublicRounded sx={{ color: "var(--champ-primary)", mb: 1 }} />
           <Typography component="h2" fontWeight={700} sx={{ mb: 1 }}>
             Make it part of your website
           </Typography>
@@ -842,7 +843,7 @@ export default function Username() {
           <Button
             onClick={() => setOwnerTab("embed")}
             endIcon={<ArrowForwardRounded />}
-            sx={{ p: 0, color: "#137464" }}
+            sx={{ p: 0, color: "var(--champ-primary-hover)" }}
           >
             Set up your widget
           </Button>
@@ -930,10 +931,10 @@ export default function Username() {
             <Box
               key={item.id}
               sx={{
-                border: "1px solid #e7ecf4",
+                border: "1px solid var(--champ-border)",
                 borderRadius: 3,
                 p: 2.5,
-                bgcolor: item.hiddenFromShowcase ? "#f8f9fc" : "white",
+                bgcolor: item.hiddenFromShowcase ? "var(--champ-field)" : "white",
               }}
             >
               <Stack
@@ -982,7 +983,7 @@ export default function Username() {
                 sx={{
                   mt: 2,
                   pl: 2,
-                  borderLeft: "3px solid #dbe4ff",
+                  borderLeft: "3px solid var(--champ-mint-strong)",
                   lineHeight: 1.8,
                   whiteSpace: "pre-wrap",
                   overflowWrap: "anywhere",
@@ -996,7 +997,7 @@ export default function Username() {
                   label="Hidden from public showcase"
                   sx={{
                     mt: 2,
-                    bgcolor: "#eef0f6",
+                    bgcolor: "var(--champ-soft)",
                     color: "text.secondary",
                     fontSize: 11,
                   }}
@@ -1078,16 +1079,15 @@ export default function Username() {
             bgcolor: "white",
             px: { xs: 2, sm: 4 },
             py: 2,
-            borderBottom: "1px solid #e7ecf4",
+            borderBottom: "1px solid var(--champ-border)",
           }}
         >
           <Button
             component={Link}
             href="/login"
-            startIcon={<ChatBubbleOutlineRounded />}
             sx={{ color: "text.primary", p: 0, fontSize: 18, fontWeight: 750 }}
           >
-            Chat Champ
+            <Brand />
           </Button>
           <Button
             component={Link}
@@ -1165,7 +1165,7 @@ export default function Username() {
             icon={<PublicRounded />}
             label={isOwner ? "Your message board" : "Message board"}
             size="small"
-            sx={{ bgcolor: "#edf1ff", color: "primary.main", fontSize: 11 }}
+            sx={{ bgcolor: "var(--champ-soft)", color: "primary.main", fontSize: 11 }}
           />
         </Stack>
         <Paper
@@ -1178,7 +1178,7 @@ export default function Username() {
             mb: 3,
             position: "relative",
             overflow: "hidden",
-            background: "linear-gradient(115deg, #fff 35%, #edf1ff)",
+            background: "linear-gradient(115deg, #fff 35%, var(--champ-soft))",
           }}
         >
           <Box className="board-hero-orbit" aria-hidden="true" />
@@ -1198,9 +1198,9 @@ export default function Username() {
                 width: 68,
                 height: 68,
                 borderRadius: "20px",
-                bgcolor: "#4361d8",
+                bgcolor: "var(--champ-primary)",
                 color: "white",
-                boxShadow: "0 8px 24px #4361d825",
+                boxShadow: "0 8px 24px color-mix(in srgb, var(--champ-primary) 14.51%, transparent)",
               }}
             >
               {isOwner ? (
@@ -1286,13 +1286,13 @@ export default function Username() {
                   label: "Custom questions",
                   count: customQuestions.length,
                   tab: "questions",
-                  color: "#4361d8",
+                  color: "var(--champ-primary)",
                 },
                 {
                   label: "Questions asked",
                   count: priorityQuestions.length,
                   tab: "questions",
-                  color: "#168575",
+                  color: "var(--champ-primary)",
                 },
                 {
                   label: "Shared answers",
@@ -1300,7 +1300,7 @@ export default function Username() {
                     (item) => !item.hiddenFromShowcase,
                   ).length,
                   tab: "showcase",
-                  color: "#926341",
+                  color: "var(--champ-warm)",
                 },
               ].map((stat) => (
                 <Button
@@ -1355,7 +1355,7 @@ export default function Username() {
                 aria-label="Board management"
                 variant="fullWidth"
                 sx={{
-                  bgcolor: "#eaf0fa",
+                  bgcolor: "var(--champ-soft)",
                   borderRadius: 2,
                   p: 0.5,
                   width: { xs: "100%", sm: 480 },
@@ -1371,7 +1371,7 @@ export default function Username() {
                   },
                   "& .Mui-selected": {
                     bgcolor: "white",
-                    boxShadow: "0 2px 6px #202b4508",
+                    boxShadow: "0 2px 6px color-mix(in srgb, var(--champ-ink) 3.14%, transparent)",
                   },
                 }}
               >

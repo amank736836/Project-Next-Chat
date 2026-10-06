@@ -116,7 +116,7 @@ export default function Profile() {
         minHeight: "100%",
         overflowY: "auto",
         bgcolor: "white",
-        borderLeft: "1px solid #e7ecf4",
+        borderLeft: "1px solid var(--champ-border)",
         p: { xs: 2.5, xl: 3 },
       }}
     >
@@ -135,7 +135,7 @@ export default function Profile() {
         sx={{ pb: 1 }}
       >
         <Avatar
-          sx={{ width: 88, height: 88, border: "5px solid #edf1ff", mb: 1 }}
+          sx={{ width: 88, height: 88, border: "5px solid var(--champ-soft)", mb: 1 }}
           src={transformImageUrl(user?.avatar?.url)}
           alt={user.name}
         />
@@ -144,7 +144,7 @@ export default function Profile() {
           @{user.username}
         </Typography>
       </Stack>
-      <Box sx={{ borderRadius: 3, bgcolor: "#f7f9fd", p: 2 }}>
+      <Box sx={{ borderRadius: 3, bgcolor: "var(--champ-field)", p: 2 }}>
         <Stack
           direction="row"
           alignItems="center"
@@ -191,8 +191,8 @@ export default function Profile() {
           onClick={copyToClipboard}
           sx={{
             textAlign: "left",
-            border: "1px solid #dfe6fa",
-            bgcolor: "#f3f6ff",
+            border: "1px solid var(--champ-border)",
+            bgcolor: "var(--champ-soft)",
             borderRadius: 3,
             p: 2,
             gap: 1.5,
@@ -228,7 +228,7 @@ const ProfileCard = memo(({ text, Icon, heading }) => (
       sx={{
         display: "grid",
         placeItems: "center",
-        bgcolor: "#f4f6fa",
+        bgcolor: "var(--champ-soft)",
         borderRadius: 2,
         width: 36,
         height: 36,

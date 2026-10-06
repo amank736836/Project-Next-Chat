@@ -161,7 +161,7 @@ function HomeContent() {
           sx={{
             "& .MuiDrawer-paper": {
               width: "80vw",
-              background: "#f5f7fb",
+              background: "var(--champ-canvas)",
               boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
             },
           }}
@@ -192,7 +192,7 @@ function HomeContent() {
                 sm: "75vw",
                 md: "42vw",
               },
-              background: "#f5f7fb",
+              background: "var(--champ-canvas)",
               boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
             },
           }}
@@ -206,7 +206,7 @@ function HomeContent() {
           size={{ sm: 4, md: 5, lg: 3 }}
           sx={{
             display: { xs: "none", sm: "block" },
-            background: "#f5f7fb",
+            background: "var(--champ-canvas)",
           }}
           height={"100%"}
         >
@@ -232,7 +232,7 @@ function HomeContent() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "#f5f7fb",
+              background: "var(--champ-canvas)",
               padding: "1rem",
             }}
           >

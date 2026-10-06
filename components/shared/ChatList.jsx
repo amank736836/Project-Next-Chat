@@ -109,7 +109,7 @@ function ChatList({
       className="workspace-root"
       height="100%"
       width={w}
-      sx={{ bgcolor: "white", borderRight: "1px solid #e7ecf4", minHeight: 0 }}
+      sx={{ bgcolor: "white", borderRight: "1px solid var(--champ-border)", minHeight: 0 }}
     >
       <Box sx={{ p: 2.5, pb: 1.5 }}>
         <Stack
@@ -124,7 +124,7 @@ function ChatList({
           <Chip
             label={chats.length}
             size="small"
-            sx={{ bgcolor: "#edf1ff", color: "primary.main", fontWeight: 700 }}
+            sx={{ bgcolor: "var(--champ-soft)", color: "primary.main", fontWeight: 700 }}
           />
         </Stack>
         <TextField
@@ -162,7 +162,7 @@ function ChatList({
             },
             "& .Mui-selected": {
               color: "primary.main",
-              bgcolor: "#edf1ff !important",
+              bgcolor: "var(--champ-soft) !important",
             },
           }}
         >

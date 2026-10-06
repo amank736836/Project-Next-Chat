@@ -105,8 +105,8 @@ function AdminLoginContent() {
               height: 64,
               borderRadius: "18px",
               bgcolor: "rgba(255,255,255,0.95)",
-              color: "#2694ab",
-              boxShadow: "0 8px 24px -12px rgba(38,148,171,0.4)",
+              color: "var(--champ-primary)",
+              boxShadow: "0 8px 24px -12px rgba(var(--champ-primary-rgb),0.4)",
             }}
           >
             <AdminPanelSettingsIcon sx={{ fontSize: 34 }} />

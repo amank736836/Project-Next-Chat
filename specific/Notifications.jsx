@@ -139,7 +139,7 @@ export default function Notifications() {
             borderRadius: "8px",
             backgroundColor: "white",
             p: "0.5rem",
-            border: "1px solid #e7ecf4",
+            border: "1px solid var(--champ-border)",
             "&::-webkit-scrollbar": {
               display: "none",
             },

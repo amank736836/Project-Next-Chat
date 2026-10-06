@@ -1,10 +1,13 @@
-export const gradientBg = "linear-gradient(to bottom, #4facfe, #00f2fe)";
-export const dialogBg = "linear-gradient(145deg, #ffffff, #f4f7ff)";
-export const authBg = "linear-gradient(to right, #ff7e5f, #feb47b)";
-export const orange = "rgba(234, 112, 112, 1)";
-export const lightOrange = "rgba(234, 112, 112, 0.2)";
-export const purple = "rgba(75, 12, 192, 1)";
-export const lightPurple = "rgba(75, 12, 192, 0.2)";
-export const grayColor = "rgba(247, 247, 247, 1)";
-export const lightBlue = "#2694ab";
-export const matBlack = "#1c1c1c";
+import { brand } from "./brand";
+
+// Compatibility exports for existing components; all resolve to the login palette.
+export const gradientBg = `linear-gradient(145deg, ${brand.canvas}, ${brand.soft})`;
+export const dialogBg = brand.surface;
+export const authBg = brand.canvas;
+export const orange = brand.warm;
+export const lightOrange = `${brand.warm}22`;
+export const purple = brand.primary;
+export const lightPurple = `${brand.primary}22`;
+export const grayColor = brand.canvas;
+export const lightBlue = brand.primary;
+export const matBlack = brand.ink;

@@ -65,7 +65,7 @@ function ChatItem({
                   height: 11,
                   border: "2px solid white",
                   borderRadius: "50%",
-                  bgcolor: "#29a58a",
+                  bgcolor: "var(--champ-primary)",
                 }}
               />
             )}

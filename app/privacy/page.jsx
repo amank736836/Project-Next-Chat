@@ -9,7 +9,7 @@ export default function PrivacyPage() {
     <Box
       sx={{
         minHeight: "100vh",
-        bgcolor: "#f5f7fb",
+        bgcolor: "var(--champ-canvas)",
         py: { xs: 3, md: 6 },
         px: { xs: 2, md: 4 },
         display: "flex",

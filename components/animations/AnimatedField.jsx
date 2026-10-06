@@ -2,6 +2,7 @@
 
 import useReducedMotionSafe from "./useReducedMotionSafe";
 
+import { brand } from "../../constants/brand";
 import { useState } from "react";
 import { IconButton, TextField } from "@mui/material";
 import {
@@ -11,7 +12,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { EASE_OUT_EXPO, SPRING_BOUNCY } from "./motionConfig";
 
-const ACCENT = "79, 172, 254";
+const ACCENT = brand.primaryRgb;
 const DANGER = "211, 47, 47";
 const SUCCESS = "46, 125, 50";
 
@@ -169,7 +170,7 @@ export function ValidityIcon({ state, checking }) {
               width: 18,
               height: 18,
               borderRadius: "50%",
-              border: "2px solid rgba(79,172,254,0.25)",
+              border: "2px solid rgba(var(--champ-primary-rgb),0.25)",
               borderTopColor: "rgb(79,172,254)",
               animation: reducedMotion
                 ? undefined

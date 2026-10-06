@@ -167,3 +167,14 @@ The board tests also intercept API responses in the browser only. The same-origi
 send fallback is covered with `NEXT_PUBLIC_SOCKET_SERVER_URL` unset; real socket
 message delivery, widget installation, and database writes still need backend
 integration testing. No production fixture data is introduced.
+
+
+### Theme consistency checks
+
+The workspace and board browser suites compare **computed** primary-button,
+canvas, message-bubble, logo, and font styles against the login reference. They
+also cover recovery/admin-login shells and default embed colors. Unit tests in
+`components/styles/__tests__/brand.test.jsx` keep CSS/MUI/chart/widget tokens in
+sync, check text/button contrast, and ensure saved widget colors are not replaced
+by a brand refresh. Existing user-selected widget colors are intentionally not
+expected to match the application theme.

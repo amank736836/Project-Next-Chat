@@ -50,8 +50,8 @@ export default function UserItem({
               bgcolor: isAdded ? "error.dark" : "primary.dark",
             },
             "&:disabled": {
-              bgcolor: "#e7ecf4",
-              color: "#8b97ac",
+              bgcolor: "var(--champ-border)",
+              color: "var(--champ-disabled)",
             },
           }}
         >

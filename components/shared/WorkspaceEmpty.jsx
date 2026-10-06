@@ -23,17 +23,17 @@ export default function WorkspaceEmpty({
     >
       <Box className="workspace-conversation-art" aria-hidden="true">
         <svg width="180" height="154" viewBox="0 0 180 154" fill="none">
-          <circle cx="90" cy="77" r="70" fill="#edf1ff" />
-          <circle cx="153" cy="29" r="5" fill="#90d6c5" />
-          <circle cx="23" cy="121" r="4" fill="#b6c4fb" />
+          <circle cx="90" cy="77" r="70" fill="var(--champ-soft)" />
+          <circle cx="153" cy="29" r="5" fill="var(--champ-mint-strong)" />
+          <circle cx="23" cy="121" r="4" fill="var(--champ-sage)" />
           <g className="workspace-conversation-art-back">
             <path
               d="M70 67h72a14 14 0 0 1 14 14v34a14 14 0 0 1-14 14h-8v16l-21-16H70a14 14 0 0 1-14-14V81a14 14 0 0 1 14-14Z"
-              fill="#d1eee6"
+              fill="var(--champ-mint)"
             />
             <path
               d="M80 91h50M80 105h34"
-              stroke="#499986"
+              stroke="var(--champ-primary)"
               strokeWidth="5"
               strokeLinecap="round"
             />
@@ -41,7 +41,7 @@ export default function WorkspaceEmpty({
           <g className="workspace-conversation-art-front">
             <path
               d="M35 27h77a16 16 0 0 1 16 16v38a16 16 0 0 1-16 16H65L42 113V97h-7a16 16 0 0 1-16-16V43a16 16 0 0 1 16-16Z"
-              fill="#4361d8"
+              fill="var(--champ-primary)"
             />
             <circle cx="49" cy="62" r="5" fill="white" />
             <circle cx="74" cy="62" r="5" fill="white" />

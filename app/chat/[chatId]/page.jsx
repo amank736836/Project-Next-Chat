@@ -635,7 +635,7 @@ function ChatContent() {
         sx={{
           "& .MuiDrawer-paper": {
             width: "80vw",
-            background: "#f5f7fb",
+            background: "var(--champ-canvas)",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           },
         }}
@@ -668,7 +668,7 @@ function ChatContent() {
               sm: "75vw",
               md: "42vw",
             },
-            background: "#f5f7fb",
+            background: "var(--champ-canvas)",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           },
         }}
@@ -681,7 +681,7 @@ function ChatContent() {
           size={{ sm: 4, md: 5, lg: 3 }}
           sx={{
             display: { xs: "none", sm: "block" },
-            background: "#f5f7fb",
+            background: "var(--champ-canvas)",
           }}
           height={"100%"}
         >
@@ -712,7 +712,7 @@ function ChatContent() {
                 py: 1.5,
                 minHeight: 64,
                 flexShrink: 0,
-                borderBottom: "1px solid #e7ecf4",
+                borderBottom: "1px solid var(--champ-border)",
                 bgcolor: "white",
               }}
             >
@@ -742,7 +742,7 @@ function ChatContent() {
               boxSizing="border-box"
               padding={"1rem"}
               spacing={"1rem"}
-              bgcolor="#f5f7fb"
+              bgcolor="var(--champ-canvas)"
               flex={1}
               minHeight={0}
               sx={{
@@ -809,7 +809,7 @@ function ChatContent() {
                 sx={{
                   px: "1rem",
                   py: "0.4rem",
-                  bgcolor: "#e3f2fd",
+                  bgcolor: "var(--champ-soft)",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -817,13 +817,13 @@ function ChatContent() {
                 }}
               >
                 <Box sx={{ minWidth: 0 }}>
-                  <Typography variant="body2" sx={{ color: "#0d47a1", fontWeight: 600 }}>
+                  <Typography variant="body2" sx={{ color: "var(--champ-primary-hover)", fontWeight: 600 }}>
                     Replying to {replyingTo.senderName}
                   </Typography>
                   <Typography
                     variant="caption"
                     sx={{
-                      color: "#0d47a1",
+                      color: "var(--champ-primary-hover)",
                       display: "block",
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -860,9 +860,9 @@ function ChatContent() {
                   disabled={uploadingLoader}
                   sx={{
                     rotate: "30deg",
-                    backgroundColor: "#edf1ff",
+                    backgroundColor: "var(--champ-soft)",
                     marginRight: "0.5rem",
-                    color: "#4361d8",
+                    color: "var(--champ-primary)",
                   }}
                 >
                   <AttachFileIcon />
@@ -880,7 +880,7 @@ function ChatContent() {
                     minWidth: 0,
                     backgroundColor: "white",
                     boxShadow: "none",
-                    border: "1px solid #e7ecf4",
+                    border: "1px solid var(--champ-border)",
                   }}
                 />
 
@@ -891,11 +891,11 @@ function ChatContent() {
                     disabled={aiLoading || !message.trim()}
                     title="Ask AI privately (share with chat afterwards if you want)"
                     sx={{
-                      backgroundColor: "#4facfe",
+                      backgroundColor: "var(--champ-primary)",
                       color: "white",
                       marginLeft: "0.5rem",
                       "&:hover": {
-                        backgroundColor: "#3d8bfd",
+                        backgroundColor: "var(--champ-primary-hover)",
                       },
                     }}
                   >
@@ -913,12 +913,12 @@ function ChatContent() {
                   type="submit"
                   sx={{
                     borderRadius: "12px",
-                    backgroundColor: "#4361d8",
+                    backgroundColor: "var(--champ-primary)",
                     color: "white",
                     marginLeft: "1rem",
                     padding: "0.4rem",
                     "&:hover": {
-                      bgcolor: "#3049af",
+                      bgcolor: "var(--champ-primary-hover)",
                     },
                   }}
                 >

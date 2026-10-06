@@ -3,7 +3,7 @@
  *   <script src="https://your-domain/widget.js"
  *     data-username="amank736836"
  *     data-position="bottom-right"
-  *     data-color="#4facfe"
+  *     data-color="#44775b"
  *     data-title="Send feedback"
  *     async defer></script>
  *
@@ -53,9 +53,9 @@
   var cfg = {
     username: (attr('data-username', '') || '').trim().toLowerCase(),
     position: sanitizePosition((attr('data-position', 'bottom-right') || '').trim()),
-    color: sanitizeColor(attr('data-color', '#4facfe'), '#4facfe'),
+    color: sanitizeColor(attr('data-color', '#44775b'), '#44775b'),
     bg: sanitizeColor(attr('data-bg', '#ffffff'), '#ffffff'),
-    text: sanitizeColor(attr('data-text', '#1a1a2e'), '#1a1a2e'),
+    text: sanitizeColor(attr('data-text', '#253d35'), '#253d35'),
     title: attr('data-title', 'Send feedback') || 'Send feedback',
     subtitle: attr('data-subtitle', 'We read every message') || '',
     placeholder: attr('data-placeholder', 'Write your anonymous message here...') || '',
@@ -93,7 +93,7 @@
         function pick(snippetVal, serverVal, isDefault) {
           return isDefault ? serverVal || snippetVal : snippetVal;
         }
-        var defaults = { color: '#4facfe', bg: '#ffffff', text: '#1a1a2e', title: 'Send feedback' };
+        var defaults = { color: '#44775b', bg: '#ffffff', text: '#253d35', title: 'Send feedback' };
         if (currentScript && currentScript.getAttribute) {
           if (!currentScript.getAttribute('data-color') && s.themeColor) cfg.color = sanitizeColor(s.themeColor, cfg.color);
           if (!currentScript.getAttribute('data-bg') && s.backgroundColor) cfg.bg = sanitizeColor(s.backgroundColor, cfg.bg);

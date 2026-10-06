@@ -273,3 +273,54 @@ test("admin overview and all searchable directories", async ({
     page.getByRole("button", { name: "Close admin navigation" }).last(),
   ).toBeVisible();
 });
+
+test("login and workspace use the same brand, not route-specific themes", async ({ page, context, baseURL }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto('/login');
+  const loginButton = page.getByRole('button', { name: /Let’s talk/ });
+  await expect(loginButton).toBeVisible();
+  const loginColor = await loginButton.evaluate(el => getComputedStyle(el).backgroundColor);
+  const loginFont = await loginButton.evaluate(el => getComputedStyle(el).fontFamily);
+  const loginCanvas = await page.locator('.welcome-stage').evaluate(el => getComputedStyle(el).backgroundColor);
+  expect(loginColor).toBe('rgb(68, 119, 91)');
+  async function screenshot(name) {
+    if (!process.env.THEME_SCREENSHOTS) return;
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: `${process.env.THEME_SCREENSHOTS}/${name}.png`, fullPage: true, animations: 'disabled' });
+  }
+  await screenshot('login');
+  await page.goto('/');
+  const homeButton = page.getByRole('button', { name: 'Find a friend' });
+  await expect(homeButton).toBeVisible();
+  await expect(homeButton).toHaveCSS('background-color', loginColor);
+  await expect(homeButton).toHaveCSS('font-family', loginFont);
+  await expect(page.locator('.workspace-root').last()).toHaveCSS('color', 'rgb(37, 61, 53)');
+  await expect(page.locator('body')).toHaveCSS('background-color', loginCanvas);
+  await screenshot('chat-home');
+  await page.goto('/groups?group=design');
+  await expect(page.getByRole('button', { name: 'Add member', exact: true })).toHaveCSS('background-color', loginColor);
+  await screenshot('groups');
+  await page.goto('/chat/design');
+  await expect(page.getByText(messages[1].content, { exact: true })).toBeVisible();
+  await expect(page.locator('.workspace-message').filter({ hasText: messages[1].content })).toHaveCSS('background-color', loginColor);
+  await screenshot('conversation');
+  if (!["localhost", "127.0.0.1"].includes(new URL(baseURL).hostname)) throw new Error('Local test server only.');
+  await context.addCookies([{ name: process.env.STEALTHY_NOTE_ADMIN_TOKEN_NAME || 'StealthyNoteAdminToken', value: jwt.sign({ secretKey: process.env.ADMIN_SECRET_KEY || 'Admin@1234' }, process.env.JWT_SECRET || 'fallback_secret'), url: baseURL }]);
+  await page.goto('/admin/dashboard');
+  await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
+  await expect(page.locator('aside')).toHaveCSS('background-color', loginCanvas);
+  await expect(page.locator('aside [aria-current="page"] > span')).toHaveCSS('background-color', loginColor);
+  await screenshot('admin');
+});
+
+test("account recovery and admin login keep the shared cream and green theme", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.route('**/api/v1/admin', route => route.fulfill({ json: { admin: false } }));
+  for (const path of ['/forgot', '/verify', '/admin/login']) {
+    await page.goto(path);
+    await expect(page.getByRole('link', { name: 'Chat Champ home' })).toBeVisible();
+    await expect(page.locator('.auth-motion-root').last()).toHaveCSS('background-color', 'rgb(250, 251, 247)');
+    await expect(page.locator('.champ-wordmark > svg')).toHaveCSS('color', 'rgb(68, 119, 91)');
+    if (process.env.THEME_SCREENSHOTS) await page.screenshot({ path: `${process.env.THEME_SCREENSHOTS}/${path.replaceAll('/', '-')}.png`, fullPage: true, animations: 'disabled' });
+  }
+});

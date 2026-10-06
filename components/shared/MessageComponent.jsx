@@ -98,10 +98,10 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
       transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeInOut" }}
       style={{
         alignSelf: isRightAligned ? "flex-end" : "flex-start",
-        color: isRightAligned ? "white" : "#202b45",
-        backgroundColor: isAi ? "#f0edfc" : isRightAligned ? "#4361d8" : "white",
-        border: isRightAligned ? "none" : "1px solid #e5eaf3",
-        boxShadow: "0 2px 5px #202b4505",
+        color: isRightAligned ? "white" : "var(--champ-ink)",
+        backgroundColor: isAi ? "var(--champ-soft)" : isRightAligned ? "var(--champ-primary)" : "white",
+        border: isRightAligned ? "none" : "1px solid var(--champ-border)",
+        boxShadow: "0 2px 5px color-mix(in srgb, var(--champ-ink) 1.96%, transparent)",
         borderRadius: isRightAligned ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
         padding: "0.75rem 1rem",
         width: "fit-content",
@@ -161,7 +161,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
                 target="_blank"
                 download
                 style={{
-                  color: isRightAligned ? "white" : "#202b45",
+                  color: isRightAligned ? "white" : "var(--champ-ink)",
                 }}
               >
                 {RenderAttachment(fileType, url)}
@@ -211,7 +211,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
           gap: 0.8,
         }}
       >
-        <Typography variant="caption" color={isRightAligned ? "#e4eaff" : "text.secondary"}>
+        <Typography variant="caption" color={isRightAligned ? "var(--champ-on-dark)" : "text.secondary"}>
           {timeAgo}
         </Typography>
         {!isAi && (
@@ -224,7 +224,7 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
               p: 0,
               lineHeight: 1,
               textTransform: "none",
-              color: isRightAligned ? "white" : "#1976d2",
+              color: isRightAligned ? "white" : "var(--champ-primary)",
             }}
           >
             Reply

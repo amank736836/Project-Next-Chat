@@ -3,9 +3,9 @@
 import { Box, Paper, Stack, Typography } from "@mui/material";
 
 export const boardSurfaceSx = {
-  border: "1px solid #e7ecf4",
+  border: "1px solid var(--champ-border)",
   borderRadius: "20px",
-  boxShadow: "0 5px 24px #202b4503",
+  boxShadow: "0 5px 24px color-mix(in srgb, var(--champ-ink) 1.18%, transparent)",
 };
 
 export function BoardSection({
@@ -58,8 +58,8 @@ export function BoardEmpty({ icon: Icon, title, description }) {
         textAlign: "center",
         py: 4,
         px: 2,
-        bgcolor: "#f8faff",
-        border: "1px dashed #dfe5f2",
+        bgcolor: "var(--champ-field)",
+        border: "1px dashed var(--champ-border)",
         borderRadius: 3,
       }}
     >
@@ -72,7 +72,7 @@ export function BoardEmpty({ icon: Icon, title, description }) {
             height: 44,
             mb: 0.5,
             borderRadius: 3,
-            bgcolor: "#edf1ff",
+            bgcolor: "var(--champ-soft)",
             color: "primary.main",
           }}
         >

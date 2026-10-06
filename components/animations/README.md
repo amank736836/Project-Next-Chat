@@ -98,14 +98,35 @@ scroll container or replaying the entire list. The admin portal retains its
 existing reduced-motion-aware page/card reveals, counters, and virtualized row
 entrances while using the same workspace palette.
 
-Landing/auth routes keep their existing theme. CSS class names for workspace
+Every route now shares the login-derived theme; login keeps its existing layout. CSS class names for workspace
 illustrations are namespaced to avoid the public welcome page's artwork styles.
 All workspace CSS animation and transitions respect `prefers-reduced-motion`;
 interactive controls retain visible keyboard focus states.
 
-The `/u/[username]` board now shares the workspace theme as well: owner overview,
+The `/u/[username]` board shares the same theme: owner overview,
 questions, showcase, embed setup, and public visitor views. `BoardSection` and
 `BoardEmpty` keep surface/empty-state styling consistent. Tab panels use the same
 short entrance, prompt arrows have small hover translations, and all motion is
 covered by the workspace reduced-motion rules. Account ownership resolves behind
 a loading shell before showing owner controls or the visitor composer.
+
+
+## Shared login-derived brand
+
+`constants/brand.js` is the single source for the cream canvas, sage actions,
+forest text, DM Sans typography, field borders, and control/card radii.
+`app/layout.js` exposes these as `--champ-*` CSS variables and `WorkspaceTheme`
+uses the same values for MUI on **every route**, including login, recovery, board,
+showcase, and admin. Components use semantic variables instead of independent
+blue/navy palettes. Canvas charts use the resolved JS colors rather than CSS
+variables. Error/destructive-action colors remain distinct.
+
+The login mark is shared through `components/shared/Brand.jsx` (WelcomeStage
+re-exports `ChampMark` for compatibility). Compact recovery/admin-login shells
+use the same cream background and white bordered card instead of the legacy
+multicolor backdrop. Existing motion/reduced-motion behavior is retained.
+
+New widget defaults also inherit the palette; saved custom colors are preserved.
+The standalone `public/widget.js` has literal fallbacks because embedded scripts
+cannot inherit the application theme. Keep those fallbacks and the SVG favicon
+in sync with the tokens when rebranding.

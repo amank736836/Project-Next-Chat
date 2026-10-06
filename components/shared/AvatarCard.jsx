@@ -26,14 +26,14 @@ export default function AvatarCard({ avatar = [], max = 3 }) {
               position: "absolute",
               left: index * 12,
               border: "2px solid white",
-              bgcolor: "#e5eafa",
-              color: "#4361d8",
+              bgcolor: "var(--champ-soft)",
+              color: "var(--champ-primary)",
             }}
           />
         ))
       ) : (
         <Avatar
-          sx={{ width: 44, height: 44, bgcolor: "#e5eafa", color: "#4361d8" }}
+          sx={{ width: 44, height: 44, bgcolor: "var(--champ-soft)", color: "var(--champ-primary)" }}
         />
       )}
     </Box>
