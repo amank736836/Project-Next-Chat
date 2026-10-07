@@ -1,0 +1,25 @@
+{
+  "validUser": {
+    "name": "Test User",
+    "email": "${TEST_USER_EMAIL}",
+    "username": "testuser",
+    "password": "${TEST_USER_PASSWORD}",
+    "note": "Use environment variables for actual credentials"
+  },
+  "adminUser": {
+    "secretKey": "${ADMIN_SECRET_KEY}",
+    "note": "Use environment variable for actual secret key"
+  },
+  "invalidUser": {
+    "name": "",
+    "email": "not-an-email",
+    "username": "ab",
+    "password": "123"
+  },
+  "edgeCaseUser": {
+    "nameMin": "Abc",
+    "nameMax": "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "usernameUnderscore": "test_user_123",
+    "passwordMin": "123456"
+  }
+}
