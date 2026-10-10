@@ -14,12 +14,23 @@ export async function GET(request) {
     }
     
     const searchParams = new URL(request.url).searchParams;
-    const name = searchParams.get('name');
-    
+    const name = (searchParams.get('name') || '').trim().slice(0, 60);
+
+    if (!name) {
+      return NextResponse.json(
+        { success: false, message: 'Search term is required' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: escape regex metacharacters — raw user input in $regex
+    // allows ReDoS and regex-injection attacks.
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     const users = await User.find({
-      name: { $regex: name, $options: 'i' },
+      name: { $regex: escapedName, $options: 'i' },
       _id: { $ne: user._id },
-    }).select('name username avatar');
+    }).select('name username avatar').limit(50);
     
     return NextResponse.json(
       { success: true, users },

@@ -6,8 +6,16 @@ import { sendToken } from '../../../../../lib/server/auth.js';
 import { uploadFilesToCloudinary } from '../../../../../lib/server/cloudinary.js';
 import { sendVerificationEmail } from '../../../../../lib/server/email.js';
 import { v4 as uuid } from 'uuid';
+import { rateLimit, rateLimitedResponse } from '../../../../../lib/server/rateLimit.js';
+import { generateVerificationCode, CODE_TTL_MS } from '../../../../../lib/server/verification.js';
 
 export async function POST(request) {
+  // SECURITY: registrations trigger email sends — rate-limit this endpoint.
+  const limitResult = rateLimit({ scope: 'user-register', request, limit: 5, windowMs: 15 * 60 * 1000 });
+  if (limitResult.limited) {
+    return rateLimitedResponse(limitResult, NextResponse);
+  }
+
   try {
     await connectDB();
 
@@ -33,7 +41,8 @@ export async function POST(request) {
       );
     }
 
-    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+    // SECURITY: cryptographically secure code (never Math.random()).
+    const verifyCode = generateVerificationCode();
 
     const avatarBuffer = Buffer.from(await avatarFile.arrayBuffer());
     const avatarBase64 = `data:${avatarFile.type};base64,${avatarBuffer.toString('base64')}`;
@@ -49,7 +58,8 @@ export async function POST(request) {
       password,
       avatar: avatar[0],
       verifyCode,
-      verifyCodeExpiry: new Date(Date.now() + 10 * 60 * 1000),
+      verifyCodeExpiry: new Date(Date.now() + CODE_TTL_MS),
+      verifyCodeAttempts: 0,
     });
 
     const baseUrl = new URL(request.url).origin;

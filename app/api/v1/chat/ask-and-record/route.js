@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 import { withCors, corsPreflight } from "../../../../../lib/server/cors.js";
+import { rateLimit, rateLimitedResponse } from "../../../../../lib/server/rateLimit.js";
 
 const SOCKET_CHAT_API_BASE =
   process.env.SOCKET_BACKEND_URL || "http://localhost:4000/api/v1";
@@ -10,6 +11,12 @@ export async function OPTIONS() {
 }
 
 export async function POST(request) {
+  // SECURITY: anonymous endpoint — limit per-IP spam against the backend.
+  const limitResult = rateLimit({ scope: "ask-and-record", request, limit: 20, windowMs: 15 * 60 * 1000 });
+  if (limitResult.limited) {
+    return rateLimitedResponse(limitResult, NextResponse);
+  }
+
   try {
     const payload = await request.json();
 

@@ -1,4 +1,8 @@
-import nextJS from '@next/eslint-plugin-next';
+// NOTE: @next/eslint-plugin-next (via eslint-config-next) was removed because
+// it transitively pins fast-glob -> micromatch -> braces, which carry
+// unpatched high-severity DoS advisories (GHSA-vfj7-8cjw-p6xm and friends).
+// The four warn-level @next/next rules it provided were dropped; the rest of
+// the lint setup is unchanged.
 import importPlugin from 'eslint-plugin-import';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
@@ -22,7 +26,6 @@ const eslintConfig = [
       },
     },
     plugins: {
-      '@next/next': nextJS,
       import: importPlugin,
       'jsx-a11y': jsxA11yPlugin,
       react: reactPlugin,
@@ -35,10 +38,6 @@ const eslintConfig = [
       },
     },
     rules: {
-      '@next/next/no-duplicate-head': 'warn',
-      '@next/next/no-html-link-for-pages': 'warn',
-      '@next/next/no-script-component-in-head': 'warn',
-      '@next/next/no-title-in-document-head': 'warn',
       'import/no-anonymous-default-export': 'warn',
       'react/no-unknown-property': 'off',
       'react/react-in-jsx-scope': 'off',
