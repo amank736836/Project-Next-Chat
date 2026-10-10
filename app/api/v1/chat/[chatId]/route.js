@@ -81,14 +81,25 @@ export async function GET(request, { params }) {
     }
     
     const chat = await query;
-    
+
     if (!chat) {
       return NextResponse.json(
         { success: false, message: 'Chat not found' },
         { status: 404 }
       );
     }
-    
+
+    // SECURITY: only chat members may read chat details (prevents IDOR).
+    const isMember = (chat.members || []).some(
+      (member) => member.toString() === user._id.toString()
+    );
+    if (!isMember) {
+      return NextResponse.json(
+        { success: false, message: 'Chat not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       { success: true, chat },
       { status: 200 }

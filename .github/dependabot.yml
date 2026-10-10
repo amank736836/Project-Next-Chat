@@ -1,0 +1,12 @@
+# Keep dependencies current and let Dependabot open security-update PRs.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      npm_and_yarn:
+        patterns:
+          - "*"
