@@ -12,15 +12,15 @@ export const useErrors = (errors = []) => {
         }
         if (error?.data?.message) {
           toast.error(error.data.message, {
-            duration: 1000,
+            duration: 4000,
           });
         } else if (error?.message) {
           toast.error(error.message, {
-            duration: 1000,
+            duration: 4000,
           });
         } else {
           toast.error("Something went wrong", {
-            duration: 1000,
+            duration: 4000,
           });
         }
       }
@@ -47,14 +47,14 @@ export const useAsyncMutation = (mutationHook) => {
         });
       } else if (res.error) {
         toast.error(res?.error?.data?.message, {
-          duration: 1000,
+          duration: 4000,
           id: toastId,
         });
       }
     } catch (error) {
       console.error(error);
       toast.error("Error updating data", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     }

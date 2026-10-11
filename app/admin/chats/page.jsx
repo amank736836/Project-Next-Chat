@@ -56,7 +56,9 @@ const columns = [
     headerClassName: "table-header",
     width: 200,
     renderCell: (params) => (
-      <Stack direction={"row"} alignItems={"center"} spacing={"1rem"}>
+      <Stack direction={"row"} spacing={"1rem"} sx={{
+        alignItems: "center"
+      }}>
         <Avatar alt={params.row.creator.name} src={params.row.creator.avatar} />
         <Typography>{params.row.creator.name}</Typography>
       </Stack>

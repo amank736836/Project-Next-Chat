@@ -12,9 +12,17 @@ import useReducedMotionSafe from "../animations/useReducedMotionSafe";
 function LoadingContent({ label, variant }) {
   return (
     <Box role="status" aria-busy="true" sx={{ p: { xs: 3, md: 4 } }}>
-      <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 3 }}>
+      <Stack
+        direction="row"
+        spacing={1.5}
+        sx={{
+          alignItems: "center",
+          mb: 3
+        }}>
         <span className="admin-loading-spinner" aria-hidden="true" />
-        <Typography fontWeight={600}>{label}</Typography>
+        <Typography sx={{
+          fontWeight: 600
+        }}>{label}</Typography>
       </Stack>
       <Box aria-hidden="true">
         <Skeleton variant="rounded" width="45%" height={32} sx={{ mb: 3 }} />
@@ -97,10 +105,17 @@ export default function AdminAsyncContent({
               }}
             >
               <ErrorOutlineIcon color="error" sx={{ fontSize: 36, mb: 1 }} />
-              <Typography variant="h6" component="h2" fontWeight={700}>
+              <Typography variant="h6" component="h2" sx={{
+                fontWeight: 700
+              }}>
                 Unable to load this page
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 1, mb: 2 }}>
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  mt: 1,
+                  mb: 2
+                }}>
                 {errorMessage}
               </Typography>
               {onRetry && (

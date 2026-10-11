@@ -178,7 +178,7 @@ export default function WelcomeStage({ children, onCreateAccount }) {
         <Link
           href="/login"
           className="champ-brand"
-          aria-label="Chat Champ home"
+          aria-label="chatchamp home"
         >
           <ChampMark />
           <span>
@@ -287,8 +287,10 @@ export default function WelcomeStage({ children, onCreateAccount }) {
         onClose={() => setDialog(null)}
         maxWidth="sm"
         fullWidth
-        PaperProps={{
-          sx: { borderRadius: "24px", p: 1, background: "#fbfdfb" },
+        slotProps={{
+          paper: {
+            sx: { borderRadius: "24px", p: 1, background: "#fbfdfb" },
+          },
         }}
         aria-labelledby="welcome-dialog-title"
       >

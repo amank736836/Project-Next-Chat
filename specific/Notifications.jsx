@@ -161,7 +161,9 @@ export default function Notifications() {
           ) : notificationList.length > 0 ? (
             renderedNotifications
           ) : (
-            <Typography textAlign="center" color="gray">
+            <Typography color="gray" sx={{
+              textAlign: "center"
+            }}>
               {notificationList.length === 0
                 ? "No Notifications yet"
                 : "Error fetching notifications"}
@@ -198,9 +200,10 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
             xs: "column",
             sm: "row",
           }}
-          alignItems={"center"}
-          width={"100%"}
-        >
+          sx={{
+            alignItems: "center",
+            width: "100%"
+          }}>
           <Typography
             variant="body1"
             sx={{
@@ -215,7 +218,9 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
           >
             {name}
           </Typography>
-          <Stack spacing={1} direction={"row"} justifyContent="center">
+          <Stack spacing={1} direction={"row"} sx={{
+            justifyContent: "center"
+          }}>
             <Button
               onClick={() => handler({ _id, accept: true })}
               variant="contained"

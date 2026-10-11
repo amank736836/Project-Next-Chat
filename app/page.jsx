@@ -2,7 +2,6 @@
 
 import { Box, Button, Stack, Typography, Drawer, Grid, Skeleton } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import WorkspaceEmpty from "../components/shared/WorkspaceEmpty";
@@ -31,10 +30,12 @@ import {
 import { useSocket } from "../providers/SocketProvider";
 import DeleteChatMenu from "../components/dialog/DeleteChatMenu";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
+// Static imports: as next/dynamic these suspended after first paint, which swapped
+// the whole page for the route-level skeleton (visible flash / layout shift).
+import Header from "../components/layout/Header";
+import ChatList from "../components/shared/ChatList";
+import Profile from "../components/shared/Profile";
 
-const Header = dynamic(() => import("../components/layout/Header"));
-const ChatList = dynamic(() => import("../components/shared/ChatList"));
-const Profile = dynamic(() => import("../components/shared/Profile"));
 
 function HomeContent() {
   const { newMessagesAlert } = useSelector((state) => state.chat);
@@ -201,15 +202,18 @@ function HomeContent() {
         </Drawer>
       )}
 
-      <Grid className="workspace-root" container height="calc(100dvh - 64px)">
+      <Grid className="workspace-root" container sx={{
+        height: "calc(100dvh - 64px)"
+      }}>
         <Grid
+          component="nav"
+          aria-label="Conversations"
           size={{ sm: 4, md: 5, lg: 3 }}
           sx={{
+            height: "100%",
             display: { xs: "none", sm: "block" },
-            background: "var(--champ-canvas)",
-          }}
-          height={"100%"}
-        >
+            background: "var(--champ-canvas)"
+          }}>
           {isLoadingChats ? (
             <Stack spacing={"1rem"}>
               {chatListSkeleton}
@@ -225,7 +229,9 @@ function HomeContent() {
           )}
         </Grid>
 
-        <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height={"100%"}>
+        <Grid component="main" size={{ sm: 8, md: 7, lg: 6, xs: 12 }} sx={{
+          height: "100%"
+        }}>
           <Box
             sx={{
               height: "100%",
@@ -245,12 +251,13 @@ function HomeContent() {
         </Grid>
 
         <Grid
+          component="aside"
+          aria-label="Your profile"
           size={{ lg: 3 }}
           sx={{
-            display: { xs: "none", lg: "block" },
-          }}
-          height={"100%"}
-        >
+            height: "100%",
+            display: { xs: "none", lg: "block" }
+          }}>
           <Profile />
         </Grid>
       </Grid>

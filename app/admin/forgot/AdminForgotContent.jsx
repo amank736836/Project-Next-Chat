@@ -83,7 +83,7 @@ export default function AdminForgotContent() {
     } catch (error) {
       shake();
       toast.error(error?.response?.data?.message || "Failed to send code", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {
@@ -139,7 +139,7 @@ export default function AdminForgotContent() {
     } catch (error) {
       shake();
       toast.error(error?.response?.data?.message || "Update failed", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {
@@ -160,6 +160,7 @@ export default function AdminForgotContent() {
           {isForgotPassword ? (
             <>
               <AnimatedHeading
+                component="h1"
                 text="Forgot Password"
                 subtext="Let's get you back into your account."
               />
@@ -175,7 +176,7 @@ export default function AdminForgotContent() {
                   margin="normal"
                   variant="outlined"
                   type="text"
-                  autoComplete="identifier email"
+                  autoComplete="username"
                   autoFocus
                   value={identifier.value}
                   onChange={identifier.changeHandler}
@@ -189,7 +190,11 @@ export default function AdminForgotContent() {
                   loadingLabel="Sending code…"
                   sx={{ mt: 2 }}
                 />
-                <Typography textAlign="center" mt={2}>
+                <Typography
+                  sx={{
+                    textAlign: "center",
+                    mt: 2
+                  }}>
                   OR
                 </Typography>
                 <AnimatedToggleButton
@@ -207,6 +212,7 @@ export default function AdminForgotContent() {
           ) : (
             <>
               <AnimatedHeading
+                component="h1"
                 text="Verify Forgot Password"
                 subtext="Enter your code and choose a new password."
               />
@@ -283,7 +289,11 @@ export default function AdminForgotContent() {
                   }
                 />
               </form>
-              <Typography textAlign="center" mt={2}>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  mt: 2
+                }}>
                 OR
               </Typography>
               <AnimatedToggleButton

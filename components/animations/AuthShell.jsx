@@ -123,7 +123,7 @@ export default function AuthShell({
               my: "auto",
             }}
           >
-            <Link href="/login" aria-label="Chat Champ home" style={{ color: "inherit", textDecoration: "none" }}><Brand /></Link>
+            <Link href="/login" aria-label="chatchamp home" style={{ color: "inherit", textDecoration: "none" }}><Brand /></Link>
             <TiltCard controls={controls} maxTilt={maxTilt}>
               <Suspense
                 fallback={

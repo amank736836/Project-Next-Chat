@@ -150,3 +150,13 @@ tests/*
 tests/e2e/*
 !tests/e2e/workspace.spec.js
 !tests/e2e/board.spec.js
+!tests/e2e/qa-regression.spec.js
+!tests/support/
+tests/support/*
+!tests/support/mockApi.js
+!tests/qa/
+tests/qa/*
+!tests/qa/audit.js
+
+# QA run output (the curated report evidence lives in qa-report/)
+qa-artifacts/

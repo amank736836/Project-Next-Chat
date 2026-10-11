@@ -95,8 +95,9 @@ function ShowcaseContent() {
 
   return (
     <Box
+      component="main"
       sx={{
-        minHeight: "100vh",
+        minHeight: "100dvh",
         background: gradientBg,
         display: "flex",
         justifyContent: "center",
@@ -106,10 +107,18 @@ function ShowcaseContent() {
     >
       <Box sx={{ width: "100%", maxWidth: 720 }}>
         <Paper elevation={4} sx={{ p: { xs: 2, sm: 3 }, borderRadius: "16px", mb: 2 }}>
-          <Typography variant="h5" align="center" fontWeight={700}>
+          <Typography component="h1" variant="h5" align="center" sx={{
+            fontWeight: 700
+          }}>
             @{esc(username)} — Answer Showcase
           </Typography>
-          <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 0.5 }}>
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{
+              color: "text.secondary",
+              mt: 0.5
+            }}>
             Answered questions{hostFilter ? ` from ${esc(hostFilter)}` : " from every website"}
           </Typography>
           {availableHosts.length > 0 && (
@@ -141,14 +150,29 @@ function ShowcaseContent() {
           <Stack spacing={1.5}>
             {answered.map((item) => (
               <Paper key={item.id} elevation={3} sx={{ p: 2, borderRadius: "16px" }}>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   Question{item.hosts?.length > 0 ? ` · ${item.hosts.map(esc).join(", ")}` : ""}
                 </Typography>
-                <Typography fontWeight={600}>{esc(item.question)}</Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
+                <Typography sx={{
+                  fontWeight: 600
+                }}>{esc(item.question)}</Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                    display: "block",
+                    mt: 1
+                  }}>
                   Answer
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
+                    mt: 0.5
+                  }}>
                   {esc(item.answer)}
                 </Typography>
               </Paper>
@@ -156,7 +180,9 @@ function ShowcaseContent() {
           </Stack>
         ) : (
           <Paper elevation={2} sx={{ p: 3, borderRadius: "16px", textAlign: "center" }}>
-            <Typography color="text.secondary">No answered questions yet</Typography>
+            <Typography sx={{
+              color: "text.secondary"
+            }}>No answered questions yet</Typography>
             <Button href={`/u/${username}`} variant="outlined" sx={{ mt: 2 }}>
               Ask @{esc(username)} a question
             </Button>

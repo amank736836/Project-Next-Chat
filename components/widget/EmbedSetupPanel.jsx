@@ -207,7 +207,13 @@ export default function EmbedSetupPanel({ username }) {
       elevation={0}
       sx={{ ...boardSurfaceSx, p: { xs: 2.5, sm: 3 }, minWidth: 0 }}
     >
-      <Stack direction="row" gap={1.5} alignItems="center" sx={{ mb: 1 }}>
+      <Stack
+        direction="row"
+        sx={{
+          gap: 1.5,
+          alignItems: "center",
+          mb: 1
+        }}>
         <Box
           sx={{
             display: "grid",
@@ -220,18 +226,37 @@ export default function EmbedSetupPanel({ username }) {
         >
           <CodeRounded />
         </Box>
-        <Typography component="h2" variant="h6" fontWeight={700}>
+        <Typography component="h2" variant="h6" sx={{
+          fontWeight: 700
+        }}>
           Take your board with you
         </Typography>
       </Stack>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          mb: 2
+        }}>
         First tell us which website(s) you will paste the snippet on — responses
         get tagged per site. One snippet works on all of them.
       </Typography>
 
-      <Stack direction="row" gap={1} alignItems="center" sx={{ mt: 3, mb: 2 }}>
+      <Stack
+        direction="row"
+        sx={{
+          gap: 1,
+          alignItems: "center",
+          mt: 3,
+          mb: 2
+        }}>
         <LanguageRounded fontSize="small" color="primary" />
-        <Typography component="h3" fontWeight={650} fontSize={14}>
+        <Typography
+          component="h3"
+          sx={{
+            fontWeight: 650,
+            fontSize: 14
+          }}>
           01 · Connect your websites
         </Typography>
       </Stack>
@@ -271,14 +296,31 @@ export default function EmbedSetupPanel({ username }) {
           ))}
         </Box>
       ) : (
-        <Typography variant="body2" color="warning.main" sx={{ mb: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "warning.main",
+            mb: 2
+          }}>
           Add at least one website above to unlock your embed snippets.
         </Typography>
       )}
 
-      <Stack direction="row" gap={1} alignItems="center" sx={{ mt: 4, mb: 2 }}>
+      <Stack
+        direction="row"
+        sx={{
+          gap: 1,
+          alignItems: "center",
+          mt: 4,
+          mb: 2
+        }}>
         <PaletteOutlined fontSize="small" color="primary" />
-        <Typography component="h3" fontWeight={650} fontSize={14}>
+        <Typography
+          component="h3"
+          sx={{
+            fontWeight: 650,
+            fontSize: 14
+          }}>
           02 · Make it feel like you
         </Typography>
       </Stack>
@@ -416,7 +458,7 @@ export default function EmbedSetupPanel({ username }) {
                 label="Auto-open (sec, 0=off)"
                 value={settings.autoOpenDelay}
                 onChange={set("autoOpenDelay")}
-                inputProps={{ min: 0, max: 120 }}
+                slotProps={{ htmlInput: { min: 0, max: 120 } }}
                 sx={{ width: 170 }}
               />
             </Box>
@@ -464,7 +506,9 @@ export default function EmbedSetupPanel({ username }) {
             }}
           >
             <Box sx={{ position: "absolute", inset: 0, p: 2 }}>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 your-website.com
               </Typography>
               <Box
@@ -534,7 +578,9 @@ export default function EmbedSetupPanel({ username }) {
                 p: 1.5,
               }}
             >
-              <Typography variant="subtitle2" fontWeight={700}>
+              <Typography variant="subtitle2" sx={{
+                fontWeight: 700
+              }}>
                 {settings.title}
               </Typography>
               <Typography
@@ -577,7 +623,9 @@ export default function EmbedSetupPanel({ username }) {
               variant="outlined"
               sx={{ p: 2, mt: 2, borderRadius: 2, bgcolor: "#fafafa" }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Your snippets will appear here once you add your first website
                 above. Save settings to keep the site list.
               </Typography>
@@ -654,9 +702,11 @@ export default function EmbedSetupPanel({ username }) {
               </Box>
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ display: "block", mt: 1 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  display: "block",
+                  mt: 1
+                }}>
                 Responses appear on your board in Priority Questions + chat,
                 same as direct /u/{username} messages.
                 {primarySite

@@ -49,7 +49,7 @@ const authSlice = createSlice({
       .addCase(adminLogin.rejected, (state, action) => {
         state.loader = false;
         toast.error(action.error.message, {
-          duration: 1000,
+          duration: 4000,
         });
       })
       .addCase(getAdmin.fulfilled, (state, action) => {
@@ -75,7 +75,7 @@ const authSlice = createSlice({
       .addCase(adminLogout.rejected, (state, action) => {
         state.loader = false;
         toast.error(action.error.message, {
-          duration: 1000,
+          duration: 4000,
         });
       });
   },

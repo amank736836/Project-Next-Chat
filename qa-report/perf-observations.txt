@@ -1,0 +1,8 @@
+login 375 {"ttfb":6,"dcl":39,"load":309,"fcp":180,"lcp":444,"cls":0.0007,"js":388,"heapMB":10}
+login 1280 {"ttfb":5,"dcl":81,"load":260,"fcp":484,"lcp":484,"cls":0.0006,"js":394,"heapMB":10}
+privacy 375 {"ttfb":4,"dcl":34,"load":191,"fcp":136,"lcp":136,"cls":0.0042,"js":263,"heapMB":10}
+privacy 1280 {"ttfb":5,"dcl":90,"load":226,"fcp":152,"lcp":152,"cls":0,"js":263,"heapMB":10}
+home (signed-in, mocked API) 375 {"ttfb":7,"dcl":43,"load":222,"fcp":368,"lcp":428,"cls":0.065,"js":360,"heapMB":11}
+home (signed-in, mocked API) 1280 {"ttfb":7,"dcl":109,"load":362,"fcp":556,"lcp":556,"cls":0.0345,"js":360,"heapMB":12}
+chat (signed-in, mocked API) 375 {"ttfb":22,"dcl":77,"load":431,"fcp":752,"lcp":0,"cls":0,"js":443,"heapMB":11}
+chat (signed-in, mocked API) 1280 {"ttfb":14,"dcl":49,"load":275,"fcp":564,"lcp":564,"cls":0,"js":443,"heapMB":12}

@@ -11,12 +11,9 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const esc = (v = '') =>
-  String(v ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+// React already escapes text children; escaping again here printed literal
+// "&amp;" / "&lt;" for titles such as "Q&A".
+const esc = (v = '') => String(v ?? '');
 
 export default async function EmbedPage({ params, searchParams }) {
   const { username: rawUsername } = await params;
@@ -65,7 +62,7 @@ export default async function EmbedPage({ params, searchParams }) {
   }
 
   return (
-    <div style={{ margin: 0, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--champ-canvas)', padding: 12, boxSizing: 'border-box' }}>
+    <main style={{ margin: 0, minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--champ-canvas)', padding: 12, boxSizing: 'border-box' }}>
       <div
         id="sn-embed"
           data-username={username}
@@ -92,7 +89,7 @@ export default async function EmbedPage({ params, searchParams }) {
             border: '1px solid rgba(0,0,0,0.08)',
           }}
         >
-          <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 4 }}>{esc(settings.title)}</div>
+          <h1 style={{ fontWeight: 700, fontSize: 18, margin: '0 0 4px' }}>{esc(settings.title)}</h1>
           <div style={{ opacity: 0.7, fontSize: 13, marginBottom: 12 }}>
             {esc(settings.subtitle)} · @{esc(username)}
           </div>
@@ -104,7 +101,9 @@ export default async function EmbedPage({ params, searchParams }) {
                 id="sn-input"
                 rows={4}
                 placeholder={settings.placeholder}
+                aria-label={settings.placeholder || 'Your message'}
                 style={{
+                  fontFamily: 'inherit',
                   width: '100%',
                   boxSizing: 'border-box',
                   borderRadius: 10,
@@ -119,6 +118,7 @@ export default async function EmbedPage({ params, searchParams }) {
                 id="sn-send"
                 type="submit"
                 style={{
+                  fontFamily: 'inherit',
                   width: '100%',
                   border: 0,
                   borderRadius: settings.shape === 'pill' ? 999 : 10,
@@ -131,15 +131,15 @@ export default async function EmbedPage({ params, searchParams }) {
               >
                 {esc(settings.buttonText)}
               </button>
-              <div id="sn-status" style={{ fontSize: 13, marginTop: 8, minHeight: 18 }} />
+              <div id="sn-status" role="status" aria-live="polite" style={{ fontSize: 13, marginTop: 8, minHeight: 18 }} />
             </form>
           )}
         </div>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var root=document.getElementById('sn-embed');if(!root)return;var username=root.dataset.username||'';var form=document.getElementById('sn-form');if(!form)return;var input=document.getElementById('sn-input');var status=document.getElementById('sn-status');var sugg=document.getElementById('sn-suggestions');var showSugg=root.dataset.suggestions!=='0';function setStatus(m,ok){status.textContent=m||'';status.style.color=ok?'green':'#b00020';}async function loadSugg(){if(!showSugg)return;try{var r=await fetch('/api/v1/chat/questions?username='+encodeURIComponent(username),{headers:{'Accept':'application/json'}});var j=await r.json();var list=(j.suggestions||[]).slice(0,3);sugg.innerHTML='';list.forEach(function(q){var b=document.createElement('button');b.type='button';b.textContent=q;b.style.cssText='text-align:left;border:1px solid rgba(0,0,0,0.12);background:transparent;border-radius:8px;padding:6px 8px;font-size:12px;cursor:pointer';b.onclick=function(){input.value=q;};sugg.appendChild(b);});}catch(e){}}form.addEventListener('submit',async function(e){e.preventDefault();var q=input.value.trim();if(!q){setStatus('Please write a message first.');return;}setStatus('Sending…',true);try{var res=await fetch('/api/v1/chat/ask-and-record',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,question:q,content:q})});var data=await res.json();if(data.success){if(data.alreadyAnswered){setStatus('Already answered — thanks!',true);}else{setStatus('Thanks! Your feedback was sent.',true);}input.value='';loadSugg();}else{setStatus(data.message||'Failed to send. Try again.');}}catch(err){setStatus('Failed to send. Try again.');}});loadSugg();})();`,
+            __html: `(function(){var root=document.getElementById('sn-embed');if(!root)return;var username=root.dataset.username||'';var form=document.getElementById('sn-form');if(!form)return;var input=document.getElementById('sn-input');var status=document.getElementById('sn-status');var sugg=document.getElementById('sn-suggestions');var showSugg=root.dataset.suggestions!=='0';function setStatus(m,ok){status.textContent=m||'';status.style.color=ok?'green':'#b00020';}async function loadSugg(){if(!showSugg)return;try{var r=await fetch('/api/v1/chat/questions?username='+encodeURIComponent(username),{headers:{'Accept':'application/json'}});var j=await r.json();var list=(j.suggestions||[]).slice(0,3);sugg.innerHTML='';list.forEach(function(q){var b=document.createElement('button');b.type='button';b.textContent=q;b.style.cssText='font-family:inherit;color:inherit;text-align:left;border:1px solid rgba(0,0,0,0.12);background:transparent;border-radius:8px;padding:6px 8px;font-size:12px;cursor:pointer';b.onclick=function(){input.value=q;};sugg.appendChild(b);});}catch(e){}}form.addEventListener('submit',async function(e){e.preventDefault();var q=input.value.trim();if(!q){setStatus('Please write a message first.');return;}setStatus('Sending…',true);try{var res=await fetch('/api/v1/chat/ask-and-record',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,question:q,content:q})});var data=await res.json();if(data.success){if(data.alreadyAnswered){setStatus('Already answered — thanks!',true);}else{setStatus('Thanks! Your feedback was sent.',true);}input.value='';loadSugg();}else{setStatus(data.message||'Failed to send. Try again.');}}catch(err){setStatus('Failed to send. Try again.');}});loadSugg();})();`,
           }}
         />
-    </div>
+    </main>
   );
 }

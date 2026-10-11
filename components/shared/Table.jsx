@@ -62,21 +62,22 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
       >
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: 3, gap: 2 }}
-        >
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 3,
+            gap: 2
+          }}>
           <Box>
             <Typography variant="overline" color="primary" sx={{ letterSpacing: ".14em", fontSize: 10 }}>COMMUNITY DIRECTORY</Typography>
             <Typography
               component="h1"
               variant="h4"
-              fontWeight={600}
               sx={{
+                fontWeight: 600,
                 letterSpacing: "-0.03em",
-                fontSize: { xs: "1.65rem", sm: "2rem" },
-              }}
-            >
+                fontSize: { xs: "1.65rem", sm: "2rem" }
+              }}>
               {headings}
             </Typography>
             <motion.div
@@ -101,27 +102,35 @@ export default function Table({ rows, columns, headings, rowHeight = 52 }) {
           <Typography
             component="div"
             variant="body2"
-            color="text.secondary"
             sx={{
+              color: "text.secondary",
               px: 1.5,
               py: 0.75,
               borderRadius: 2,
               bgcolor: "var(--champ-soft)",
-              whiteSpace: "nowrap",
-            }}
-          >
+              whiteSpace: "nowrap"
+            }}>
             <AnimatedCounter value={rows.length} />{" "}
             {rows.length === 1 ? "record" : "records"}
           </Typography>
         </Stack>
 
-        <Stack direction={{ xs: "column", sm: "row" }} gap={1.5} alignItems={{ xs: "stretch", sm: "center" }} justifyContent="space-between" sx={{ mb: 2.5 }}>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          sx={{
+            gap: 1.5,
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: "space-between",
+            mb: 2.5
+          }}>
           <TextField size="small" placeholder="Search records…" value={search} onChange={(event) => setSearch(event.target.value)} sx={{ width: { xs: "100%", sm: 320 } }}
             slotProps={{ htmlInput: { "aria-label": "Search records" }, input: {
               startAdornment: <InputAdornment position="start"><SearchRounded fontSize="small" /></InputAdornment>,
               endAdornment: search ? <InputAdornment position="end"><IconButton size="small" aria-label="Clear search" onClick={() => setSearch("")}><CloseRounded fontSize="small" /></IconButton></InputAdornment> : null,
             } }} />
-          <Typography variant="caption" color="text.secondary" role="status">{search ? `${visibleRows.length} matching records` : "Explore, sort, and filter your community data."}</Typography>
+          <Typography variant="caption" role="status" sx={{
+            color: "text.secondary"
+          }}>{search ? `${visibleRows.length} matching records` : "Explore, sort, and filter your community data."}</Typography>
         </Stack>
         <DataGrid
           className={rowsEntering ? "admin-table-entering" : undefined}

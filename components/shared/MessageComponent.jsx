@@ -108,7 +108,9 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
       }}
     >
       {!isRightAligned && (
-        <Typography color={lightBlue} fontWeight={600} variant="caption">
+        <Typography color={lightBlue} variant="caption" sx={{
+          fontWeight: 600
+        }}>
           {isAi ? "✨ AI Assistant" : isAnonymousMessage ? "Anonymous" : sender?.name || "Anonymous"}
         </Typography>
       )}
@@ -220,8 +222,11 @@ function MessageComponent({ message, onReply, onShareAi, onDismissAi }) {
             variant="text"
             onClick={handleReplyClick}
             sx={{
-              minWidth: "auto",
-              p: 0,
+              // comfortable tap target (was ~34x13px)
+              minWidth: 44,
+              minHeight: 32,
+              px: 1,
+              py: 0.5,
               lineHeight: 1,
               textTransform: "none",
               color: isRightAligned ? "white" : "var(--champ-primary)",

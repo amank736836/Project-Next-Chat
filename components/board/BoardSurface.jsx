@@ -23,11 +23,12 @@ export function BoardSection({
     >
       <Stack
         direction="row"
-        alignItems="flex-start"
-        justifyContent="space-between"
-        gap={2}
-        sx={{ mb: 2.5 }}
-      >
+        sx={{
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 2,
+          mb: 2.5
+        }}>
         <Box sx={{ minWidth: 0 }}>
           <Typography component="h2" variant="h6">
             {title}
@@ -35,9 +36,11 @@ export function BoardSection({
           {description && (
             <Typography
               variant="body2"
-              color="text.secondary"
-              sx={{ mt: 0.5, lineHeight: 1.7 }}
-            >
+              sx={{
+                color: "text.secondary",
+                mt: 0.5,
+                lineHeight: 1.7
+              }}>
               {description}
             </Typography>
           )}
@@ -52,17 +55,16 @@ export function BoardSection({
 export function BoardEmpty({ icon: Icon, title, description }) {
   return (
     <Stack
-      alignItems="center"
       spacing={1.25}
       sx={{
+        alignItems: "center",
         textAlign: "center",
         py: 4,
         px: 2,
         bgcolor: "var(--champ-field)",
         border: "1px dashed var(--champ-border)",
-        borderRadius: 3,
-      }}
-    >
+        borderRadius: 3
+      }}>
       {Icon && (
         <Box
           sx={{
@@ -79,10 +81,19 @@ export function BoardEmpty({ icon: Icon, title, description }) {
           <Icon aria-hidden="true" />
         </Box>
       )}
-      <Typography fontSize={14} fontWeight={650}>
+      <Typography
+        sx={{
+          fontSize: 14,
+          fontWeight: 650
+        }}>
         {title}
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          maxWidth: 360
+        }}>
         {description}
       </Typography>
     </Stack>

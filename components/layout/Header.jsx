@@ -98,7 +98,7 @@ export default function Header({ alwaysShowProfile = false }) {
     } catch (error) {
       console.error(error);
       toast.error(error?.response?.data?.message || "Something went wrong!", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     }
@@ -121,7 +121,7 @@ export default function Header({ alwaysShowProfile = false }) {
           <Box
             component={Link}
             href="/"
-            aria-label="Chat Champ home"
+            aria-label="chatchamp home"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -145,7 +145,11 @@ export default function Header({ alwaysShowProfile = false }) {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Box display="flex" gap={{ xs: 0, sm: 0.5 }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: { xs: 0, sm: 0.5 }
+            }}>
             <IconBtn
               title="Search"
               onClick={openSearch}
@@ -226,7 +230,7 @@ const IconBtn = ({ title, onClick, icon, value, showZero = false, badgeColor = "
         size="large"
         sx={{
           width: { xs: 32, sm: 42 },
-          height: { xs: 40, sm: 42 },
+          height: { xs: 44, sm: 42 },
           borderRadius: "12px",
           color: active ? "var(--champ-primary)" : "var(--champ-muted)",
           bgcolor: active ? "var(--champ-soft)" : "transparent",
