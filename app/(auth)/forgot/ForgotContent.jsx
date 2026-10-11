@@ -78,7 +78,7 @@ export default function ForgotContent() {
     } catch (error) {
       console.error(error);
       toast.error(error?.response?.data?.message || "Failed to send code", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {
@@ -134,7 +134,7 @@ export default function ForgotContent() {
     } catch (error) {
       console.error(error);
       toast.error(error?.response?.data?.message || "Update failed", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {
@@ -146,7 +146,9 @@ export default function ForgotContent() {
     <>
       {isForgotPassword ? (
         <>
-          <Typography variant="h5" fontWeight={600} color="primary">
+          <Typography component="h1" variant="h5" color="primary" sx={{
+            fontWeight: 600
+          }}>
             Forgot Password
           </Typography>
           <form
@@ -161,7 +163,7 @@ export default function ForgotContent() {
               margin="normal"
               variant="outlined"
               type="text"
-              autoComplete="identifier email"
+              autoComplete="username"
               autoFocus
               value={identifier.value}
               onChange={identifier.changeHandler}
@@ -176,13 +178,17 @@ export default function ForgotContent() {
             >
               Send Verification Code
             </Button>
-            <Typography textAlign="center" mt={2}>
+            <Typography
+              sx={{
+                textAlign: "center",
+                mt: 2
+              }}>
               OR
             </Typography>
             <Button
               fullWidth
               variant="outlined"
-              color="secondary"
+              color="primary"
               onClick={toggleVerify}
               sx={{ mt: 2 }}
               disabled={isLoading}
@@ -190,7 +196,11 @@ export default function ForgotContent() {
               Verify Forgot Password
             </Button>
           </form>
-          <Typography textAlign={"center"} m={"0.5rem"}>
+          <Typography
+            sx={{
+              textAlign: "center",
+              m: "0.5rem"
+            }}>
             Know your password?{" "}
             <Button
               variant="text"
@@ -206,7 +216,9 @@ export default function ForgotContent() {
         </>
       ) : (
         <>
-          <Typography variant="h5" fontWeight={600} color="primary">
+          <Typography component="h1" variant="h5" color="primary" sx={{
+            fontWeight: 600
+          }}>
             Verify Forgot Password
           </Typography>
           <form
@@ -280,7 +292,11 @@ export default function ForgotContent() {
               Update Password
             </Button>
           </form>
-          <Typography textAlign="center" mt={2}>
+          <Typography
+            sx={{
+              textAlign: "center",
+              mt: 2
+            }}>
             OR
           </Typography>
           <Button

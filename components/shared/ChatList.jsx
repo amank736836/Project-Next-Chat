@@ -107,17 +107,21 @@ function ChatList({
   return (
     <Stack
       className="workspace-root"
-      height="100%"
-      width={w}
-      sx={{ bgcolor: "white", borderRight: "1px solid var(--champ-border)", minHeight: 0 }}
-    >
+      sx={{
+        height: "100%",
+        width: w,
+        bgcolor: "white",
+        borderRight: "1px solid var(--champ-border)",
+        minHeight: 0
+      }}>
       <Box sx={{ p: 2.5, pb: 1.5 }}>
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: 2 }}
-        >
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 2
+          }}>
           <Typography component="h2" variant="h6">
             Messages
           </Typography>
@@ -179,12 +183,19 @@ function ChatList({
         {chatItems}
         {filteredChats.length === 0 && (
           <Box sx={{ p: 3, textAlign: "center" }}>
-            <Typography fontWeight={600}>
+            <Typography sx={{
+              fontWeight: 600
+            }}>
               {chats.length
                 ? "No conversations found"
                 : "Your inbox starts here"}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 1
+              }}>
               {chats.length
                 ? "Try a different name or filter."
                 : "Use Search in the toolbar to find a friend and connect."}

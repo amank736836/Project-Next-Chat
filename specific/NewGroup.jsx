@@ -141,7 +141,12 @@ export default function NewGroupDialog() {
           }}
         />
 
-        <Typography variant="body1" fontWeight={500} mt={2}>
+        <Typography
+          variant="body1"
+          sx={{
+            fontWeight: 500,
+            mt: 2
+          }}>
           Choose your people · {selectedMembers.length} selected
         </Typography>
 
@@ -163,11 +168,15 @@ export default function NewGroupDialog() {
           {loadingAvailableFriends ? (
             <Skeleton variant="rounded" height={40} />
           ) : errorAvailableFriends ? (
-            <Typography variant="body2" color="error" textAlign="center">
+            <Typography variant="body2" color="error" sx={{
+              textAlign: "center"
+            }}>
               {errorAvailableFriendsMessage?.data?.message || "Unable to load friends. Please try again."}
             </Typography>
           ) : availableFriends?.friends?.length === 0 ? (
-            <Typography variant="body2" textAlign="center">
+            <Typography variant="body2" sx={{
+              textAlign: "center"
+            }}>
               No available friends to add.
             </Typography>
           ) : (
@@ -175,7 +184,12 @@ export default function NewGroupDialog() {
           )}
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between" mt={3}>
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: "space-between",
+            mt: 3
+          }}>
           <Button
             variant="text"
             color="inherit"

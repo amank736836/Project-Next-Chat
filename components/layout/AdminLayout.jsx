@@ -77,12 +77,21 @@ function Sidebar({ onNavigate }) {
       <Stack
         direction="row"
         spacing={1.5}
-        alignItems="center"
-        sx={{ mb: 5, mt: 1 }}
-      >
+        sx={{
+          alignItems: "center",
+          mb: 5,
+          mt: 1
+        }}>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Brand />
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1, letterSpacing: ".12em" }}>ADMIN PORTAL</Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              display: "block",
+              mt: 1,
+              letterSpacing: ".12em"
+            }}>ADMIN PORTAL</Typography>
         </Box>
         {onNavigate && (
           <IconButton
@@ -148,12 +157,18 @@ function Sidebar({ onNavigate }) {
                     )}
                     <Stack
                       direction="row"
-                      alignItems="center"
                       spacing={1.5}
-                      sx={{ position: "relative", zIndex: 1 }}
-                    >
+                      sx={{
+                        alignItems: "center",
+                        position: "relative",
+                        zIndex: 1
+                      }}>
                       {tab.icon}
-                      <Typography fontSize="1rem" fontWeight={600}>
+                      <Typography
+                        sx={{
+                          fontSize: "1rem",
+                          fontWeight: 600
+                        }}>
                         {tab.name}
                       </Typography>
                     </Stack>
@@ -167,7 +182,11 @@ function Sidebar({ onNavigate }) {
 
       <Box sx={{ flex: 1, minHeight: 48 }} />
       <Box sx={{ border: "1px solid var(--champ-border)", borderRadius: 3, p: 2, mb: 2 }}>
-        <Typography fontSize={13} fontWeight={650}>A connected community.</Typography>
+        <Typography
+          sx={{
+            fontSize: 13,
+            fontWeight: 650
+          }}>A connected community.</Typography>
         <Typography variant="caption" sx={{ display: "block", mt: .5, color: "var(--champ-muted)", lineHeight: 1.7 }}>A clear view of the people and conversations that bring it to life.</Typography>
       </Box>
       <Button
@@ -231,10 +250,11 @@ export default function AdminLayout({ children }) {
       >
         <Box className="admin-ambient-glow" aria-hidden="true" />
         <Stack
+          component="header"
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             display: { xs: "flex", md: "none" },
             px: 3,
             py: 1.5,
@@ -242,10 +262,11 @@ export default function AdminLayout({ children }) {
             top: 0,
             zIndex: 1100,
             bgcolor: "rgba(255, 255, 255, 0.96)",
-            borderBottom: "1px solid rgba(15, 23, 42, 0.06)",
-          }}
-        >
-          <Typography fontWeight={800}>Admin portal</Typography>
+            borderBottom: "1px solid rgba(15, 23, 42, 0.06)"
+          }}>
+          <Typography sx={{
+            fontWeight: 800
+          }}>Admin portal</Typography>
           <IconButton
             aria-label={
               isDrawerOpen ? "Close admin navigation" : "Open admin navigation"

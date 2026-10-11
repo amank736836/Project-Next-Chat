@@ -115,6 +115,7 @@ function AdminLoginContent() {
       </Box>
 
       <AnimatedHeading
+        component="h1"
         text="Admin Login"
         subtext="A secure space to manage your community."
       />

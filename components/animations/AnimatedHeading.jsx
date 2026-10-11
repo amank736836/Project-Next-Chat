@@ -65,11 +65,13 @@ export default function AnimatedHeading({
       <Typography
         variant="h5"
         component={component}
-        fontWeight={800}
         color={color}
-        textAlign={align}
-        sx={{ letterSpacing: "-0.02em", minHeight: "1.6em" }}
-      >
+        sx={{
+          fontWeight: 800,
+          textAlign: align,
+          letterSpacing: "-0.02em",
+          minHeight: "1.6em"
+        }}>
         <span style={visuallyHidden}>{text}</span>
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
@@ -129,10 +131,12 @@ export default function AnimatedHeading({
       {subtext ? (
         <Typography
           variant="body2"
-          textAlign={align}
-          color="text.secondary"
-          sx={{ mt: 1, minHeight: "1.4em" }}
-        >
+          sx={{
+            textAlign: align,
+            color: "text.secondary",
+            mt: 1,
+            minHeight: "1.4em"
+          }}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
               key={subtext}

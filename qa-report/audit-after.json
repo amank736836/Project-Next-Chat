@@ -1,0 +1,8758 @@
+[
+ {
+  "vp": 320,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1649,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "button. \"Join the conversation\"",
+    "fs": 11
+   },
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 169,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1714,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1708,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1704,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1056,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 742,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 736,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1011,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 641,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1649,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "button. \"Join the conversation\"",
+    "fs": 11
+   },
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 169,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1988,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Custom questions\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Questions asked\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Shared answers\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-board.MuiButtonBase-root.MuiTab-root \"Overview\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-questions.MuiButtonBase-root.MuiTab-root \"Questions\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-showcase.MuiButtonBase-root.MuiTab-root \"Showcase\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-embed.MuiButtonBase-root.MuiTab-root \"Embed\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 1686,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 320,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 320,
+  "scrollWidth": 320,
+  "bodyScrollWidth": 320,
+  "scrollHeight": 640,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1448,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "button. \"Join the conversation\"",
+    "fs": 11
+   },
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 169,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1570,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1498,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1482,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 924,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 709,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 679,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=eyyFKm6nxRv_rwJI net::ERR_ABORTED"
+  ],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 892,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 668,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1448,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "button. \"Join the conversation\"",
+    "fs": 11
+   },
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 169,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1715,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Custom questions\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Questions asked\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Shared answers\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-board.MuiButtonBase-root.MuiTab-root \"Overview\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-questions.MuiButtonBase-root.MuiTab-root \"Questions\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-showcase.MuiButtonBase-root.MuiTab-root \"Showcase\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-embed.MuiButtonBase-root.MuiTab-root \"Embed\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 1768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 375,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 375,
+  "scrollWidth": 375,
+  "bodyScrollWidth": 375,
+  "scrollHeight": 667,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1433,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "button. \"Join the conversation\"",
+    "fs": 11
+   },
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 169,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1546,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1474,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1459,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 924,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 845,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 845,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=eyyFKm6nxRv_rwJI net::ERR_ABORTED"
+  ],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 872,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 845,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1433,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "button. \"Join the conversation\"",
+    "fs": 11
+   },
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 9
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 169,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1715,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Custom questions\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Questions asked\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Shared answers\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-board.MuiButtonBase-root.MuiTab-root \"Overview\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-questions.MuiButtonBase-root.MuiTab-root \"Questions\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-showcase.MuiButtonBase-root.MuiTab-root \"Showcase\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-embed.MuiButtonBase-root.MuiTab-root \"Embed\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 1791,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 390,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 390,
+  "scrollWidth": 390,
+  "bodyScrollWidth": 390,
+  "scrollHeight": 844,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1513,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Privacy Policy\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1450,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1358,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1434,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 884,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 813,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 813,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 872,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 813,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1513,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Privacy Policy\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1666,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Custom questions\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Questions asked\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-body1 \"Shared answers\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-board.MuiButtonBase-root.MuiTab-root \"Overview\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-questions.MuiButtonBase-root.MuiTab-root \"Questions\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-showcase.MuiButtonBase-root.MuiTab-root \"Showcase\"",
+    "fs": 11
+   },
+   {
+    "el": "button#board-tab-embed.MuiButtonBase-root.MuiTab-root \"Embed\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 1800,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 425,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 425,
+  "scrollWidth": 425,
+  "bodyScrollWidth": 425,
+  "scrollHeight": 812,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1463,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Privacy Policy\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1190,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1118,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1351,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1025,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1025,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1025,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1025,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1463,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Always in the loop\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Just you. Just your account.\"",
+    "fs": 11
+   },
+   {
+    "el": "a. \"Forgot password?\"",
+    "fs": 11
+   },
+   {
+    "el": "div.signup-divider",
+    "fs": 10
+   },
+   {
+    "el": "p.form-legal",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Terms of Service\"",
+    "fs": 10
+   },
+   {
+    "el": "a. \"Privacy Policy\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1495,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1517,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 768,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 768,
+  "scrollWidth": 768,
+  "bodyScrollWidth": 768,
+  "scrollHeight": 1024,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1351,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1181,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1181,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1181,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/friend?_rsc=CIaxm20cUmYgWU8h net::ERR_ABORTED"
+  ],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1181,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1495,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1543,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 820,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 820,
+  "scrollWidth": 820,
+  "bodyScrollWidth": 820,
+  "scrollHeight": 1180,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1083,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1206,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1182,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1452,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 940,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/friend?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 769,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 769,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=eyyFKm6nxRv_rwJI net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 861,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/friend?_rsc=CIaxm20cUmYgWU8h net::ERR_ABORTED"
+  ],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 769,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1083,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1137,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 1482,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 62,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 47,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 78,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 1024,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1024,
+  "scrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1105,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1206,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1182,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1352,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 940,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 721,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 721,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 861,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 721,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1105,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1137,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 1001,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 74,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 56,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 93,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 1280,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1280,
+  "scrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "scrollHeight": 720,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1105,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1206,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1182,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1352,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 940,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 769,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 769,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 861,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 769,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1105,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1137,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 1015,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 74,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 56,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 93,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 1366,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1366,
+  "scrollWidth": 1366,
+  "bodyScrollWidth": 1366,
+  "scrollHeight": 768,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1105,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1206,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1182,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1352,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 940,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 901,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 901,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=eyyFKm6nxRv_rwJI net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 901,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 901,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1105,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1137,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 1038,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 74,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 56,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 93,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 1440,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1440,
+  "scrollWidth": 1440,
+  "bodyScrollWidth": 1440,
+  "scrollHeight": 900,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1163,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1206,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1182,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1352,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1081,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1081,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=eyyFKm6nxRv_rwJI net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1081,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/friend?_rsc=CIaxm20cUmYgWU8h net::ERR_ABORTED"
+  ],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1081,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1163,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1137,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 74,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 56,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 93,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 1920,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 1920,
+  "scrollWidth": 1920,
+  "bodyScrollWidth": 1920,
+  "scrollHeight": 1080,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Forgot password | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/forgot",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "verify",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Verify your account | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/verify",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "privacy",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Privacy Policy | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/privacy",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "terms",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Terms of Service | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/terms",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "not-found",
+  "auth": "anon",
+  "errors": [],
+  "failed": [
+   "404 GET http://localhost:3000/definitely-missing"
+  ],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 404,
+  "finalUrl": "/definitely-missing",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "admin-login",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "admin-forgot",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"Admin Login\"",
+    "sw": 140,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin login | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/login",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "public-profile",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"SAY SOMETHING THAT MATTERS\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE CURIOSITY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "showcase",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex — Answer Showcase",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/showcase/alex",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "embed",
+  "auth": "anon",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Send feedback to @alex | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/embed/alex",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "home",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=5CB68i4pnAekjehf net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/friend?_rsc=tXyZJ52UQVBCVsD3 net::ERR_ABORTED"
+  ],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1441,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"A LITTLE SPACE TO CONNECT\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "groups",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1441,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"BETTER, TOGETHER\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "group-detail",
+  "auth": "user",
+  "errors": [],
+  "failed": [
+   "GET http://localhost:3000/chat/design?_rsc=eyyFKm6nxRv_rwJI net::ERR_ABORTED",
+   "GET http://localhost:3000/chat/design?_rsc=_Xw8SkaqHxo7BZrB net::ERR_ABORTED"
+  ],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1441,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"GROUP WORKSPACE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Groups | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/groups?group=design",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "chat",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1441,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Conversation | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/chat/design",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "board",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [
+   {
+    "el": "button. \"Create an account\"",
+    "w": 123,
+    "h": 16
+   }
+  ],
+  "tiny": [
+   {
+    "el": "div.story-eyebrow \"LESS SCROLLING. MORE CONNECTIN\"",
+    "fs": 11
+   },
+   {
+    "el": "small. \"just now\"",
+    "fs": 10
+   },
+   {
+    "el": "span.message-reaction \"1\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-peach \"J\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-lilac \"A\"",
+    "fs": 10
+   },
+   {
+    "el": "i.avatar-mint \"M\"",
+    "fs": 10
+   },
+   {
+    "el": "small. \"+ your favorite people\"",
+    "fs": 9
+   },
+   {
+    "el": "span.typing-label \"typing\"",
+    "fs": 10
+   },
+   {
+    "el": "span. \"Free to be yourself\"",
+    "fs": 11
+   },
+   {
+    "el": "span. \"Better together\"",
+    "fs": 11
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"Welcome back.\"",
+    "sw": 184,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Log in | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/login",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "own-profile",
+  "auth": "user",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiChip-label.mui-b9zgoq \"Your message board\"",
+    "fs": 11
+   },
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"YOUR LITTLE CORNER OF THE INTE\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "@alex · Message board | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/u/alex",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "admin-dashboard",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [],
+  "clipped": [
+   {
+    "el": "span. \"1,248\"",
+    "sw": 74,
+    "cw": 1
+   },
+   {
+    "el": "span. \"368\"",
+    "sw": 56,
+    "cw": 1
+   },
+   {
+    "el": "span. \"14,286\"",
+    "sw": 93,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin dashboard | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/dashboard",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "admin-users",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin users | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/users",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "admin-chats",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"1\"",
+    "sw": 4,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin chats | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/chats",
+  "axe": []
+ },
+ {
+  "vp": 2560,
+  "route": "admin-messages",
+  "auth": "admin",
+  "errors": [],
+  "failed": [],
+  "vw": 2560,
+  "scrollWidth": 2560,
+  "bodyScrollWidth": 2560,
+  "scrollHeight": 1440,
+  "overflowing": [],
+  "small": [],
+  "tiny": [
+   {
+    "el": "span.MuiTypography-root.MuiTypography-overline \"COMMUNITY DIRECTORY\"",
+    "fs": 10
+   }
+  ],
+  "clipped": [
+   {
+    "el": "span. \"2\"",
+    "sw": 8,
+    "cw": 1
+   }
+  ],
+  "brokenImgs": [],
+  "noAlt": [],
+  "h1": 1,
+  "main": 1,
+  "title": "Admin messages | Chat Champ",
+  "lang": "en",
+  "status": 200,
+  "finalUrl": "/admin/messages",
+  "axe": []
+ }
+]

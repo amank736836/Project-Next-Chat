@@ -72,7 +72,7 @@ export default function FileMenu({ anchorE1, chatId }) {
         `You can only upload 5
         ${key} at a time!`,
         {
-          duration: 1000,
+          duration: 4000,
         }
       );
       return;
@@ -103,14 +103,14 @@ export default function FileMenu({ anchorE1, chatId }) {
       } else if (res.error) {
         console.error(res.error);
         toast.error(res.error.data.message || `Error uploading ${key}`, {
-          duration: 1000,
+          duration: 4000,
           id: toastId,
         });
       }
     } catch (error) {
       console.error(error);
       toast.error("Error uploading files", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {

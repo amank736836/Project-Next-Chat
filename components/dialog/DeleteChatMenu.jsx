@@ -87,16 +87,15 @@ export default function DeleteChatMenu({ deleteOptionAnchor }) {
       }}
     >
       <Stack
-        sx={{
-          width: "10rem",
-          padding: "0.5rem",
-          cursor: "pointer",
-        }}
         direction={"row"}
-        alignItems={"center"}
         spacing={"0.5rem"}
         onClick={isGroupChat ? leaveGroup : deleteChat}
-      >
+        sx={{
+          alignItems: "center",
+          width: "10rem",
+          padding: "0.5rem",
+          cursor: "pointer"
+        }}>
         {isGroupChat ? (
           <>
             <ExitToAppIcon />

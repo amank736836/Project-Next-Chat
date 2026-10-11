@@ -280,10 +280,14 @@ export default function SocketPlayground() {
     <Box sx={{ minHeight: "100vh", bgcolor: "#f6f7fb", py: 4, px: 2 }}>
       <Stack spacing={2.5} sx={{ maxWidth: 860, mx: "auto" }}>
         <Box>
-          <Typography variant="h5" fontWeight={800}>
+          <Typography variant="h5" sx={{
+            fontWeight: 800
+          }}>
             Socket diagnostics
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Dev-only test bench for the realtime connection (blocked in
             production builds).
           </Typography>
@@ -291,7 +295,13 @@ export default function SocketPlayground() {
 
         <Paper sx={{ p: 2.5, borderRadius: 3 }} elevation={0}>
           <Stack spacing={1.5}>
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: "center",
+                flexWrap: "wrap"
+              }}>
               <Chip label={statusMeta.label} color={statusMeta.color} size="small" />
               <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
                 {socketServer || "⚠ no socket server configured"}
@@ -313,10 +323,14 @@ export default function SocketPlayground() {
 
             <Divider />
 
-            <Typography variant="subtitle2" fontWeight={700}>
+            <Typography variant="subtitle2" sx={{
+              fontWeight: 700
+            }}>
               1 · Backend session
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               The socket server verifies the handshake against a cookie on its
               own origin, so log in there first. Nothing is stored — the request
               goes straight from this browser to the backend.
@@ -362,7 +376,9 @@ export default function SocketPlayground() {
 
             <Divider />
 
-            <Typography variant="subtitle2" fontWeight={700}>
+            <Typography variant="subtitle2" sx={{
+              fontWeight: 700
+            }}>
               2 · Connection options
             </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
@@ -392,7 +408,13 @@ export default function SocketPlayground() {
               />
             </Stack>
 
-            <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: "center",
+                flexWrap: "wrap"
+              }}>
               <Button variant="contained" onClick={connect} disabled={status === "connecting"}>
                 Connect
               </Button>
@@ -414,10 +436,14 @@ export default function SocketPlayground() {
         </Paper>
 
         <Paper sx={{ p: 2.5, borderRadius: 3 }} elevation={0}>
-          <Typography variant="subtitle2" fontWeight={700} gutterBottom>
+          <Typography variant="subtitle2" gutterBottom sx={{
+            fontWeight: 700
+          }}>
             Handshake
           </Typography>
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Stack direction="row" spacing={1} useFlexGap sx={{
+            flexWrap: "wrap"
+          }}>
             <Chip size="small" variant="outlined" label={`time to connect: ${meta.connectMs ?? "—"} ms`} />
             <Chip size="small" variant="outlined" label={`transport: ${meta.transport ?? "—"}`} />
             <Chip size="small" variant="outlined" label={`socket id: ${meta.socketId ?? "—"}`} />
@@ -429,7 +455,9 @@ export default function SocketPlayground() {
         </Paper>
 
         <Paper sx={{ p: 2.5, borderRadius: 3 }} elevation={0}>
-          <Typography variant="subtitle2" fontWeight={700} gutterBottom>
+          <Typography variant="subtitle2" gutterBottom sx={{
+            fontWeight: 700
+          }}>
             Event log
           </Typography>
           <Box

@@ -27,7 +27,6 @@ import {
   useRef,
   useState,
 } from "react";
-import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
@@ -69,11 +68,13 @@ import {
 import { useSocket } from "../../../providers/SocketProvider";
 import DeleteChatMenu from "../../../components/dialog/DeleteChatMenu";
 import ProtectedRoute from "../../../components/auth/ProtectedRoute";
+// Static imports: as next/dynamic these suspended after first paint, which swapped
+// the whole page for the route-level skeleton (visible flash / layout shift).
+import Header from "../../../components/layout/Header";
+import ChatList from "../../../components/shared/ChatList";
+import Profile from "../../../components/shared/Profile";
 import axios from "axios";
 
-const Header = dynamic(() => import("../../../components/layout/Header"));
-const ChatList = dynamic(() => import("../../../components/shared/ChatList"));
-const Profile = dynamic(() => import("../../../components/shared/Profile"));
 const MESSAGE_WINDOW_STEP = 120;
 
 function ChatContent() {
@@ -657,34 +658,37 @@ function ChatContent() {
         )}
       </Drawer>
 
-        <Drawer
-        open={isProfile}
-        onClose={handleProfileClose}
-        anchor="left"
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: {
-              xs: "85vw",
-              sm: "75vw",
-              md: "42vw",
-            },
-            background: "var(--champ-canvas)",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+      <Drawer
+      open={isProfile}
+      onClose={handleProfileClose}
+      anchor="left"
+      sx={{
+        "& .MuiDrawer-paper": {
+          width: {
+            xs: "85vw",
+            sm: "75vw",
+            md: "42vw",
           },
-        }}
-      >
-        <Profile />
-      </Drawer>
+          background: "var(--champ-canvas)",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        },
+      }}
+    >
+      <Profile />
+    </Drawer>
 
-      <Grid className="workspace-root" container height="calc(100dvh - 64px)">
+      <Grid className="workspace-root" container sx={{
+        height: "calc(100dvh - 64px)"
+      }}>
         <Grid
+          component="nav"
+          aria-label="Conversations"
           size={{ sm: 4, md: 5, lg: 3 }}
           sx={{
+            height: "100%",
             display: { xs: "none", sm: "block" },
-            background: "var(--champ-canvas)",
-          }}
-          height={"100%"}
-        >
+            background: "var(--champ-canvas)"
+          }}>
           {isLoadingChats && !hasResolvedChats && !hasChatListData ? (
             <Stack spacing={"1rem"}>
               {chatListSkeleton}
@@ -701,7 +705,15 @@ function ChatContent() {
           )}
         </Grid>
 
-        <Grid size={{ sm: 8, md: 7, lg: 6, xs: 12 }} height="100%" sx={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <Grid
+          component="main"
+          size={{ sm: 8, md: 7, lg: 6, xs: 12 }}
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0
+          }}>
           <Fragment>
             <Box
               sx={{
@@ -717,6 +729,7 @@ function ChatContent() {
               }}
             >
               <Typography
+                component="h1"
                 variant="caption"
                 sx={{
                   fontWeight: 600,
@@ -739,21 +752,21 @@ function ChatContent() {
             </Box>
             <Stack
               ref={containerRef}
-              boxSizing="border-box"
-              padding={"1rem"}
               spacing={"1rem"}
-              bgcolor="var(--champ-canvas)"
-              flex={1}
-              minHeight={0}
+              onScroll={handleMessageListScroll}
               sx={{
+                boxSizing: "border-box",
+                padding: "1rem",
+                bgcolor: "var(--champ-canvas)",
+                flex: 1,
+                minHeight: 0,
                 overflowX: "hidden",
                 overflowY: "auto",
+
                 "&::-webkit-scrollbar": {
                   display: "none",
-                },
-              }}
-              onScroll={handleMessageListScroll}
-            >
+                }
+              }}>
               {isChatWindowLoading ? (
                 <Stack
                   sx={{
@@ -775,10 +788,14 @@ function ChatContent() {
                   }}
                   spacing={"1rem"}
                 >
-                  <Typography variant="h5" color="text.primary">
+                  <Typography variant="h5" sx={{
+                    color: "text.primary"
+                  }}>
                     No Messages Yet
                   </Typography>
-                  <Typography variant="body1" color="text.secondary">
+                  <Typography variant="body1" sx={{
+                    color: "text.secondary"
+                  }}>
                     Start the conversation
                   </Typography>
                 </Stack>
@@ -850,10 +867,11 @@ function ChatContent() {
             >
               <Stack
                 direction={"row"}
-                height={"100%"}
-                padding={"1rem"}
-                alignItems={"center"}
-              >
+                sx={{
+                  height: "100%",
+                  padding: "1rem",
+                  alignItems: "center"
+                }}>
                 <IconButton
                   aria-label="Attach a file"
                   onClick={handleFileOpen}
@@ -932,12 +950,13 @@ function ChatContent() {
         </Grid>
 
         <Grid
+          component="aside"
+          aria-label="Your profile"
           size={{ lg: 3 }}
           sx={{
-            display: { xs: "none", lg: "block" },
-          }}
-          height={"100%"}
-        >
+            height: "100%",
+            display: { xs: "none", lg: "block" }
+          }}>
           <Profile />
         </Grid>
       </Grid>

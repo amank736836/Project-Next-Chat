@@ -65,7 +65,7 @@ export default function VerifyContent() {
     } catch (error) {
       console.error(error);
       toast.error(error?.response?.data?.message || "Verification failed", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {
@@ -75,7 +75,9 @@ export default function VerifyContent() {
 
   return (
     <>
-      <Typography variant="h5" fontWeight={600} color="primary">
+      <Typography component="h1" variant="h5" color="primary" sx={{
+        fontWeight: 600
+      }}>
         Verify Account
       </Typography>
       <form

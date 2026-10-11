@@ -18,11 +18,13 @@ export default function UserItem({
     <ListItem>
       <Stack
         direction={"row"}
-        alignItems={"center"}
         spacing={"1rem"}
-        width={"100%"}
-        sx={{ transition: "background-color 180ms", ...styling }}
-      >
+        sx={{
+          alignItems: "center",
+          width: "100%",
+          transition: "background-color 180ms",
+          ...styling
+        }}>
         <Avatar alt={name} src={transformImageUrl(avatar?.url || avatar)} />
         <Typography
           variant="body1"

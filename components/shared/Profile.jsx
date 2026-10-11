@@ -82,7 +82,7 @@ export default function Profile() {
       } else {
         setIsAcceptingMessage(!nextState);
         toast.error("Failed to update accepting messages", {
-          duration: 1000,
+          duration: 4000,
           id: toastId,
         });
       }
@@ -90,7 +90,7 @@ export default function Profile() {
       setIsAcceptingMessage(!nextState);
       console.error(error);
       toast.error("Failed to update accepting messages", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
     } finally {
@@ -123,39 +123,45 @@ export default function Profile() {
       <Typography
         component="h2"
         variant="overline"
-        color="text.secondary"
-        sx={{ letterSpacing: ".12em" }}
-      >
+        sx={{
+          color: "text.secondary",
+          letterSpacing: ".12em"
+        }}>
         Your space
       </Typography>
       <Stack
-        alignItems="center"
         className="workspace-reveal"
         spacing={1}
-        sx={{ pb: 1 }}
-      >
+        sx={{
+          alignItems: "center",
+          pb: 1
+        }}>
         <Avatar
           sx={{ width: 88, height: 88, border: "5px solid var(--champ-soft)", mb: 1 }}
           src={transformImageUrl(user?.avatar?.url)}
           alt={user.name}
         />
-        <Typography variant="h6">{user.name}</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography component="h2" variant="h6">{user.name}</Typography>
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           @{user.username}
         </Typography>
       </Stack>
       <Box sx={{ borderRadius: 3, bgcolor: "var(--champ-field)", p: 2 }}>
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          gap={1}
-        >
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 1
+          }}>
           <Typography
-            fontWeight={650}
-            fontSize={13}
             id="anonymous-messages-label"
-          >
+            sx={{
+              fontWeight: 650,
+              fontSize: 13
+            }}>
             Anonymous inbox
           </Typography>
           <Switch
@@ -168,7 +174,9 @@ export default function Profile() {
             }}
           />
         </Stack>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{
+          color: "text.secondary"
+        }}>
           {isAcceptingMessage
             ? "Your link is open to new messages."
             : "Turn on to receive messages from your profile link."}
@@ -202,7 +210,11 @@ export default function Profile() {
         >
           <LinkIcon />
           <Box sx={{ minWidth: 0 }}>
-            <Typography fontWeight={650} fontSize={13}>
+            <Typography
+              sx={{
+                fontWeight: 650,
+                fontSize: 13
+              }}>
               Copy your profile link
             </Typography>
             <Typography
@@ -215,7 +227,12 @@ export default function Profile() {
         </ButtonBase>
       )}
       <Box sx={{ flex: 1 }} />
-      <Typography variant="caption" color="text.secondary" textAlign="center">
+      <Typography
+        variant="caption"
+        sx={{
+          color: "text.secondary",
+          textAlign: "center"
+        }}>
         A little more connection. A little less noise.
       </Typography>
     </Stack>
@@ -223,7 +240,9 @@ export default function Profile() {
 }
 
 const ProfileCard = memo(({ text, Icon, heading }) => (
-  <Stack direction="row" spacing={1.5} alignItems="center">
+  <Stack direction="row" spacing={1.5} sx={{
+    alignItems: "center"
+  }}>
     <Box
       sx={{
         display: "grid",
@@ -239,14 +258,17 @@ const ProfileCard = memo(({ text, Icon, heading }) => (
       {Icon}
     </Box>
     <Box sx={{ minWidth: 0 }}>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" sx={{
+        color: "text.secondary"
+      }}>
         {heading}
       </Typography>
       <Typography
-        fontSize={13}
-        fontWeight={550}
-        sx={{ overflowWrap: "anywhere" }}
-      >
+        sx={{
+          fontSize: 13,
+          fontWeight: 550,
+          overflowWrap: "anywhere"
+        }}>
         {text}
       </Typography>
     </Box>

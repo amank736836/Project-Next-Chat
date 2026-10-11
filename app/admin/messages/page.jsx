@@ -30,7 +30,9 @@ const columns = [
           const fileType = fileFormat(url);
 
           return (
-            <Box key={index} height={"100%"}>
+            <Box key={index} sx={{
+              height: "100%"
+            }}>
               <a
                 href={url}
                 target="_blank"
@@ -47,14 +49,16 @@ const columns = [
         })
       ) : (
         <Typography
-          width={"100%"}
-          height={"100%"}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          fontSize={"1.2rem"}
-          fontWeight={400}
-        >
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "0.875rem",
+            fontWeight: 400,
+            color: "text.secondary"
+          }}>
           No Attachments
         </Typography>
       );
@@ -73,12 +77,13 @@ const columns = [
     width: 150,
     renderCell: (params) => (
       <Stack
-        height={"100%"}
         direction={"row"}
         spacing={"1rem"}
-        alignItems={"center"}
-        justifyItems={"center"}
-      >
+        sx={{
+          height: "100%",
+          alignItems: "center",
+          justifyItems: "center"
+        }}>
         <Avatar alt={params.row.name} src={params.row.sender.avatar} />
         <Typography>{params.row.sender.name}</Typography>
       </Stack>

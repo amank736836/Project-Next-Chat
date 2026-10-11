@@ -50,7 +50,9 @@ function Widget({ title, value, Icon, delay, accent, href }) {
       lift
       sx={{ ...surfaceSx, p: { xs: 2.5, lg: 3 }, minWidth: 0 }}
     >
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" spacing={2} sx={{
+        alignItems: "center"
+      }}>
         <Box
           sx={{
             width: 48,
@@ -66,19 +68,25 @@ function Widget({ title, value, Icon, delay, accent, href }) {
           <Icon aria-hidden="true" />
         </Box>
         <Box sx={{ minWidth: 0 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 0.5
+            }}>
             {title}
           </Typography>
           <Typography
             component="div"
-            fontSize={{ xs: "1.6rem", lg: "1.9rem" }}
-            fontWeight={600}
-          >
+            sx={{
+              fontSize: { xs: "1.6rem", lg: "1.9rem" },
+              fontWeight: 600
+            }}>
             <AnimatedCounter value={value} />
           </Typography>
         </Box>
       </Stack>
-      <Button component={Link} href={href} endIcon={<ArrowForwardRounded fontSize="small" />} size="small" sx={{ mt: 2, px: 0, color: accent }}>View details</Button>
+      <Button component={Link} href={href} endIcon={<ArrowForwardRounded fontSize="small" />} size="small" sx={{ mt: 2, px: 0, color: accent === "var(--champ-sage)" ? "var(--champ-primary-hover)" : accent }}>View details</Button>
     </AdminReveal>
   );
 }
@@ -103,12 +111,17 @@ export default function Dashboard() {
           <Typography
             variant="h4"
             component="h1"
-            fontWeight={600}
-            letterSpacing="-0.03em"
-          >
+            sx={{
+              fontWeight: 600,
+              letterSpacing: "-0.03em"
+            }}>
             Dashboard
           </Typography>
-          <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              mt: 0.5
+            }}>
             Your community at a glance.
           </Typography>
         </AdminReveal>
@@ -116,8 +129,15 @@ export default function Dashboard() {
         <AdminReveal component={Paper} elevation={0} delay={0.05}
           sx={{ ...surfaceSx, p: { xs: 3, md: 4 }, mb: 3, background: "linear-gradient(110deg, var(--champ-surface), var(--champ-soft))", color: "var(--champ-ink)", overflow: "hidden", position: "relative" }}>
           <Box aria-hidden="true" sx={{ position: "absolute", right: -35, top: -65, width: 240, height: 240, borderRadius: "50%", border: "35px solid var(--champ-mint)" }} />
-          <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems={{ xs: "flex-start", sm: "center" }} gap={3} sx={{ position: "relative" }}>
-            <Box><Typography variant="overline" sx={{ letterSpacing: ".15em", color: "var(--champ-muted)" }}>COMMUNITY OVERVIEW</Typography><Typography variant="h5" sx={{ mt: .5 }}>Small conversations. Big connections.</Typography><Typography variant="body2" sx={{ mt: 1, color: "var(--champ-muted)" }}>Keep a pulse on your community, all from one place.</Typography></Box>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            sx={{
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", sm: "center" },
+              gap: 3,
+              position: "relative"
+            }}>
+            <Box><Typography variant="overline" sx={{ letterSpacing: ".15em", color: "var(--champ-muted)" }}>COMMUNITY OVERVIEW</Typography><Typography component="h2" variant="h5" sx={{ mt: .5 }}>Small conversations. Big connections.</Typography><Typography variant="body2" sx={{ mt: 1, color: "var(--champ-muted)" }}>Keep a pulse on your community, all from one place.</Typography></Box>
             <Button variant="outlined" onClick={refetch} disabled={isFetching} startIcon={<RefreshRounded />} sx={{ color: "var(--champ-ink)", borderColor: "var(--champ-border)", flexShrink: 0, "&.Mui-disabled": { color: "var(--champ-muted)" } }}>{isFetching ? "Refreshing…" : "Refresh overview"}</Button>
           </Stack>
           <Typography variant="caption" sx={{ display: "block", mt: 3, color: "var(--champ-muted)", fontVariantNumeric: "tabular-nums" }}><Clock /></Typography>
@@ -178,12 +198,19 @@ export default function Dashboard() {
             <Typography
               variant="h6"
               component="h2"
-              fontWeight={700}
-              sx={{ mb: 3 }}
-            >
+              sx={{
+                fontWeight: 700,
+                mb: 3
+              }}>
               Message activity
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: -2, mb: 3 }}>Conversations over the last 7 days</Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: -2,
+                mb: 3
+              }}>Conversations over the last 7 days</Typography>
             <LineChart value={stats?.last7DaysMessages || []} />
           </AdminReveal>
           <AdminReveal
@@ -196,9 +223,10 @@ export default function Dashboard() {
             <Typography
               variant="h6"
               component="h2"
-              fontWeight={700}
-              sx={{ mb: 2 }}
-            >
+              sx={{
+                fontWeight: 700,
+                mb: 2
+              }}>
               Chat Overview
             </Typography>
             <Box sx={{ position: "relative", maxWidth: "20rem", mx: "auto" }}>
@@ -211,12 +239,15 @@ export default function Dashboard() {
               />
               <Stack
                 direction="row"
-                justifyContent="center"
-                alignItems="center"
                 spacing={0.5}
-                sx={{ position: "absolute", inset: 0, pointerEvents: "none" }}
                 aria-hidden="true"
-              >
+                sx={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "absolute",
+                  inset: 0,
+                  pointerEvents: "none"
+                }}>
                 <GroupIcon />
                 <Typography>Vs</Typography>
                 <PersonIcon />

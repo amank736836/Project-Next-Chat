@@ -1212,3 +1212,16 @@
     transform: none;
   }
 }
+
+/* WCAG 2.5.8 (Target Size, Minimum): stand-alone text links/buttons get a 24px hit area.
+   Inline links inside sentences are exempt and are left untouched. */
+.welcome-header nav button,
+.welcome-footer a,
+.login-form-options a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.welcome-footer a {
+  min-width: 24px;
+}

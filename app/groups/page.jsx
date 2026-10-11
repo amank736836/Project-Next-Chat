@@ -197,6 +197,8 @@ function GroupsContent() {
       sx={{ minHeight: "calc(100dvh - 64px)" }}
     >
       <Grid
+        component="nav"
+        aria-label="Your groups"
         size={{ sm: 4, md: 3 }}
         sx={{
           display: { xs: "none", sm: "block" },
@@ -213,15 +215,17 @@ function GroupsContent() {
         />
       </Grid>
       <Grid
+        component="main"
         size={{ xs: 12, sm: 8, md: 9 }}
         sx={{ p: { xs: 2, md: 4 }, minWidth: 0 }}
       >
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ mb: 3 }}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3
+          }}>
           <Button
             startIcon={<KeyboardBackspaceIcon />}
             onClick={navigateBack}
@@ -243,8 +247,8 @@ function GroupsContent() {
               display: { xs: "none", sm: "flex" },
               fontSize: 10,
               letterSpacing: ".1em",
-              bgcolor: "#e9eefb",
-              color: "primary.main",
+              bgcolor: "var(--champ-soft)",
+              color: "var(--champ-primary-hover)",
             }}
           />
         </Stack>
@@ -303,10 +307,11 @@ function GroupsContent() {
                   }}
                   direction="row"
                   useFlexGap
-                  flexWrap="wrap"
-                  gap={1}
-                  sx={{ mt: 1 }}
-                >
+                  sx={{
+                    flexWrap: "wrap",
+                    gap: 1,
+                    mt: 1
+                  }}>
                   <TextField
                     autoFocus
                     label="Group name"
@@ -337,10 +342,11 @@ function GroupsContent() {
               ) : (
                 <Stack
                   direction="row"
-                  gap={1}
-                  alignItems="center"
-                  sx={{ mt: 0.5 }}
-                >
+                  sx={{
+                    gap: 1,
+                    alignItems: "center",
+                    mt: 0.5
+                  }}>
                   <Typography
                     component="h1"
                     variant="h4"
@@ -359,7 +365,12 @@ function GroupsContent() {
                   </Tooltip>
                 </Stack>
               )}
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mt: 1
+                }}>
                 {members.length} {members.length === 1 ? "member" : "members"} ·
                 A shared space to stay connected
               </Typography>
@@ -382,11 +393,13 @@ function GroupsContent() {
             >
               <Stack
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                gap={1}
-                sx={{ p: { xs: 2, md: 3 }, borderBottom: "1px solid var(--champ-border)" }}
-              >
+                sx={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 1,
+                  p: { xs: 2, md: 3 },
+                  borderBottom: "1px solid var(--champ-border)"
+                }}>
                 <Box>
                   <Typography component="h2" variant="h6">
                     Members{" "}
@@ -397,7 +410,9 @@ function GroupsContent() {
                       {members.length}
                     </Box>
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     The people in this conversation.
                   </Typography>
                 </Box>
@@ -422,9 +437,11 @@ function GroupsContent() {
               >
                 {members.length === 0 ? (
                   <Typography
-                    sx={{ p: 3, textAlign: "center" }}
-                    color="text.secondary"
-                  >
+                    sx={{
+                      color: "text.secondary",
+                      p: 3,
+                      textAlign: "center"
+                    }}>
                     No members found in this group.
                   </Typography>
                 ) : (
@@ -446,16 +463,25 @@ function GroupsContent() {
             </Paper>
             <Stack
               direction={{ xs: "column", sm: "row" }}
-              alignItems={{ xs: "flex-start", sm: "center" }}
-              justifyContent="space-between"
-              gap={2}
-              sx={{ p: 2.5, border: "1px solid #ecdde1", borderRadius: 3 }}
-            >
+              sx={{
+                alignItems: { xs: "flex-start", sm: "center" },
+                justifyContent: "space-between",
+                gap: 2,
+                p: 2.5,
+                border: "1px solid #ecdde1",
+                borderRadius: 3
+              }}>
               <Box>
-                <Typography fontWeight={650} fontSize={14}>
+                <Typography
+                  sx={{
+                    fontWeight: 650,
+                    fontSize: 14
+                  }}>
                   Delete this group
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   This permanently removes the group and its conversations.
                 </Typography>
               </Box>
@@ -516,10 +542,11 @@ const GroupsList = memo(({ myGroups = [], chatId, loading }) => {
     >
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{ mb: 1 }}
-      >
+        sx={{
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 1
+        }}>
         <Typography component="h2" variant="h6">
           Your groups
         </Typography>
@@ -529,7 +556,12 @@ const GroupsList = memo(({ myGroups = [], chatId, loading }) => {
           sx={{ bgcolor: "var(--champ-soft)", color: "primary.main" }}
         />
       </Stack>
-      <Typography variant="body2" color="text.secondary" sx={{ pb: 2 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          pb: 2
+        }}>
         Good company, all in one place.
       </Typography>
       <Button
@@ -556,16 +588,24 @@ const GroupsList = memo(({ myGroups = [], chatId, loading }) => {
           >
             <Stack
               direction="row"
-              gap={1.5}
-              alignItems="center"
-              sx={{ p: 1.5 }}
-            >
+              sx={{
+                gap: 1.5,
+                alignItems: "center",
+                p: 1.5
+              }}>
               <AvatarCard avatar={group.avatar} />
               <Box sx={{ minWidth: 0 }}>
-                <Typography fontWeight={650} fontSize={14} noWrap>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontWeight: 650,
+                    fontSize: 14
+                  }}>
                   {group.name}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   Manage group
                 </Typography>
               </Box>
@@ -575,9 +615,11 @@ const GroupsList = memo(({ myGroups = [], chatId, loading }) => {
       ) : (
         <Typography
           variant="body2"
-          color="text.secondary"
-          sx={{ p: 2, textAlign: "center" }}
-        >
+          sx={{
+            color: "text.secondary",
+            p: 2,
+            textAlign: "center"
+          }}>
           No groups yet. Start one with your friends.
         </Typography>
       )}

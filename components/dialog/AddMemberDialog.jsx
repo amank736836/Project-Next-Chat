@@ -115,7 +115,9 @@ export default function AddMemberDialog({ chatId }) {
                 }}
               />
             ) : isErrorAvailableFriends ? (
-              <Typography textAlign={"center"} key={"AddMemberError"}>
+              <Typography key={"AddMemberError"} sx={{
+                textAlign: "center"
+              }}>
                 {errorAvailableFriends?.data?.message ||
                   errorAvailableFriends?.message ||
                   "Something went wrong"}
@@ -130,17 +132,20 @@ export default function AddMemberDialog({ chatId }) {
                 />
               ))
             ) : (
-              <Typography textAlign={"center"}>No Friends Found</Typography>
+              <Typography sx={{
+                textAlign: "center"
+              }}>No Friends Found</Typography>
             )}
           </List>
         </Stack>
         <Stack
           direction={"row"}
-          justifyContent={"space-evenly"}
-          alignItems={"center"}
-          paddingTop={2}
-          marginTop={2}
-        >
+          sx={{
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            paddingTop: 2,
+            marginTop: 2
+          }}>
           <Button color="inherit" variant="text" onClick={closeHandler}>
             Cancel
           </Button>

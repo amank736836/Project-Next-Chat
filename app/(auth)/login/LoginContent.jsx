@@ -128,7 +128,7 @@ export default function LoginContent({ isLogin, setIsLogin }) {
       const checkUsername = async () => {
         try {
           const response = await axios.get(
-            `${AUTH_API_BASE}/check-username?username=${username.value}`,
+            `${AUTH_API_BASE}/check-username?username=${encodeURIComponent(username.value)}`,
           );
           setUsernameAvailable(response.data.available);
         } catch (error) {
@@ -167,7 +167,7 @@ export default function LoginContent({ isLogin, setIsLogin }) {
       const checkEmail = async () => {
         try {
           const response = await axios.get(
-            `${AUTH_API_BASE}/check-email?email=${email.value}`,
+            `${AUTH_API_BASE}/check-email?email=${encodeURIComponent(email.value)}`,
           );
           setEmailAvailable(response.data.available);
         } catch (error) {
@@ -245,7 +245,7 @@ export default function LoginContent({ isLogin, setIsLogin }) {
       console.error(error);
       if (error?.response?.data?.message === "User not found") {
         toast.error("User not found", {
-          duration: 1000,
+          duration: 4000,
           id: toastId,
         });
         setSubmitStatus("idle");
@@ -255,18 +255,18 @@ export default function LoginContent({ isLogin, setIsLogin }) {
       }
       if (error?.response?.data?.message === "Invalid password") {
         toast.error("Invalid password", {
-          duration: 1000,
+          duration: 4000,
           id: toastId,
         });
         flashError();
         router.push(
-          `/forgot?identifier=${usernameParam.current || username.value}`,
+          `/forgot?identifier=${encodeURIComponent(usernameParam.current || username.value)}`,
         );
         return;
       }
 
       toast.error(error?.response?.data?.message || "Login failed", {
-        duration: 1000,
+        duration: 4000,
         id: toastId,
       });
       flashError();
@@ -765,11 +765,12 @@ export default function LoginContent({ isLogin, setIsLogin }) {
             {!isLogin ? (
               <Box sx={{ width: "100%" }}>
                 <Typography
-                  textAlign="center"
-                  mt={2}
                   variant="body2"
-                  color="text.secondary"
-                >
+                  sx={{
+                    textAlign: "center",
+                    mt: 2,
+                    color: "text.secondary"
+                  }}>
                   Already have an account?
                 </Typography>
                 <AnimatedToggleButton
@@ -785,11 +786,12 @@ export default function LoginContent({ isLogin, setIsLogin }) {
                   Login
                 </AnimatedToggleButton>
                 <Typography
-                  textAlign={"center"}
-                  m={"0.5rem"}
                   variant="caption"
-                  color="text.secondary"
-                >
+                  sx={{
+                    textAlign: "center",
+                    m: "0.5rem",
+                    color: "text.secondary"
+                  }}>
                   By signing up, you agree to our{" "}
                   <MuiLink component={Link} href="/terms" underline="hover">
                     Terms of Service

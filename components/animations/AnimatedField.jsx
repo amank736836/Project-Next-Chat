@@ -64,6 +64,8 @@ export default function AnimatedField({
   error,
   sx,
   InputProps,
+  inputProps,
+  slotProps,
   disabled,
   ...textFieldProps
 }) {
@@ -100,13 +102,20 @@ export default function AnimatedField({
           disabled={disabled}
           error={error}
           {...textFieldProps}
-          InputProps={{
-            ...InputProps,
-            startAdornment: icon ? (
-              <FieldIcon icon={icon} active={focused} tone={tone} />
-            ) : (
-              InputProps?.startAdornment
-            ),
+          // MUI 9 removed the `InputProps` / `inputProps` props. Callers keep
+          // using them here, so fold them into `slotProps` (which wins last).
+          slotProps={{
+            ...slotProps,
+            input: {
+              ...InputProps,
+              ...slotProps?.input,
+              startAdornment: icon ? (
+                <FieldIcon icon={icon} active={focused} tone={tone} />
+              ) : (
+                slotProps?.input?.startAdornment ?? InputProps?.startAdornment
+              ),
+            },
+            htmlInput: { ...inputProps, ...slotProps?.htmlInput },
           }}
           sx={{
             width: "100%",

@@ -48,10 +48,13 @@ function ChatItem({
       >
         <Stack
           direction="row"
-          alignItems="center"
           spacing={1.5}
-          sx={{ p: 1.5, pr: handleDeleteChat ? 5 : 1.5, minHeight: 82 }}
-        >
+          sx={{
+            alignItems: "center",
+            p: 1.5,
+            pr: handleDeleteChat ? 5 : 1.5,
+            minHeight: 82
+          }}>
           <Box sx={{ position: "relative", flexShrink: 0 }}>
             <AvatarCard avatar={avatar} />
             {isOnline && (
@@ -73,9 +76,10 @@ function ChatItem({
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
               noWrap
-              fontSize={14}
-              fontWeight={sameSender || newMessageCount ? 750 : 600}
-            >
+              sx={{
+                fontSize: 14,
+                fontWeight: sameSender || newMessageCount ? 750 : 600
+              }}>
               {name}
             </Typography>
             <Typography

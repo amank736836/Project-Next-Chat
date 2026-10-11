@@ -318,7 +318,7 @@ test("account recovery and admin login keep the shared cream and green theme", a
   await page.route('**/api/v1/admin', route => route.fulfill({ json: { admin: false } }));
   for (const path of ['/forgot', '/verify', '/admin/login']) {
     await page.goto(path);
-    await expect(page.getByRole('link', { name: 'Chat Champ home' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'chatchamp home' })).toBeVisible();
     await expect(page.locator('.auth-motion-root').last()).toHaveCSS('background-color', 'rgb(250, 251, 247)');
     await expect(page.locator('.champ-wordmark > svg')).toHaveCSS('color', 'rgb(68, 119, 91)');
     if (process.env.THEME_SCREENSHOTS) await page.screenshot({ path: `${process.env.THEME_SCREENSHOTS}/${path.replaceAll('/', '-')}.png`, fullPage: true, animations: 'disabled' });

@@ -12,15 +12,14 @@ export default function WorkspaceEmpty({
   return (
     <Stack
       className="workspace-reveal"
-      alignItems="center"
       spacing={2.5}
       sx={{
+        alignItems: "center",
         textAlign: "center",
         p: { xs: 3, md: 5 },
         maxWidth: 580,
-        m: "auto",
-      }}
-    >
+        m: "auto"
+      }}>
       <Box className="workspace-conversation-art" aria-hidden="true">
         <svg width="180" height="154" viewBox="0 0 180 154" fill="none">
           <circle cx="90" cy="77" r="70" fill="var(--champ-soft)" />
@@ -64,20 +63,23 @@ export default function WorkspaceEmpty({
         {title}
       </Typography>
       <Typography
-        color="text.secondary"
-        sx={{ lineHeight: 1.8, maxWidth: 380 }}
-      >
+        sx={{
+          color: "text.secondary",
+          lineHeight: 1.8,
+          maxWidth: 380
+        }}>
         {description}
       </Typography>
       {children && (
         <Stack
           direction="row"
           useFlexGap
-          flexWrap="wrap"
-          justifyContent="center"
-          gap={1.5}
-          sx={{ pt: 1 }}
-        >
+          sx={{
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 1.5,
+            pt: 1
+          }}>
           {children}
         </Stack>
       )}

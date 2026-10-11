@@ -671,7 +671,9 @@ export default function Username() {
             onChange={(e) => setNewQuestion(e.target.value)}
           />
           {isSelectedSuggestionUnedited && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               Edit the selected suggestion before saving.
             </Typography>
           )}
@@ -706,10 +708,13 @@ export default function Username() {
                 <Stack
                   key={item.id}
                   direction="row"
-                  alignItems="center"
-                  gap={1}
-                  sx={{ p: 2, border: "1px solid var(--champ-border)", borderRadius: 2 }}
-                >
+                  sx={{
+                    alignItems: "center",
+                    gap: 1,
+                    p: 2,
+                    border: "1px solid var(--champ-border)",
+                    borderRadius: 2
+                  }}>
                   <Typography
                     variant="body2"
                     sx={{ flex: 1, overflowWrap: "anywhere" }}
@@ -746,14 +751,19 @@ export default function Username() {
                 <Stack
                   key={item.id}
                   direction="row"
-                  alignItems="center"
-                  gap={1.5}
-                  sx={{ p: 2, bgcolor: "var(--champ-field)", borderRadius: 2 }}
-                >
+                  sx={{
+                    alignItems: "center",
+                    gap: 1.5,
+                    p: 2,
+                    bgcolor: "var(--champ-field)",
+                    borderRadius: 2
+                  }}>
                   <Typography
                     variant="caption"
                     color="primary"
-                    fontWeight={700}
+                    sx={{
+                      fontWeight: 700
+                    }}
                   >
                     {String(index + 1).padStart(2, "0")}
                   </Typography>
@@ -829,14 +839,21 @@ export default function Username() {
         </BoardSection>
         <Box sx={{ ...boardSurfaceSx, p: 3, bgcolor: "var(--champ-soft)" }}>
           <PublicRounded sx={{ color: "var(--champ-primary)", mb: 1 }} />
-          <Typography component="h2" fontWeight={700} sx={{ mb: 1 }}>
+          <Typography
+            component="h2"
+            sx={{
+              fontWeight: 700,
+              mb: 1
+            }}>
             Make it part of your website
           </Typography>
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ lineHeight: 1.8, mb: 2 }}
-          >
+            sx={{
+              color: "text.secondary",
+              lineHeight: 1.8,
+              mb: 2
+            }}>
             Add a message widget to your site. Bring every conversation back to
             one place.
           </Typography>
@@ -871,11 +888,14 @@ export default function Username() {
           />
           <Stack
             direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            gap={2}
-          >
-            <Typography variant="caption" color="text.secondary">
+            sx={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 2
+            }}>
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               A little kindness goes a long way.
             </Typography>
             <Button
@@ -898,8 +918,12 @@ export default function Username() {
       </BoardSection>
       {suggestionsBlock}
       {!isLoggedInViewer && (
-        <Stack alignItems="center" spacing={1}>
-          <Typography variant="body2" color="text.secondary">
+        <Stack spacing={1} sx={{
+          alignItems: "center"
+        }}>
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             A space like this could be yours, too.
           </Typography>
           <Button
@@ -939,11 +963,12 @@ export default function Username() {
             >
               <Stack
                 direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                gap={1}
-                sx={{ mb: 1.5 }}
-              >
+                sx={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 1,
+                  mb: 1.5
+                }}>
                 <Typography
                   variant="overline"
                   color="primary"
@@ -974,21 +999,24 @@ export default function Username() {
                   </Button>
                 )}
               </Stack>
-              <Typography fontWeight={650} sx={{ overflowWrap: "anywhere" }}>
+              <Typography
+                sx={{
+                  fontWeight: 650,
+                  overflowWrap: "anywhere"
+                }}>
                 {item.question}
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
                 sx={{
+                  color: "text.secondary",
                   mt: 2,
                   pl: 2,
                   borderLeft: "3px solid var(--champ-mint-strong)",
                   lineHeight: 1.8,
                   whiteSpace: "pre-wrap",
-                  overflowWrap: "anywhere",
-                }}
-              >
+                  overflowWrap: "anywhere"
+                }}>
                 {item.answer}
               </Typography>
               {isOwner && item.hiddenFromShowcase && (
@@ -1018,7 +1046,11 @@ export default function Username() {
         />
       )}
       {answeredShowcase.length > ANSWER_SHOWCASE_PAGE_SIZE && (
-        <Stack alignItems="center" sx={{ mt: 3 }}>
+        <Stack
+          sx={{
+            alignItems: "center",
+            mt: 3
+          }}>
           <Pagination
             count={totalAnswerShowcasePages}
             page={answerShowcasePage}
@@ -1073,15 +1105,14 @@ export default function Username() {
         <Stack
           component="header"
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             bgcolor: "white",
             px: { xs: 2, sm: 4 },
             py: 2,
-            borderBottom: "1px solid var(--champ-border)",
-          }}
-        >
+            borderBottom: "1px solid var(--champ-border)"
+          }}>
           <Button
             component={Link}
             href="/login"
@@ -1138,10 +1169,11 @@ export default function Username() {
       >
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: 3 }}
-        >
+          sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 3
+          }}>
           {isLoggedInViewer ? (
             <Button
               component={Link}
@@ -1155,9 +1187,10 @@ export default function Username() {
           ) : (
             <Typography
               variant="overline"
-              color="text.secondary"
-              sx={{ letterSpacing: ".12em" }}
-            >
+              sx={{
+                color: "text.secondary",
+                letterSpacing: ".12em"
+              }}>
               A SPACE FOR CONNECTION
             </Typography>
           )}
@@ -1184,10 +1217,11 @@ export default function Username() {
           <Box className="board-hero-orbit" aria-hidden="true" />
           <Stack
             direction={{ xs: "column", sm: "row" }}
-            alignItems={{ xs: "flex-start", sm: "center" }}
-            gap={3}
-            sx={{ position: "relative" }}
-          >
+            sx={{
+              alignItems: { xs: "flex-start", sm: "center" },
+              gap: 3,
+              position: "relative"
+            }}>
             <Avatar
               src={
                 isOwner
@@ -1234,9 +1268,11 @@ export default function Username() {
               </Typography>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ mt: 1, lineHeight: 1.8 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mt: 1,
+                  lineHeight: 1.8
+                }}>
                 {isOwner
                   ? `@${username} · Share your link, spark a question, and connect on your terms.`
                   : "A question you've been meaning to ask. A thought worth sharing. Start here."}
@@ -1345,10 +1381,11 @@ export default function Username() {
             </Box>
             <Stack
               direction={{ xs: "column", sm: "row" }}
-              justifyContent="space-between"
-              gap={2}
-              sx={{ mb: 3 }}
-            >
+              sx={{
+                justifyContent: "space-between",
+                gap: 2,
+                mb: 3
+              }}>
               <Tabs
                 value={ownerTab}
                 onChange={(_, tab) => setOwnerTab(tab)}
@@ -1477,10 +1514,12 @@ export default function Username() {
         )}
         <Typography
           variant="caption"
-          color="text.secondary"
           align="center"
-          sx={{ display: "block", mt: 5 }}
-        >
+          sx={{
+            color: "text.secondary",
+            display: "block",
+            mt: 5
+          }}>
           A little more connection. A little less noise.
         </Typography>
       </Box>

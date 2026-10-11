@@ -56,7 +56,9 @@ export default function PasswordStrengthBar({ password }) {
   return (
     <Box sx={{ mt: 0.5, mb: 1 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{
+          color: "text.secondary"
+        }}>
           Password strength
         </Typography>
         <Typography variant="caption" sx={{ color: strength.color, fontWeight: 700 }}>
@@ -78,7 +80,13 @@ export default function PasswordStrengthBar({ password }) {
         }}
       />
 
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: "block" }}>
+      <Typography
+        variant="caption"
+        sx={{
+          color: "text.secondary",
+          mt: 0.5,
+          display: "block"
+        }}>
         {strength.helper}
       </Typography>
     </Box>
