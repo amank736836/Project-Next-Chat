@@ -2,7 +2,7 @@
 
 import { Avatar, IconButton } from "@mui/material";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { PersonOutline, CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import { PersonOutlined as PersonOutline, CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import { EASE_OUT_EXPO, SPRING_BOUNCY } from "./motionConfig";
 import { VisuallyHiddenInput } from "../styles/StyledComponents";
 

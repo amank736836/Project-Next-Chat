@@ -1,6 +1,6 @@
 "use client";
 
-import { DeleteOutline, Logout } from "@mui/icons-material";
+import { DeleteOutlined as DeleteOutline, Logout } from "@mui/icons-material";
 import {
   Box,
   Chip,

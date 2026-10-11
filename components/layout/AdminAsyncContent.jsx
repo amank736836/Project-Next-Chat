@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  ErrorOutline as ErrorOutlineIcon,
+  ErrorOutlined as ErrorOutlineIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import { Box, Button, Paper, Skeleton, Stack, Typography } from "@mui/material";

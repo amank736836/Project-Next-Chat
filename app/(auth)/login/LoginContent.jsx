@@ -11,10 +11,10 @@ import {
   ArrowBack as ArrowBackIcon,
   ArrowForward as ArrowForwardIcon,
   BadgeOutlined as BadgeOutlinedIcon,
-  LockOutline as LockOutlineIcon,
+  LockOutlined as LockOutlineIcon,
   LockPersonOutlined as LockPersonOutlinedIcon,
-  MailOutline as MailOutlineIcon,
-  PersonOutline as PersonOutlineIcon,
+  MailOutlined as MailOutlineIcon,
+  PersonOutlined as PersonOutlineIcon,
 } from "@mui/icons-material";
 import { Box, Link as MuiLink, Typography } from "@mui/material";
 import axios from "axios";
